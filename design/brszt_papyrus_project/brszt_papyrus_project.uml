@@ -1,6 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_nU6jEL9TEeyEzKdlLLqWNA" name="brszt_papyrus_project">
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_nU6jEL9TEeyEzKdlLLqWNA" name="brszt_papyrus_project" visibility="private">
   <packageImport xmi:type="uml:PackageImport" xmi:id="_nZkZkL9TEeyEzKdlLLqWNA">
     <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
   </packageImport>
+  <packagedElement xmi:type="uml:Class" xmi:id="_6sYYsL_wEeyGIuMxKuqG9w" name="Player" visibility="public">
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_R3JkQL_zEeyGIuMxKuqG9w" name="score" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_cQ_F4L_zEeyGIuMxKuqG9w" name="speed" visibility="private" type="_FDYowL_xEeyGIuMxKuqG9w"/>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_mGM3gL_zEeyGIuMxKuqG9w" name="position" visibility="private" type="_FDYowL_xEeyGIuMxKuqG9w"/>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_T6MkoL_0EeyGIuMxKuqG9w" name="playerColor" visibility="private" type="_xfYWQL_zEeyGIuMxKuqG9w"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_Gq4OML_1EeyGIuMxKuqG9w" name="getScore">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_I3u1YL_3EeyGIuMxKuqG9w" name="score" direction="return">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_RVJ_kL_1EeyGIuMxKuqG9w" name="setScore">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_es6Y8L_3EeyGIuMxKuqG9w" name="newScore">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+      </ownedParameter>
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_nEV98L_3EeyGIuMxKuqG9w" name="retVal" direction="return">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_tCYCoL_3EeyGIuMxKuqG9w" name="setSpeed">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_tCYCob_3EeyGIuMxKuqG9w" name="newSpeed" type="_FDYowL_xEeyGIuMxKuqG9w"/>
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_tCYCor_3EeyGIuMxKuqG9w" name="retVal" direction="return">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_tCZ30L_3EeyGIuMxKuqG9w" name="getSpeed">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_tCZ30b_3EeyGIuMxKuqG9w" name="retVal" type="_FDYowL_xEeyGIuMxKuqG9w" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_OKWwIL_4EeyGIuMxKuqG9w" name="setPosition">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_OKWwIb_4EeyGIuMxKuqG9w" name="newPosition" type="_FDYowL_xEeyGIuMxKuqG9w"/>
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_OKWwIr_4EeyGIuMxKuqG9w" name="retVal" direction="return">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_OKYlUL_4EeyGIuMxKuqG9w" name="getPosition">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_OKYlUb_4EeyGIuMxKuqG9w" name="retVal" type="_FDYowL_xEeyGIuMxKuqG9w" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_kRXDgL_4EeyGIuMxKuqG9w" name="getPlayerColor">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_ouMbML_4EeyGIuMxKuqG9w" name="retVal" type="_xfYWQL_zEeyGIuMxKuqG9w" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_rci30L_4EeyGIuMxKuqG9w" name="setColor">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_yUhcQL_4EeyGIuMxKuqG9w" name="newColor" type="_xfYWQL_zEeyGIuMxKuqG9w"/>
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_5CUJ8L_4EeyGIuMxKuqG9w" name="retVal" direction="return">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+      </ownedParameter>
+    </ownedOperation>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_86ZIYL_wEeyGIuMxKuqG9w" name="Render"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_98pPkL_wEeyGIuMxKuqG9w" name="Game"/>
+  <packagedElement xmi:type="uml:Class" xmi:id="_FDYowL_xEeyGIuMxKuqG9w" name="Vector2D" isActive="true">
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_WF__wL_yEeyGIuMxKuqG9w" name="x">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_5NcqoL_yEeyGIuMxKuqG9w" name="y">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+    </ownedAttribute>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Enumeration" xmi:id="_xfYWQL_zEeyGIuMxKuqG9w" name="Color">
+    <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_1lIDoL_zEeyGIuMxKuqG9w" name="Red"/>
+    <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_8D_kgL_zEeyGIuMxKuqG9w" name="Green"/>
+    <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="_--JBcL_zEeyGIuMxKuqG9w" name="Pink"/>
+    <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="__a518L_zEeyGIuMxKuqG9w" name="Blue"/>
+    <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="__eGT4L_zEeyGIuMxKuqG9w" name="Yellow"/>
+    <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="__gncYL_zEeyGIuMxKuqG9w" name="Purple"/>
+    <ownedLiteral xmi:type="uml:EnumerationLiteral" xmi:id="__k0m8L_zEeyGIuMxKuqG9w" name="Orange"/>
+  </packagedElement>
 </uml:Model>
