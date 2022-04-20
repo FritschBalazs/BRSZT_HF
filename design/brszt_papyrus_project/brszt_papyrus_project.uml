@@ -88,8 +88,8 @@
         <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
       </ownedAttribute>
       <ownedAttribute xmi:type="uml:Property" xmi:id="_36vUgMAREeylqLJZ8sek7Q" name="Players" visibility="private" type="_6sYYsL_wEeyGIuMxKuqG9w">
-        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_XpyDsMATEeylqLJZ8sek7Q"/>
-        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Xk7Y4MATEeylqLJZ8sek7Q" value="*"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_XpyDsMATEeylqLJZ8sek7Q" value="2"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_pKauAMDFEeyXUvDWIWyW3g" value="4"/>
       </ownedAttribute>
       <ownedAttribute xmi:type="uml:Property" xmi:id="_am4G8MATEeylqLJZ8sek7Q" name="roundNum" visibility="private">
         <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
@@ -182,15 +182,14 @@
         <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
       </ownedAttribute>
       <ownedAttribute xmi:type="uml:Property" xmi:id="_Y7G84MC8EeyXUvDWIWyW3g" name="Curves" visibility="private" type="_CnXYkMC9EeyXUvDWIWyW3g">
-        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_BRAs0MDBEeyXUvDWIWyW3g" value="*"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_U1BiMMDFEeyXUvDWIWyW3g" value="2"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_kfR0kMDFEeyXUvDWIWyW3g" value="4"/>
       </ownedAttribute>
     </packagedElement>
     <packagedElement xmi:type="uml:Class" xmi:id="_CnXYkMC9EeyXUvDWIWyW3g" name="Curve">
       <ownedAttribute xmi:type="uml:Property" xmi:id="_FPxlQMC9EeyXUvDWIWyW3g" name="Points" visibility="private" type="_3Df3UMC9EeyXUvDWIWyW3g">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_uFHtcMDFEeyXUvDWIWyW3g"/>
         <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Dx4ZAMC_EeyXUvDWIWyW3g" value="*"/>
-      </ownedAttribute>
-      <ownedAttribute xmi:type="uml:Property" xmi:id="_B6_TYMDAEeyXUvDWIWyW3g" name="playerId" visibility="private">
-        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
       </ownedAttribute>
     </packagedElement>
     <packagedElement xmi:type="uml:Class" xmi:id="_3Df3UMC9EeyXUvDWIWyW3g" name="CurvePoint">
@@ -198,6 +197,7 @@
       <ownedAttribute xmi:type="uml:Property" xmi:id="_ymcAsMC-EeyXUvDWIWyW3g" name="isColored">
         <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
       </ownedAttribute>
+      <ownedAttribute xmi:type="uml:Property" xmi:id="_d995IMDEEeyXUvDWIWyW3g" name="color" type="_xfYWQL_zEeyGIuMxKuqG9w"/>
     </packagedElement>
     <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_jWvcQMAiEeyG9aR2PUpHNw">
       <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_jWwDUMAiEeyG9aR2PUpHNw" source="http://www.eclipse.org/uml2/2.0.0/UML">

@@ -412,7 +412,7 @@
       <layoutConstraint xmi:type="notation:Bounds" xmi:id="_o20-isATEeylqLJZ8sek7Q"/>
     </children>
     <element xmi:type="uml:Enumeration" href="brszt_papyrus_project.uml#_o20-gMATEeylqLJZ8sek7Q"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_o20-gsATEeylqLJZ8sek7Q" x="1540" y="20"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_o20-gsATEeylqLJZ8sek7Q" x="1620" y="20"/>
   </children>
   <children xmi:type="notation:Shape" xmi:id="_80_nAMAcEeyG9aR2PUpHNw" type="Class_Shape">
     <children xmi:type="notation:DecorationNode" xmi:id="_80_nAsAcEeyG9aR2PUpHNw" type="Class_NameLabel"/>
@@ -492,7 +492,7 @@
       <layoutConstraint xmi:type="notation:Bounds" xmi:id="_wsvpk8AhEeyG9aR2PUpHNw"/>
     </children>
     <element xmi:type="uml:Class" href="brszt_papyrus_project.uml#_wsubYMAhEeyG9aR2PUpHNw"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_wsvpgcAhEeyG9aR2PUpHNw" x="920" y="360" width="261" height="161"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_wsvpgcAhEeyG9aR2PUpHNw" x="1120" y="420" width="261" height="161"/>
   </children>
   <children xmi:type="notation:Shape" xmi:id="_CncREMC9EeyXUvDWIWyW3g" type="Class_Shape">
     <children xmi:type="notation:DecorationNode" xmi:id="_CnfUYMC9EeyXUvDWIWyW3g" type="Class_NameLabel"/>
@@ -503,10 +503,6 @@
       <children xmi:type="notation:Shape" xmi:id="_FQaecMC9EeyXUvDWIWyW3g" type="Property_ClassAttributeLabel">
         <element xmi:type="uml:Property" href="brszt_papyrus_project.uml#_FPxlQMC9EeyXUvDWIWyW3g"/>
         <layoutConstraint xmi:type="notation:Location" xmi:id="_FQaeccC9EeyXUvDWIWyW3g"/>
-      </children>
-      <children xmi:type="notation:Shape" xmi:id="_B7he4MDAEeyXUvDWIWyW3g" type="Property_ClassAttributeLabel">
-        <element xmi:type="uml:Property" href="brszt_papyrus_project.uml#_B6_TYMDAEeyXUvDWIWyW3g"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_B7iF8MDAEeyXUvDWIWyW3g"/>
       </children>
       <styles xmi:type="notation:TitleStyle" xmi:id="_Cnf7ccC9EeyXUvDWIWyW3g"/>
       <styles xmi:type="notation:SortingStyle" xmi:id="_Cnf7csC9EeyXUvDWIWyW3g"/>
@@ -526,7 +522,7 @@
       <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CngihMC9EeyXUvDWIWyW3g"/>
     </children>
     <element xmi:type="uml:Class" href="brszt_papyrus_project.uml#_CnXYkMC9EeyXUvDWIWyW3g"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CncREcC9EeyXUvDWIWyW3g" x="1220" y="360"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CncREcC9EeyXUvDWIWyW3g" x="880" y="480"/>
   </children>
   <children xmi:type="notation:Shape" xmi:id="_3DiTkMC9EeyXUvDWIWyW3g" type="Class_Shape">
     <children xmi:type="notation:DecorationNode" xmi:id="_3Di6oMC9EeyXUvDWIWyW3g" type="Class_NameLabel"/>
@@ -537,6 +533,10 @@
       <children xmi:type="notation:Shape" xmi:id="_ynB2kMC-EeyXUvDWIWyW3g" type="Property_ClassAttributeLabel">
         <element xmi:type="uml:Property" href="brszt_papyrus_project.uml#_ymcAsMC-EeyXUvDWIWyW3g"/>
         <layoutConstraint xmi:type="notation:Location" xmi:id="_ynB2kcC-EeyXUvDWIWyW3g"/>
+      </children>
+      <children xmi:type="notation:Shape" xmi:id="_d-ePcMDEEeyXUvDWIWyW3g" type="Property_ClassAttributeLabel">
+        <element xmi:type="uml:Property" href="brszt_papyrus_project.uml#_d995IMDEEeyXUvDWIWyW3g"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_d-ePccDEEeyXUvDWIWyW3g"/>
       </children>
       <styles xmi:type="notation:TitleStyle" xmi:id="_3Di6pMC9EeyXUvDWIWyW3g"/>
       <styles xmi:type="notation:SortingStyle" xmi:id="_3Di6pcC9EeyXUvDWIWyW3g"/>
@@ -556,7 +556,7 @@
       <layoutConstraint xmi:type="notation:Bounds" xmi:id="_3Di6scC9EeyXUvDWIWyW3g"/>
     </children>
     <element xmi:type="uml:Class" href="brszt_papyrus_project.uml#_3Df3UMC9EeyXUvDWIWyW3g"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_3DiTkcC9EeyXUvDWIWyW3g" x="600" y="560"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_3DiTkcC9EeyXUvDWIWyW3g" x="600" y="500"/>
   </children>
   <styles xmi:type="notation:StringValueStyle" xmi:id="_uaznsb9TEeyEzKdlLLqWNA" name="diagram_compatibility_version" stringValue="1.4.0"/>
   <styles xmi:type="notation:DiagramStyle" xmi:id="_uaznsr9TEeyEzKdlLLqWNA"/>
