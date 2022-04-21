@@ -1,0 +1,65 @@
+[33mcommit e70ae58acf793aa64167210f59b752e082038c75[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Marton Hantos <marton.hantos@pcbdesign.hu>
+Date:   Thu Apr 21 23:33:38 2022 +0200
+
+    minor changes
+
+[33mcommit f4333776cfacab76ed616b12e4004c00235cd685[m
+Author: Frici <fbalazs99@gmail.com>
+Date:   Wed Apr 20 18:34:53 2022 +0200
+
+    minor changes
+
+[33mcommit 5f5800f49b292e8fe1c8e41545758af4cf462a8b[m
+Author: Frici <fbalazs99@gmail.com>
+Date:   Wed Apr 20 18:04:31 2022 +0200
+
+    Added properties for board, curves, buttons, other small changes
+
+[33mcommit 28a71e6f0f3a29eebc06d7392abbfbed973150bc[m
+Author: Marton Hantos <marton.hantos@pcbdesign.hu>
+Date:   Tue Apr 19 22:56:01 2022 +0200
+
+    Expanded the UML diagram of the design
+
+[33mcommit e766402017a052cea1cc16854086badd373be8f1[m
+Author: Dániel Harsányi <danielharsanyi18@gmail.com>
+Date:   Tue Apr 19 20:27:56 2022 +0200
+
+    Started UML diagram with Player class
+
+[33mcommit c9d306c4fdb992af2c179e1d695af3750ddae8ea[m
+Author: Frici <fbalazs99@gmail.com>
+Date:   Mon Apr 18 22:12:56 2022 +0200
+
+    Created papyrus project
+
+[33mcommit 806c6ac2ca2d981a673aec763d997cbae983651c[m
+Author: Marton Hantos <marton.hantos@pcbdesign.hu>
+Date:   Mon Apr 18 21:47:12 2022 +0200
+
+    Added initial source file
+
+[33mcommit 78082477d0a26fa35b13764a79b9987ca3556c86[m
+Author: Marton Hantos <marton.hantos@pcbdesign.hu>
+Date:   Mon Apr 18 21:44:37 2022 +0200
+
+    Added empty Java project
+
+[33mcommit 349861370f0d9fa29591ca2783456625384541d2[m
+Author: Frici <fbalazs99@gmail.com>
+Date:   Tue Apr 5 09:40:10 2022 +0200
+
+    Fixed "join game" description
+
+[33mcommit 4a25cca3c679f2e441c1fad93eb747c0b21b5d4a[m
+Author: Frici <fbalazs99@gmail.com>
+Date:   Tue Apr 5 09:07:32 2022 +0200
+
+    Added the (almost complete) specification
+
+[33mcommit d11ffff1404ad6e493f0fca6a2a1e3af7402d4cf[m
+Author: Frici <fbalazs99@gmail.com>
+Date:   Tue Apr 5 08:54:51 2022 +0200
+
+    Initial commit
