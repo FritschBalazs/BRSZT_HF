@@ -316,6 +316,14 @@
         <element xmi:type="uml:Property" href="brszt_papyrus_project.uml#_Y7G84MC8EeyXUvDWIWyW3g"/>
         <layoutConstraint xmi:type="notation:Location" xmi:id="_Y718scC8EeyXUvDWIWyW3g"/>
       </children>
+      <children xmi:type="notation:Shape" xmi:id="_BsHVsMKIEeyFAbkWLA5f4Q" type="Property_ClassAttributeLabel">
+        <element xmi:type="uml:Property" href="brszt_papyrus_project.uml#_BrcnUMKIEeyFAbkWLA5f4Q"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_BsHVscKIEeyFAbkWLA5f4Q"/>
+      </children>
+      <children xmi:type="notation:Shape" xmi:id="_JuJ5gMKIEeyFAbkWLA5f4Q" type="Property_ClassAttributeLabel">
+        <element xmi:type="uml:Property" href="brszt_papyrus_project.uml#_JthnYMKIEeyFAbkWLA5f4Q"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_JuJ5gcKIEeyFAbkWLA5f4Q"/>
+      </children>
       <styles xmi:type="notation:TitleStyle" xmi:id="_wsvphsAhEeyG9aR2PUpHNw"/>
       <styles xmi:type="notation:SortingStyle" xmi:id="_wsvph8AhEeyG9aR2PUpHNw"/>
       <styles xmi:type="notation:FilteringStyle" xmi:id="_wsvpiMAhEeyG9aR2PUpHNw"/>

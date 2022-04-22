@@ -117,6 +117,14 @@
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_uHsmwMJ6EeyamZn8kkJksw" value="2"/>
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_uHtN0MJ6EeyamZn8kkJksw" value="4"/>
     </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_BrcnUMKIEeyFAbkWLA5f4Q" name="Points" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_GkGYUMKIEeyFAbkWLA5f4Q" value="2"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_GkUawMKIEeyFAbkWLA5f4Q" value="4"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_JthnYMKIEeyFAbkWLA5f4Q" name="currentRound" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+    </ownedAttribute>
     <ownedOperation xmi:type="uml:Operation" xmi:id="_QJds8MHAEeyfHPg9hfxRyw" name="receivePositions" visibility="public">
       <ownedParameter xmi:type="uml:Parameter" xmi:id="_mu_IUMHAEeyfHPg9hfxRyw" name="positions" type="_3Df3UMC9EeyXUvDWIWyW3g"/>
     </ownedOperation>
