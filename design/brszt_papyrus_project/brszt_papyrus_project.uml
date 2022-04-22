@@ -4,16 +4,9 @@
     <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
   </packageImport>
   <packagedElement xmi:type="uml:Class" xmi:id="_6sYYsL_wEeyGIuMxKuqG9w" name="Player" visibility="public">
-    <ownedAttribute xmi:type="uml:Property" xmi:id="_R3JkQL_zEeyGIuMxKuqG9w" name="score" visibility="private">
-      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
-    </ownedAttribute>
-    <ownedAttribute xmi:type="uml:Property" xmi:id="_T6MkoL_0EeyGIuMxKuqG9w" name="playerColor" visibility="private" type="_xfYWQL_zEeyGIuMxKuqG9w"/>
     <ownedAttribute xmi:type="uml:Property" xmi:id="_xz6t8MAWEeylqLJZ8sek7Q" name="controlState" visibility="private" type="_-tOKYMAQEeylqLJZ8sek7Q"/>
     <ownedAttribute xmi:type="uml:Property" xmi:id="_yN53EMAdEeyG9aR2PUpHNw" name="name" visibility="private">
       <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
-    </ownedAttribute>
-    <ownedAttribute xmi:type="uml:Property" xmi:id="_QEDAYMAeEeyG9aR2PUpHNw" name="isAlive" visibility="private">
-      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
     </ownedAttribute>
     <ownedAttribute xmi:type="uml:Property" xmi:id="_d9etwMDAEeyXUvDWIWyW3g" name="id" visibility="private">
       <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
@@ -44,6 +37,7 @@
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_bNQWAsJ6EeyamZn8kkJksw"/>
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_bNQWA8J6EeyamZn8kkJksw" value="1"/>
     </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_t2yt4cKDEeyFAbkWLA5f4Q" name="board" type="_wsubYMAhEeyG9aR2PUpHNw" aggregation="composite" association="_t2wRoMKDEeyFAbkWLA5f4Q"/>
     <ownedOperation xmi:type="uml:Operation" xmi:id="_xS1ycMAcEeyG9aR2PUpHNw" name="updatePositions" visibility="public"/>
     <ownedOperation xmi:type="uml:Operation" xmi:id="_xUUZIMAcEeyG9aR2PUpHNw" name="evaluateStep" visibility="public">
       <ownedParameter xmi:type="uml:Parameter" xmi:id="_JijM0MAfEeyG9aR2PUpHNw" name="playersAlive" direction="return">
@@ -119,7 +113,6 @@
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_U1BiMMDFEeyXUvDWIWyW3g" value="2"/>
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_kfR0kMDFEeyXUvDWIWyW3g" value="4"/>
     </ownedAttribute>
-    <ownedAttribute xmi:type="uml:Property" xmi:id="_y2Jk0sJ4EeyamZn8kkJksw" name="game" type="_98pPkL_wEeyGIuMxKuqG9w" aggregation="composite" association="_y2I9wMJ4EeyamZn8kkJksw"/>
     <ownedAttribute xmi:type="uml:Property" xmi:id="_uHr_ssJ6EeyamZn8kkJksw" name="curve" type="_CnXYkMC9EeyXUvDWIWyW3g" aggregation="composite" association="_uHqxkMJ6EeyamZn8kkJksw">
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_uHsmwMJ6EeyamZn8kkJksw" value="2"/>
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_uHtN0MJ6EeyamZn8kkJksw" value="4"/>
@@ -178,7 +171,7 @@
       <ownedParameter xmi:type="uml:Parameter" xmi:id="_AMPPQcJEEeyFYonslAOuwg" name="retVal" type="_THnnEMI3EeyFYonslAOuwg" direction="return"/>
     </ownedOperation>
   </packagedElement>
-  <packagedElement xmi:type="uml:Class" xmi:id="_fz6JYMG8EeyfHPg9hfxRyw" name="Player@Server">
+  <packagedElement xmi:type="uml:Class" xmi:id="_fz6JYMG8EeyfHPg9hfxRyw" name="ServerSidePlayer" visibility="public">
     <generalization xmi:type="uml:Generalization" xmi:id="_lehi0MG8EeyfHPg9hfxRyw" general="_6sYYsL_wEeyGIuMxKuqG9w"/>
     <ownedAttribute xmi:type="uml:Property" xmi:id="_pV9ucMG8EeyfHPg9hfxRyw" name="position" visibility="private" type="_FDYowL_xEeyGIuMxKuqG9w"/>
     <ownedAttribute xmi:type="uml:Property" xmi:id="_uwbzEMG8EeyfHPg9hfxRyw" name="speed" visibility="private" type="_FDYowL_xEeyGIuMxKuqG9w"/>
@@ -187,6 +180,13 @@
     </ownedAttribute>
     <ownedAttribute xmi:type="uml:Property" xmi:id="_ax7zUsJ3EeyamZn8kkJksw" name="player@server" type="_FDYowL_xEeyGIuMxKuqG9w" aggregation="composite"/>
     <ownedAttribute xmi:type="uml:Property" xmi:id="_FS30QsJ4EeyamZn8kkJksw" name="vector2d" type="_FDYowL_xEeyGIuMxKuqG9w" aggregation="composite" association="_FS3NMMJ4EeyamZn8kkJksw"/>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_T6MkoL_0EeyGIuMxKuqG9w" name="playerColor" visibility="private" type="_xfYWQL_zEeyGIuMxKuqG9w"/>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_QEDAYMAeEeyG9aR2PUpHNw" name="isAlive" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_6rL7gMKFEeyFAbkWLA5f4Q" name="score" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
+    </ownedAttribute>
     <ownedOperation xmi:type="uml:Operation" xmi:id="_7yAzAMG8EeyfHPg9hfxRyw" name="move" visibility="public">
       <ownedParameter xmi:type="uml:Parameter" xmi:id="_JSeuYMG9EeyfHPg9hfxRyw" name="retVal" type="_FDYowL_xEeyGIuMxKuqG9w"/>
     </ownedOperation>
@@ -217,7 +217,7 @@
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_xrhDsMI2EeyFYonslAOuwg" value="4"/>
     </ownedAttribute>
     <ownedAttribute xmi:type="uml:Property" xmi:id="_0P2BoMI2EeyFYonslAOuwg" name="Scores" visibility="public">
-      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_4aHpsMI2EeyFYonslAOuwg" value="2"/>
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_4aMiMMI2EeyFYonslAOuwg" value="4"/>
     </ownedAttribute>
@@ -305,12 +305,6 @@
     </eAnnotations>
     <ownedEnd xmi:type="uml:Property" xmi:id="_TZrW48J4EeyamZn8kkJksw" name="client" type="_DquGkMG7EeykbKWoZeCEXA" association="_TZqIwMJ4EeyamZn8kkJksw"/>
   </packagedElement>
-  <packagedElement xmi:type="uml:Association" xmi:id="_y2I9wMJ4EeyamZn8kkJksw" memberEnd="_y2Jk0sJ4EeyamZn8kkJksw _y2KL4cJ4EeyamZn8kkJksw">
-    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_y2Jk0MJ4EeyamZn8kkJksw" source="org.eclipse.papyrus">
-      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_y2Jk0cJ4EeyamZn8kkJksw" key="nature" value="UML_Nature"/>
-    </eAnnotations>
-    <ownedEnd xmi:type="uml:Property" xmi:id="_y2KL4cJ4EeyamZn8kkJksw" name="board" type="_wsubYMAhEeyG9aR2PUpHNw" association="_y2I9wMJ4EeyamZn8kkJksw"/>
-  </packagedElement>
   <packagedElement xmi:type="uml:Association" xmi:id="_G9DBoMJ5EeyamZn8kkJksw" memberEnd="_G9DossJ5EeyamZn8kkJksw _G9EPwsJ5EeyamZn8kkJksw">
     <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_G9DosMJ5EeyamZn8kkJksw" source="org.eclipse.papyrus">
       <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_G9DoscJ5EeyamZn8kkJksw" key="nature" value="UML_Nature"/>
@@ -346,6 +340,12 @@
       <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_R_7_8cJ8EeyamZn8kkJksw" key="nature" value="UML_Nature"/>
     </eAnnotations>
     <ownedEnd xmi:type="uml:Property" xmi:id="_R_91IMJ8EeyamZn8kkJksw" name="client" type="_DquGkMG7EeykbKWoZeCEXA" association="_R_6x0MJ8EeyamZn8kkJksw"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_t2wRoMKDEeyFAbkWLA5f4Q" memberEnd="_t2yt4cKDEeyFAbkWLA5f4Q _t2zU8sKDEeyFAbkWLA5f4Q">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_t2yG0MKDEeyFAbkWLA5f4Q" source="org.eclipse.papyrus">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_t2yt4MKDEeyFAbkWLA5f4Q" key="nature" value="UML_Nature"/>
+    </eAnnotations>
+    <ownedEnd xmi:type="uml:Property" xmi:id="_t2zU8sKDEeyFAbkWLA5f4Q" name="game" type="_98pPkL_wEeyGIuMxKuqG9w" association="_t2wRoMKDEeyFAbkWLA5f4Q"/>
   </packagedElement>
   <profileApplication xmi:type="uml:ProfileApplication" xmi:id="_jWvcQMAiEeyG9aR2PUpHNw">
     <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_jWwDUMAiEeyG9aR2PUpHNw" source="http://www.eclipse.org/uml2/2.0.0/UML">
