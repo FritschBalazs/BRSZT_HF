@@ -131,7 +131,7 @@
     <ownedOperation xmi:type="uml:Operation" xmi:id="_pCgDEMHAEeyfHPg9hfxRyw" name="draw" visibility="public"/>
     <ownedOperation xmi:type="uml:Operation" xmi:id="_aiBf8MIzEeyFYonslAOuwg" name="receiveGameData" visibility="public">
       <ownedParameter xmi:type="uml:Parameter" xmi:id="_kHRi8MIzEeyFYonslAOuwg" name="scores">
-        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Real"/>
       </ownedParameter>
       <ownedParameter xmi:type="uml:Parameter" xmi:id="_PLqPMMI0EeyFYonslAOuwg" name="currentRound">
         <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
