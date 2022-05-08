@@ -1,0 +1,67 @@
+package CurveFever;
+
+public class Board {
+    private int width, height;
+    private Curve[] Curves;
+    private double[] Points;
+    private int currentRound;
+
+    public Board(int w, int h, int numOfPlayers) {
+        width = w;
+        height = h;
+        Curves = new Curve[numOfPlayers];
+        Points = new double[numOfPlayers];
+        currentRound = 0;
+    }
+
+    public void setSize(int w, int h) {
+        width = w;
+        height = h;
+    }
+
+    public void setCurves(Curve[] C) {
+        Curves = C;
+    }
+
+    public void setPoints(double[] P) {
+        Points = P;
+    }
+
+    public void setCurrentRound(int numOfRound) {
+        currentRound = numOfRound;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public Curve[] getCurves() {
+        return Curves;
+    }
+
+    public double[] getPoints() {
+        return Points;
+    }
+
+    public int getCurrentRound() {
+        return currentRound;
+    }
+
+    public void receivePositions (CurvePoint[] positions) {
+
+    }
+
+    public void receiveGameData(double[] scores, int currentRound) {
+
+    }
+
+    public void draw() {
+
+    }
+
+
+}
