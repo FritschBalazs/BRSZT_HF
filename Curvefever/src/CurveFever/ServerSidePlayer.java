@@ -1,13 +1,20 @@
 package CurveFever;
 
+import static java.lang.Math.*;
+import static java.lang.Math.toRadians;
+
 public class ServerSidePlayer extends Player{
+
+    public static final int SYSTEM_TICK = 10;  // In milliseconds
+    public static final int TURN_DEGREE_PER_SECOND = 30;   // Turns 30 degrees in one second
+    public static final double TURN_DEGREE_PER_TICK = TURN_DEGREE_PER_SECOND / SYSTEM_TICK;
 
     private Vector2D position;
     private Vector2D speed;
     private String ipAddress;
     private Color playerColor;
     private boolean isAlive;
-    private double score;
+    private int score;   /* TODO change score type to int*/
 
     public ServerSidePlayer(String name, String ipAddress, Color pColor, int pId, Vector2D startingPos) {
         super(name,pId);
@@ -18,6 +25,12 @@ public class ServerSidePlayer extends Player{
         this.playerColor = pColor;
         this.isAlive = true;
         this.score = 0;
+    }
+
+    private void rotateSpeed(double angle){
+        double xTemp = this.speed.getX() * cos(toRadians(angle)) - this.speed.getY() * sin(toRadians(angle));
+        double yTemp = this.speed.getX() * sin(toRadians(angle)) + this.speed.getY() * cos(toRadians(angle));
+        speed.setCoordinates(xTemp, yTemp);
     }
 
     public void setPosition(Vector2D pos) {
@@ -40,7 +53,7 @@ public class ServerSidePlayer extends Player{
         this.isAlive = isAlive;
     }
 
-    public void setScore(double score) {
+    public void setScore(int score) {
         this.score = score;
     }
 
@@ -68,8 +81,20 @@ public class ServerSidePlayer extends Player{
         return score;
     }
 
-    public  Vector2D move(){
-        return null;
+    public void move(){
+        double angle;   // in degrees
+        if (this.controlState == ControlState.LEFT)
+            angle = TURN_DEGREE_PER_TICK;
+        else if (this.controlState == ControlState.RIGHT)
+            angle = -1 * TURN_DEGREE_PER_TICK;
+        else angle = 0;
+
+        rotateSpeed(angle);
+        this.position.setX(this.position.getX() + this.speed.getX());
+        this.position.setY(this.position.getY() + this.speed.getY());
     }
 
+    public void updateScore(double scoreToAdd){
+        this.score += scoreToAdd;
+    }
 }
