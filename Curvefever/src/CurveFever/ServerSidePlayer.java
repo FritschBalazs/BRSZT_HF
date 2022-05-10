@@ -16,13 +16,13 @@ public class ServerSidePlayer extends Player{
     private boolean isAlive;
     private int score;   /* TODO change score type to int*/
 
-    public ServerSidePlayer(String name, Color pColor, int pId, Vector2D startingPos) {
+    public ServerSidePlayer(String name, int pId) {
         super(name,pId);
 
-        this.position = startingPos;
+        this.position.setCoordinates(0 ,0);
         this.speed.setCoordinates(0,0);
         this.ipAddress = ipAddress;
-        this.playerColor = pColor;
+        this.playerColor = Color.RED;
         this.isAlive = true;
         this.score = 0;
     }

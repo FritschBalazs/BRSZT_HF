@@ -132,21 +132,15 @@ public class Server extends Client{
 
         ServerSidePlayer[] SSPlayers= new ServerSidePlayer[numOfClients+1];
 
-        //TODO random generalast rendesen magcsinalni
-        Color[] randomColor = {Color.RED, Color.BLUE, Color.GREEN, Color.PINK, Color.ORANGE};
-        Vector2D[] randomPos = {new Vector2D(2,2),new Vector2D(400,700), new Vector2D(120,240), new Vector2D(50,70)};
 
         /* add client players */
         for (int idx = 0; idx < (numOfClients); idx++) {
-            SSPlayers[idx] = new ServerSidePlayer(pkg.playerNames[idx],randomColor[idx],idx,randomPos[idx]);
+            SSPlayers[idx] = new ServerSidePlayer(pkg.playerNames[idx],idx);
         }
         /* add server player */
-        SSPlayers[numOfClients] =new ServerSidePlayer(pkg.playerNames[numOfClients],
-                                                      randomColor[numOfClients],
-                                                      numOfClients,
-                                                      randomPos[numOfClients]);
+        SSPlayers[numOfClients] = new ServerSidePlayer(pkg.playerNames[numOfClients],numOfClients);
 
-        //game = new Game(numOfClients+1, ,SSPlayers);
+        game = new Game(numOfClients+1, pkg.numOfRounds, SSPlayers);
 
     }
 
@@ -174,12 +168,10 @@ public class Server extends Client{
 
     }
 
-    /* private halper classes */
+    /* private helper classes */
     private class GetControl implements Runnable {
 
         private final int clientId;
-
-
 
         public GetControl(int clientId){
 

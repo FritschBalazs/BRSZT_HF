@@ -7,14 +7,14 @@ public class Board {
     private static final int height = 480;
     private ArrayList<CurvePoint>[] Curves;   //We didn't implement the Curve class, instead we've used this approach.
                                               // array lists: https://www.w3schools.com/java/java_arraylist.asp
-    private double[] Points;
+    private int[] Points;
     private int currentRound;
     private int roundNum;
     private String[] PlayerNames;
 
     public Board(int numOfPlayers, int numOfRounds, String[] playerNames ) {
         this.Curves = new ArrayList[numOfPlayers];
-        this.Points = new double[numOfPlayers];
+        this.Points = new int[numOfPlayers];
         this.currentRound = 0;
         this.roundNum = numOfRounds;
         this.PlayerNames = playerNames.clone();
@@ -26,7 +26,7 @@ public class Board {
         this.Points = pkg.Scores;
         this.currentRound = pkg.currentRound;
         this.roundNum = pkg.numOfRounds;
-        this.PlayerNames = pkg.playerNames;
+        this.PlayerNames = pkg.playerNames.clone();
     }
 
 
@@ -34,8 +34,8 @@ public class Board {
         Curves = C;
     }
 
-    public void setPoints(double[] P) {
-        Points = P;
+    public void setPoints(int[] P) {
+        Points = P.clone();
     }
 
     public void setCurrentRound(int numOfRound) {
@@ -59,11 +59,11 @@ public class Board {
     }
 
     public ArrayList<CurvePoint>[] getCurves() {
-        return Curves;
+        return Curves.clone();
     }
 
-    public double[] getPoints() {
-        return Points;
+    public int[] getPoints() {
+        return Points.clone();
     }
 
     public int getCurrentRound() {
@@ -75,7 +75,7 @@ public class Board {
     }
 
     public String[] getPlayerNames() {
-        return PlayerNames;
+        return PlayerNames.clone();
     }
 
     public void receivePositions (CurvePoint[] positions) {
