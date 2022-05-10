@@ -17,7 +17,7 @@ public class Board {
         this.Points = new double[numOfPlayers];
         this.currentRound = 0;
         this.roundNum = numOfRounds;
-        this.PlayerNames = playerNames;
+        this.PlayerNames = playerNames.clone();
     }
 
     public Board(InitPackageS2C pkg) {
@@ -47,7 +47,7 @@ public class Board {
     }
 
     public void setPlayerNames(String[] names) {
-        this.PlayerNames = names;
+        this.PlayerNames = names.clone();
     }
 
     public int getWidth() {

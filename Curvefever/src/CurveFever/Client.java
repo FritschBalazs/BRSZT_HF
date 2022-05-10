@@ -65,7 +65,7 @@ public class Client{
 
     }
 
-    public void sendToServerInit(){
+    public void receiveFromServerInit(){
 
         /* if the connection got closed, or it has never been started */
         if (socket == null || socket.isClosed() ) {
@@ -91,6 +91,7 @@ public class Client{
 
             /* create the board */
             board = new Board(pkg);
+
 
         } catch (IOException e) {
             System.out.println("IOException from sendToServerInit");
@@ -130,35 +131,16 @@ public class Client{
             System.out.println("ClassNotFoundException");
         }
 
-
-        /* if we get to here that's an error */
-        return null;
-    }
-
-    public InitPackageS2C receiveFromServerInit() {
-        /* if the connection got closed, or it has never been started */
-        if (socket == null || socket.isClosed() ) {
-            establishConnection();
-        }
-
-        try {
-            InitPackageS2C message  = (InitPackageS2C) objIStream.readObject();
-            return message;
-        } catch (IOException e) {
-            System.out.println("IOexception while trying to receive");
-        } catch (ClassNotFoundException e) {
-            System.out.println("ClassNotFoundException");
-        }
+        //TODO feldolgozni a kapott package-et
 
 
         /* if we get to here that's an error */
         return null;
     }
+
 
 
     private void establishConnection() {
-
-        //TODO port megadast kitalalni? külön megadni, kiszedni a stringnbol vagy hardcode?
 
         System.out.println("Connecting to server...");
         try {

@@ -9,6 +9,4 @@ public class InitPackageS2C extends PackageS2C implements java.io.Serializable{
         super(numOfPlayers);  //constructor for the superclass (PackageS2C in this case)
         playerNames = new String[numOfPlayers];
     }
-
-    //TODO ahogy dontottunk PackageS2C-ben ugyanazt alkalmazni ide is
 }

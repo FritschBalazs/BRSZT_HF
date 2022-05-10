@@ -89,8 +89,6 @@ public class Server extends Client{
     }
 
     public void setupGame(){
-        //TODO blokkolva elküldi a dolgokat.
-
 
         /* Create init package */
         InitPackageS2C pkg = new InitPackageS2C(numOfClients+1);
@@ -131,6 +129,24 @@ public class Server extends Client{
                 System.out.println("IOException from setupGame, while sending init packages");
             }
         }
+
+        ServerSidePlayer[] SSPlayers= new ServerSidePlayer[numOfClients+1];
+
+        //TODO random generalast rendesen magcsinalni
+        Color[] randomColor = {Color.RED, Color.BLUE, Color.GREEN, Color.PINK, Color.ORANGE};
+        Vector2D[] randomPos = {new Vector2D(2,2),new Vector2D(400,700), new Vector2D(120,240), new Vector2D(50,70)};
+
+        /* add client players */
+        for (int idx = 0; idx < (numOfClients); idx++) {
+            SSPlayers[idx] = new ServerSidePlayer(pkg.playerNames[idx],randomColor[idx],idx,randomPos[idx]);
+        }
+        /* add server player */
+        SSPlayers[numOfClients] =new ServerSidePlayer(pkg.playerNames[numOfClients],
+                                                      randomColor[numOfClients],
+                                                      numOfClients,
+                                                      randomPos[numOfClients]);
+
+        //game = new Game(numOfClients+1, ,SSPlayers);
 
     }
 
@@ -178,7 +194,7 @@ public class Server extends Client{
                 ObjOutStreams[clientId].writeUTF("Provide control input pls");
                 ObjOutStreams[clientId].flush();
 
-                //TODO megcsinalni hogy a thread a tenyleges valtozot allitsa
+                //TODO megcsinalni hogy a thread a tenyleges valtozot allitsa be
                 ControlState dummy;
                 dummy = (ControlState)ObjInStreams[clientId].readObject();
             } catch (IOException e) {
@@ -201,8 +217,12 @@ public class Server extends Client{
         public void run() {
 
             try {
-                //TODO megcsinalni hogy a tenyleges adatot kuldje
+                //TODO megcsinalni hogy a tenyleges adatot kuldje,
+                //----------------------------***************************--------------
                 PackageS2C dummyForClient = new PackageS2C(4);
+                dummyForClient.Scores[0] = board.getCurrentRound();
+                //---------------------------*****------------------------------
+
                 ObjOutStreams[clientId].writeObject(dummyForClient);
             } catch (IOException e) {
                 System.out.println("IOException from SendPoints runnable #" + clientId);

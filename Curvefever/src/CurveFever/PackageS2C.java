@@ -10,7 +10,4 @@ public class PackageS2C implements java.io.Serializable{
         CurvePoints = new CurvePoint[numOfPlayers];
         Scores = new double[numOfPlayers];
     }
-
-    //TODO ide jo ha public minden, es nincs setter meg getter vagy ilyet nem illik?
-
 }
