@@ -11,17 +11,15 @@ public class ServerSidePlayer extends Player{
 
     private Vector2D position;
     private Vector2D speed;
-    private String ipAddress; //TODO delete ipAddress
     private Color playerColor;
     private boolean isAlive;
-    private int score;   /* TODO change score type to int*/
+    private int score;
 
     public ServerSidePlayer(String name, int pId) {
         super(name,pId);
 
         this.position.setCoordinates(0 ,0);
         this.speed.setCoordinates(0,0);
-        this.ipAddress = ipAddress;
         this.playerColor = Color.RED;
         this.isAlive = true;
         this.score = 0;
@@ -39,10 +37,6 @@ public class ServerSidePlayer extends Player{
 
     public void setSpeed(Vector2D speed) {
         this.speed = speed;
-    }
-
-    public void setIpAddress(String ipAddr) {
-        this.ipAddress = ipAddr;
     }
 
     public void setPlayerColor(Color color) {
@@ -63,10 +57,6 @@ public class ServerSidePlayer extends Player{
 
     public Vector2D getSpeed() {
         return speed;
-    }
-
-    public String getIpAddress() {
-        return ipAddress;
     }
 
     public Color getPlayerColor() {
