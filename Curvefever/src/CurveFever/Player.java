@@ -39,6 +39,10 @@ public class Player {
         return controlState;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void getInput() {
 
     }

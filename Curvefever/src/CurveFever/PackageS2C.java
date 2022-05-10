@@ -1,6 +1,6 @@
 package CurveFever;
 
-public class PackageS2C {
+public class PackageS2C implements java.io.Serializable{
     public CurvePoint[] CurvePoints;
     public int currentRound;
     public GameState gameState;

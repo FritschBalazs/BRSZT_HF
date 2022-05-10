@@ -1,7 +1,10 @@
 package CurveFever;
 
 public class Main {
+
+    /* ez csak random cucc nyugodtan torold */
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        Client myClient = new Client("localhost","en",false);
+        myClient.receiveFromServer();
     }
 }

@@ -12,7 +12,7 @@ public class Game {
         this.roundNum = 3;
         this.playerNum = 3;
         this.currentRound = 0;
-        this.mainBoard = new Board(100, 100, this.playerNum);
+        //this.mainBoard = new Board(100, 100, this.playerNum);
         for (int i = 0; i < this.playerNum; i++) {
             this.Players[i] = Players[i];
         }
@@ -34,7 +34,7 @@ public class Game {
         }
 
 
-        this.mainBoard = new Board(100, 100, playerNum);
+        //this.mainBoard = new Board(100, 100, playerNum);
 
     }
 

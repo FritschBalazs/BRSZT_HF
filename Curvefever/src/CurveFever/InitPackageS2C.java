@@ -1,6 +1,6 @@
 package CurveFever;
 
-public class InitPackageS2C extends  PackageS2C{
+public class InitPackageS2C extends PackageS2C implements java.io.Serializable{
     public int playerID;
     public String[] playerNames;
     public int numOfRounds;

@@ -20,10 +20,18 @@ public class Server extends Client{
 
     //private int port;
 
-    public Server(int numOfPlayers, String playerName) {
+    public Server(int numOfPlayers,int numOfRounds, String playerName) {
         super("", playerName, true);
 
+        board = new Board( numOfPlayers, numOfRounds, null);
         numOfClients = numOfPlayers - 1;
+        Sockets = new Socket[numOfClients];
+        ObjInStreams = new ObjectInputStream[numOfClients];
+        ObjOutStreams = new ObjectOutputStream[numOfClients];
+        GCRunnables = new GetControl[numOfClients];
+        SPRunnables = new SendPoints[numOfClients];
+
+
         //this.port = port;
 
         try {
@@ -34,9 +42,6 @@ public class Server extends Client{
         System.out.println("----- Server created -----");
     }
 
-    public void setClientIpAddresses(String[] addresses) {
-        this.ClientIpAddresses = addresses;
-    }
 
     //not sure if this is needed, or correct
     public void setGame(Game game) {
@@ -51,15 +56,6 @@ public class Server extends Client{
         return game;
     }
 
-    public String[] getClientIpAddresses(){
-        return ClientIpAddresses;
-    }
-
-
-    public String getAClientIpAddress(int n){
-        return ClientIpAddresses[n];
-    }
-
     public int getPort() {
         return port;
     }
@@ -68,7 +64,7 @@ public class Server extends Client{
     {
         int numOfPlayer = 0;
 
-        System.out.println("Waiting for connections.... (1/"+(numOfClients+1)+")";
+        System.out.println("Waiting for connections.... (1/"+(numOfClients+1)+")");
         try {
             while (numOfPlayer < numOfClients) {
                 /* accept new connection */
@@ -83,9 +79,9 @@ public class Server extends Client{
 
                 /* increment player number */
                 numOfPlayer++;
-                System.out.println("New player connected. "  + numOfPlayer+ "/" + (numOfClients+1)) ;
+                System.out.println("New player connected. "  + (numOfPlayer+1)+ "/" + (numOfClients+1)) ;
             }
-            System.out.println("All " + numOfClients + 1 + " players connected");
+            System.out.println("All " + (numOfClients + 1) + " players connected");
         } catch (IOException ex) {
             System.out.println("IOException from acceptConnections()");
         }
@@ -94,12 +90,54 @@ public class Server extends Client{
 
     public void setupGame(){
         //TODO blokkolva elküldi a dolgokat.
+
+
+        /* Create init package */
+        InitPackageS2C pkg = new InitPackageS2C(numOfClients+1);
+        pkg.currentRound = 0;
+        pkg.gameState = GameState.MENU; //TODO ez igy ok Marci/Dani?
+        pkg.CurvePoints = null;
+        pkg.numOfRounds = board.getRoundNum();
+
+
+        /* get all the player names */
+        for (int i = 0; i < numOfClients; i++) {
+            try {
+                /* send request */
+                ObjOutStreams[i].writeUTF("Please send player name!");
+                ObjOutStreams[i].flush();
+
+                /* wait for response */
+                pkg.playerNames[i] =  ObjInStreams[i].readUTF();
+            } catch (IOException e) {
+               System.out.println("IOException from setupGame, while requesting names");
+            }
+        }
+
+
+        /* send out init packages for all players */
+        for (int i = 0; i < numOfClients; i++) {
+            /* update package */
+            pkg.Scores[i] = 0;
+            pkg.playerID = i;
+
+            /* send package */
+            try {
+                /* send package */
+                ObjOutStreams[i].writeObject(pkg);
+                ObjOutStreams[i].flush();
+
+            } catch (IOException e) {
+                System.out.println("IOException from setupGame, while sending init packages");
+            }
+        }
+
     }
 
 
-    public void sendToClient(boolean InitPackage) {
+    //public void sendToClient(boolean InitPackage) {
         /* if the connection got closed, or it has never been started */
-        if (socket == null || socket.isClosed() ) {
+      /*  if (socket == null || socket.isClosed() ) {
             establishConnection();
         }
 
@@ -110,7 +148,7 @@ public class Server extends Client{
             System.out.println("IOexception while trying to send");
         }
 
-    }
+    }*/
 
     public void requestInputs() {
 

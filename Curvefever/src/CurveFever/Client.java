@@ -6,9 +6,9 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class Client{
-    private Player player;
-    private Board board;
-    private boolean isGameHost;
+    protected Player player;
+    protected Board board;
+    protected boolean isGameHost; //TODO ezt torolni, csak nem akarok tul sok merge conflict-ot
     private String serverIp;
 
     private Socket socket;
@@ -63,6 +63,40 @@ public class Client{
 
     public void updateBoard() {
 
+    }
+
+    public void sendToServerInit(){
+
+        /* if the connection got closed, or it has never been started */
+        if (socket == null || socket.isClosed() ) {
+            establishConnection();
+        }
+
+        try {
+            /* wait for signal */
+            String msg = objIStream.readUTF();
+            System.out.println("Message from server: "+msg);
+
+            /* Send player name */
+            objOStream.writeUTF(player.getName());
+            objOStream.flush();
+
+            /* Wait for init package */
+            InitPackageS2C pkg;
+            pkg = (InitPackageS2C) objIStream.readObject();
+
+            /* save init data */
+            player.setId(pkg.playerID);
+            player.setName(pkg.playerNames[pkg.playerID]);
+
+            /* create the board */
+            board = new Board(pkg);
+
+        } catch (IOException e) {
+            System.out.println("IOException from sendToServerInit");
+        } catch (ClassNotFoundException e) {
+            System.out.println("ClassNotFoundException from sendToServerInit");
+        }
     }
 
     public void sendToServer() {
@@ -141,6 +175,6 @@ public class Client{
             System.out.println("IOException when trying to connect");
         }
 
-        System.out.println("Connected to server successful");
+        System.out.println("Connection to server complete");
     }
 }
