@@ -1,7 +1,7 @@
 package CurveFever;
 
 public class Vector2D {
-    private double x,y;  //TODO ha ezt baszogatni akarjuk CurevPointba akkor protected-nek kell lennie
+    protected double x,y;
 
     public Vector2D() {
         this.x = 0;

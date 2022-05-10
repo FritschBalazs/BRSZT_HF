@@ -1,15 +1,18 @@
 package CurveFever;
 
+import java.util.ArrayList;
+
 public class Board {
     private int width, height;
-    private Curve[] Curves;
+    private ArrayList<CurvePoint>[] Curves;   //We didn't implement the Curve class, instead we've used this approach.
+                                              // array lists: https://www.w3schools.com/java/java_arraylist.asp
     private double[] Points;
     private int currentRound;
 
     public Board(int w, int h, int numOfPlayers) {
         width = w;
         height = h;
-        Curves = new Curve[numOfPlayers];
+        Curves = new ArrayList[numOfPlayers];
         Points = new double[numOfPlayers];
         currentRound = 0;
     }
@@ -19,7 +22,7 @@ public class Board {
         height = h;
     }
 
-    public void setCurves(Curve[] C) {
+    public void setCurves(ArrayList[] C) {
         Curves = C;
     }
 
@@ -39,7 +42,7 @@ public class Board {
         return height;
     }
 
-    public Curve[] getCurves() {
+    public ArrayList<CurvePoint>[] getCurves() {
         return Curves;
     }
 

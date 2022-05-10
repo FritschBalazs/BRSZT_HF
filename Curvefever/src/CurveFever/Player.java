@@ -1,10 +1,9 @@
 package CurveFever;
 
 public class Player {
-    private int id;
-    private ControlState controlState;
-    private String name;
-    // TODO ide protected, hogy ServerSide lassa?
+    protected int id;
+    protected ControlState controlState;
+    protected String name;
     // note, ide nem kell color, mert sajat maganak folosleges tudni, a tablan ugyis rajta lesz hogy milyet rajzoljon
     // ki
 
