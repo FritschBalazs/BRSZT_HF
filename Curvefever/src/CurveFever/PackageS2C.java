@@ -1,6 +1,6 @@
 package CurveFever;
 
-public class PackageS2C {
+public class PackageS2C implements java.io.Serializable{
     public CurvePoint[] CurvePoints;
     public int currentRound;
     public GameState gameState;
@@ -10,7 +10,4 @@ public class PackageS2C {
         CurvePoints = new CurvePoint[numOfPlayers];
         Scores = new double[numOfPlayers];
     }
-
-    //TODO ide jo ha public minden, es nincs setter meg getter vagy ilyet nem illik?
-
 }

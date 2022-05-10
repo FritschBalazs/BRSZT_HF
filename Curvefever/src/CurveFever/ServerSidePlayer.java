@@ -11,12 +11,12 @@ public class ServerSidePlayer extends Player{
 
     private Vector2D position;
     private Vector2D speed;
-    private String ipAddress;
+    private String ipAddress; //TODO delete ipAddress
     private Color playerColor;
     private boolean isAlive;
     private int score;   /* TODO change score type to int*/
 
-    public ServerSidePlayer(String name, String ipAddress, Color pColor, int pId, Vector2D startingPos) {
+    public ServerSidePlayer(String name, Color pColor, int pId, Vector2D startingPos) {
         super(name,pId);
 
         this.position = startingPos;

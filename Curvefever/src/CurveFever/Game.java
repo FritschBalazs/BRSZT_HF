@@ -22,7 +22,7 @@ public class Game {
         this.roundNum = 3;
         this.playerNum = 3;
         this.currentRound = 0;
-        this.mainBoard = new Board(100, 100, this.playerNum);
+        //this.mainBoard = new Board(100, 100, this.playerNum);
         this.Players = Players.clone();
         this.gameState = GameState.MENU;
 
@@ -41,7 +41,7 @@ public class Game {
 
         this.currentRound = 0;
         this.Players = Players.clone();
-        this.mainBoard = new Board(100, 100, playerNum);
+        //this.mainBoard = new Board(100, 100, playerNum);
         this.gameState = GameState.MENU;
     }
 
