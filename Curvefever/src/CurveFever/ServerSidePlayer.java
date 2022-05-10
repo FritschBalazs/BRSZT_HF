@@ -69,7 +69,7 @@ public class ServerSidePlayer extends Player{
     }
 
     public  Vector2D move(){
-
+        return null;
     }
 
 }
