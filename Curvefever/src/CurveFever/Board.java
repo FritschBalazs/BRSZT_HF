@@ -12,6 +12,14 @@ public class Board {
     private int roundNum;
     private String[] PlayerNames;
 
+    public Board(int numOfPlayers, int numOfRounds) {
+        this.Curves = new ArrayList[numOfPlayers];
+        this.Points = new int[numOfPlayers];
+        this.currentRound = 0;
+        this.roundNum = numOfRounds;
+        this.PlayerNames = new String[numOfPlayers];
+    }
+
     public Board(int numOfPlayers, int numOfRounds, String[] playerNames ) {
         this.Curves = new ArrayList[numOfPlayers];
         this.Points = new int[numOfPlayers];
