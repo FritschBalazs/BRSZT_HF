@@ -1,5 +1,7 @@
 package CurveFever;
 
+import javax.swing.*;
+
 public class Menu {
     private Client client;
     private Server server; //only one Server or one Client will be used
@@ -26,6 +28,8 @@ public class Menu {
     public String getPlayerName() {return playerName;}
     public int getNumOfPlayers() {return numOfPlayers;}
     public int getNumOfRounds() {return numOfRounds;}
+
+
 
 
     public void createGame(){

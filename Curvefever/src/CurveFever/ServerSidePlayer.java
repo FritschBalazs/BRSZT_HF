@@ -1,5 +1,7 @@
 package CurveFever;
 
+import java.awt.*;
+
 import static java.lang.Math.*;
 import static java.lang.Math.toRadians;
 
