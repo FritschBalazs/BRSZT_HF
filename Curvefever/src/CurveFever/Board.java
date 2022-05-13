@@ -22,9 +22,14 @@ public class Board extends JPanel {
     private int roundNum;
     private String[] PlayerNames;
 
-    public Board(int numOfPlayers, int numOfRounds, String[] playerNames) {//playernamest visszairni
-        this.Curves = new Curve[numOfPlayers];
-        this.Points = new double[numOfPlayers];
+    public Board(int numOfPlayers, int numOfRounds) {
+        this.Curves = new ArrayList[numOfPlayers];
+        this.Points = new int[numOfPlayers];
+        this.currentRound = 0;
+        this.roundNum = numOfRounds;
+        this.PlayerNames = new String[numOfPlayers];
+    }
+
         this.currentRound = 0;
         this.roundNum = numOfRounds;
         this.PlayerNames = playerNames.clone();

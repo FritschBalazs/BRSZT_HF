@@ -1,14 +1,18 @@
 package CurveFever;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import javax.swing.Timer;
 
 public class Server extends Client{
 
     private Game game;
+    private Timer gameTimer;
     private int numOfClients;   //NOT the number of players!!!!!!!!
     private ServerSocket ss;
     private Socket[] Sockets;
@@ -16,23 +20,29 @@ public class Server extends Client{
     private ObjectInputStream[]  ObjInStreams;
     private GetControl[] GCRunnables;
     private SendPoints[] SPRunnables;
+    private Thread[] GCThreads;
+    private Thread[] SPThreads;
 
+    private ControlState[] ContorlStates;
 
-    //private int port;
+    private static final int timerInterval = 1000;
+
 
     public Server(int numOfPlayers,int numOfRounds, String playerName) {
         super("", playerName, true);
 
-        board = new Board( numOfPlayers, numOfRounds, null);
+        board = new Board( numOfPlayers, numOfRounds);
         numOfClients = numOfPlayers - 1;
         Sockets = new Socket[numOfClients];
         ObjInStreams = new ObjectInputStream[numOfClients];
         ObjOutStreams = new ObjectOutputStream[numOfClients];
         GCRunnables = new GetControl[numOfClients];
         SPRunnables = new SendPoints[numOfClients];
+        GCThreads = new Thread[numOfClients];
+        SPThreads = new Thread[numOfClients];
 
+        ContorlStates = new ControlState[numOfPlayers];
 
-        //this.port = port;
 
         try {
             ss = new ServerSocket(port);
@@ -42,15 +52,10 @@ public class Server extends Client{
         System.out.println("----- Server created -----");
     }
 
-
     //not sure if this is needed, or correct
     public void setGame(Game game) {
         this.game = game;
     }
-
-    /*public void setPort (int port) {
-        this.port = port;
-    }*/
 
     public Game getGame() {
         return game;
@@ -110,6 +115,9 @@ public class Server extends Client{
             } catch (IOException e) {
                System.out.println("IOException from setupGame, while requesting names");
             }
+
+            /* add the local player's name */
+            pkg.playerNames[numOfClients] = this.player.getName();
         }
 
 
@@ -130,41 +138,87 @@ public class Server extends Client{
             }
         }
 
+
         ServerSidePlayer[] SSPlayers= new ServerSidePlayer[numOfClients+1];
 
-
-        /* add client players */
-        for (int idx = 0; idx < (numOfClients); idx++) {
+        /* add client players, and local player */
+        for (int idx = 0; idx < (numOfClients+1); idx++) {
             SSPlayers[idx] = new ServerSidePlayer(pkg.playerNames[idx],idx);
         }
-        /* add server player */
-        SSPlayers[numOfClients] = new ServerSidePlayer(pkg.playerNames[numOfClients],numOfClients);
 
         game = new Game(numOfClients+1, pkg.numOfRounds, SSPlayers);
+        //TODO init game
 
+        /*setup timer*/
+        setUpTimer();
+
+        /* start timer */
+        gameTimer.start();
     }
 
 
-    //public void sendToClient(boolean InitPackage) {
-        /* if the connection got closed, or it has never been started */
-      /*  if (socket == null || socket.isClosed() ) {
-            establishConnection();
+    public void setUpTimer() {
+
+        ActionListener al = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                /* call server.run(), the main function */
+                runServer();
+            }
+        };
+        gameTimer = new Timer(timerInterval,al);
+    }
+
+
+
+
+    public void sendToClient() {
+
+        /* create and start data sending threads */
+        for (int idx = 0; idx < numOfClients; idx++) {
+            SPThreads[idx] = new Thread(SPRunnables [idx]);
+            SPThreads[idx].start();
         }
 
-        try {
-            objOStream.writeObject(player.getControlState());
-            objOStream.flush();
-        } catch (IOException e) {
-            System.out.println("IOexception while trying to send");
+        /* wait for them to finnish */
+        for (int idx = 0; idx < numOfClients; idx++) {
+            try {
+                SPThreads[idx].join();
+            } catch (InterruptedException e) {
+                System.out.println("InterruptedException when waiting for SPThread #"+idx+" to die");
+            }
         }
 
-    }*/
+    }
 
     public void requestInputs() {
+        /* Create and start threads, to get input of clients */
+        for (int idx = 0; idx < numOfClients; idx++) {
+            GCThreads[idx] = new Thread(GCRunnables[idx]);
+            GCThreads[idx].start();
+        }
+
+        /* wait for all thread to finnish */
+        for (int idx = 0; idx < numOfClients; idx++) {
+            try {
+                GCThreads[idx].join();
+            } catch (InterruptedException e) {
+                System.out.println("InterruptedException from GCThread #"+idx);
+            }
+        }
+
+        /* get the local player's input */
+        ContorlStates[numOfClients] = player.getControlState();
 
     }
 
-    public void run() {
+    public void runServer() {
+        requestInputs();
+        // TODO call game main function
+        board.setCurrentRound(board.getCurrentRound()+1);
+        System.out.println("Current round  = " + board.getCurrentRound());
+
+        sendToClient();
 
     }
 
@@ -181,14 +235,12 @@ public class Server extends Client{
         public void run() {
 
             try {
-
                 /* send out a request */
                 ObjOutStreams[clientId].writeUTF("Provide control input pls");
                 ObjOutStreams[clientId].flush();
 
-                //TODO megcsinalni hogy a thread a tenyleges valtozot allitsa be
-                ControlState dummy;
-                dummy = (ControlState)ObjInStreams[clientId].readObject();
+                /* wait for the client to reply */
+                ContorlStates[clientId] = (ControlState)ObjInStreams[clientId].readObject();
             } catch (IOException e) {
                 System.out.println("IOException from getControl runnable #" + clientId);
             } catch (ClassNotFoundException e) {
@@ -212,7 +264,7 @@ public class Server extends Client{
                 //TODO megcsinalni hogy a tenyleges adatot kuldje,
                 //----------------------------***************************--------------
                 PackageS2C dummyForClient = new PackageS2C(4);
-                dummyForClient.Scores[0] = board.getCurrentRound();
+                dummyForClient.currentRound = board.getCurrentRound();
                 //---------------------------*****------------------------------
 
                 ObjOutStreams[clientId].writeObject(dummyForClient);

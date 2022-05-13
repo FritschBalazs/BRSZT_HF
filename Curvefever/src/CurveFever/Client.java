@@ -107,12 +107,21 @@ public class Client{
             establishConnection();
         }
 
+        /* wait for server to request input */
+        try {
+            objIStream.readUTF();
+        } catch (IOException e) {
+            System.out.println("IOException when waiting for server to request input");
+        }
+
+        /* send controlState to server */
         try {
             objOStream.writeObject(player.getControlState());
             objOStream.flush();
         } catch (IOException e) {
             System.out.println("IOexception while trying to send");
         }
+        System.out.println("Contorl state sent to server.");
 
     }
 
@@ -124,6 +133,7 @@ public class Client{
 
         try {
             PackageS2C message  = (PackageS2C) objIStream.readObject();
+            System.out.println("Game data pacakge received from server No."+message.currentRound);
             return message;
         } catch (IOException e) {
             System.out.println("IOexception while trying to receive");
@@ -132,6 +142,7 @@ public class Client{
         }
 
         //TODO feldolgozni a kapott package-et
+
 
 
         /* if we get to here that's an error */

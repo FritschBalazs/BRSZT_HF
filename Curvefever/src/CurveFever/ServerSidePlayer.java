@@ -20,8 +20,8 @@ public class ServerSidePlayer extends Player{
     public ServerSidePlayer(String name, int pId) {
         super(name,pId);
 
-        this.position.setCoordinates(0 ,0);
-        this.speed.setCoordinates(0,0);
+        this.position = new Vector2D(0,0);
+        this.speed = new Vector2D(0,0);
         this.playerColor = Color.RED;
         this.isAlive = true;
         this.score = 0;
