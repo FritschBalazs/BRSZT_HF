@@ -5,31 +5,6 @@ import java.awt.*;
 import java.util.Random;
 
 public class Main {
-    private static void initWindow() {
-        // create a window frame and set the title in the toolbar
-        JFrame window = new JFrame("Kurve Fívör");
-        // when we close the window, stop the app
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-
-        // create the jpanel to draw on.
-        // this also initializes the game loop
-        Board board = new Board(3,5,new String[]{"Hanti", "Dani", "Frici"});
-        // add the jpanel to the window
-        window.add(board);
-        // pass keyboard inputs to the jpanel
-        //window.addKeyListener(board);
-
-        // don't allow the user to resize the window
-        window.setResizable(false);
-        // fit the window size around the components (just our jpanel).
-        // pack() should be called after setResizable() to avoid issues on some platforms
-        window.pack();
-        // open window in the center of the screen
-        window.setLocationRelativeTo(null);
-        // display the window
-        window.setVisible(true);
-    }
 
     private static final Color BLACK = new Color(0,0,0);
     private static final Color PINK = new Color(255,105,180);
@@ -67,10 +42,12 @@ public class Main {
         Board board = new Board(4,5,new String[]{"Hanti"});
         window.add(board); // add the jpanel to the window
         window.setResizable(false); // don't allow the user to resize the window
+        ImageIcon logo = new ImageIcon("src/curvefeverlogo.jpg");
+        window.setIconImage(logo.getImage());
         window.pack(); // fit the window size around the components (just our jpanel).
         window.setLocationRelativeTo(null); // open window in the center of the screen
-        window.setVisible(true); // display the window
         board.setCurves(new Curve[]{curve, curve1, curve2, curve3}); //setting the random curves
         board.repaint(); //repainting the board
+        window.setVisible(true); // display the window
     }
 }
