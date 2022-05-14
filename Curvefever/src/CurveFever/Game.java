@@ -7,7 +7,7 @@ import java.util.Collections;
 import static java.lang.Math.*;
 
 public class Game {
-    enum circlePart{
+    private enum circlePart{
         UPPER_RIGHT,
         LOWER_RIGHT,
         LOWER_LEFT,
@@ -20,6 +20,9 @@ public class Game {
         TOP_RIGHT,
         BOTTOM_RIGHT
     }
+    private static final java.awt.Color[] PlayerColors = {
+        Color.RED, Color.ORANGE, Color.PINK, Color.GREEN, Color.YELLOW, Color.BLUE, Color.CYAN};
+    private static final double R = 10.0;
     public static final int MAX_PLAYERS = 4;
     public static final int MIN_PLAYERS = 2;
     public static final int MAX_ROUNDS = 10;
@@ -27,7 +30,7 @@ public class Game {
     public static final int SCORE_PER_SECOND = 50;
     public static final int SYSTEM_TICK = 10;
     public static final double SCORE_PER_TICK = (double)SCORE_PER_SECOND / (double)SYSTEM_TICK;
-
+    
     private int playerNum;
     private ServerSidePlayer[] Players;
     private int roundNum;
@@ -35,6 +38,9 @@ public class Game {
     private Board mainBoard;
     private GameState gameState;
 
+    //------------------------------------------------------------
+    //--------- Constructors, getters, setters -------------------
+    //------------------------------------------------------------
     public Game(ServerSidePlayer[] Players) {
         this.roundNum = 3;
         this.playerNum = 3;
@@ -55,12 +61,12 @@ public class Game {
         if (roundNum >= MIN_ROUNDS && roundNum < MAX_ROUNDS)
             this.roundNum = roundNum;
         else
-            this.roundNum = 3;  // TODO Add error handling
+            this.roundNum = 3;
 
         if (Players.length <= MAX_PLAYERS && Players.length >= MIN_PLAYERS)
             this.playerNum = Players.length;
         else
-            this.playerNum = 2;/*TODO error handling*/
+            this.playerNum = 2;
 
         this.currentRound = 0;
         this.Players = Players.clone();
@@ -94,34 +100,9 @@ public class Game {
         return this.mainBoard;
     }
 
-    public void updatePositions(ControlState[] Controls) {
-        for (int i = 0; i < Players.length; i++){
-            Players[i].setControlState(Controls[i]);
-            if (Players[i].getIsAlive())
-                Players[i].move();
-        }
-    }
-
-    public boolean[] detectCollisions() {
-        boolean[] collisionDetected = new boolean[Players.length];
-        for (int i = 0; i < Players.length; i++) {   // No collisions at the beginning
-            collisionDetected[i] = false;
-        }
-        /* TODO Detect collision part of the method*/
-        return collisionDetected;
-    }
-    public void evaluateStep(ControlState[] Controls) {
-        boolean[] collisions = detectCollisions();
-        for (int i = 0; i < Players.length; i++) {
-            if (collisions[i]) {
-                Players[i].setAlive(false);
-            }
-            if (Players[i].getIsAlive()){
-                Players[i].updateScore(SCORE_PER_TICK);
-            }
-        }
-        updatePositions(Controls);
-    }
+    //------------------------------------------------------------
+    //--------- Math for game logic methods ----------------------
+    //------------------------------------------------------------
 
     private double adjustDegree(double deg, circlePart cp){
         double angle = 0;   // Temporary
@@ -174,15 +155,18 @@ public class Game {
 
                 return angle;
             }
+            default -> {
+                return angle;
+            }
         }
-        return angle;   // TODO fix
     }
 
     public Vector2D generateRandomPosition(playerPositions playerPosition){
         double theta;
         double R = 3;
         double r;
-        double x, y;
+        double xTemp, yTemp;
+        double x = 0, y = 0;
 
         r = R * Math.sqrt(random());    // https://stackoverflow.com/questions/5837572/generate-a-random-point-within-a-circle-uniformly
         theta = random() * 2 * Math.PI;
@@ -193,43 +177,103 @@ public class Game {
             case TOP_RIGHT -> theta = adjustDegree(theta, circlePart.LOWER_LEFT);
             case BOTTOM_RIGHT -> theta = adjustDegree(theta, circlePart.UPPER_LEFT);
         }
-        x = r * cos(toRadians(theta));
-        y = r * sin(toRadians(theta));
+        xTemp = r * cos(toRadians(theta));
+        yTemp = r * sin(toRadians(theta));
+        switch (playerPosition) {
+            case BOTTOM_LEFT -> {
+                x = xTemp;
+                y = yTemp + mainBoard.getHeight();
+            }
+            case TOP_LEFT -> {
+                x = xTemp;
+                y = yTemp;
+            }
+            case TOP_RIGHT -> {
+                x = xTemp + mainBoard.getWidth();
+                y = yTemp;
+            }
+            case BOTTOM_RIGHT -> {
+                x = xTemp + mainBoard.getWidth();
+                y = yTemp + mainBoard.getHeight();
+            }
+        }
         Vector2D pos = new Vector2D(x,y);
         return pos;
     }
 
-    /*public void initBoard(){
-        switch(this.playerNum){
-            case 3: {
-                r = R * Math.sqrt(random());    // https://stackoverflow.com/questions/5837572/generate-a-random-point-within-a-circle-uniformly
-                theta = random() * 2 * Math.PI;
-                for (int i = 0; i < 3; i++) {
 
-                }
+    public void updatePositions(ControlState[] Controls) {
+        for (int i = 0; i < Players.length; i++){
+            Players[i].setControlState(Controls[i]);
+            if (Players[i].getIsAlive())
+                Players[i].move();
+        }
+    }
+
+    public boolean[] detectCollisions() {
+        boolean[] collisionDetected = new boolean[Players.length];
+        for (int i = 0; i < Players.length; i++) {   // No collisions at the beginning
+            collisionDetected[i] = false;
+        }
+        /* TODO Detect collision part of the method*/
+        return collisionDetected;
+    }
+    public void evaluateStep(ControlState[] Controls) {
+        boolean[] collisions = detectCollisions();
+        for (int i = 0; i < Players.length; i++) {
+            if (collisions[i]) {
+                Players[i].setAlive(false);
+            }
+            if (Players[i].getIsAlive()){
+                Players[i].updateScore(SCORE_PER_TICK);
+            }
+        }
+        updatePositions(Controls);
+    }
+
+
+    public void initPositions(){
+        ArrayList<Vector2D> StartingPositions = new ArrayList<>();
+        switch(this.playerNum){
+            case 2:{
+                StartingPositions.set(0, generateRandomPosition(playerPositions.TOP_LEFT));
+                StartingPositions.set(1, generateRandomPosition(playerPositions.BOTTOM_RIGHT));
+            }
+            case 3: {
+                StartingPositions.set(0, generateRandomPosition(playerPositions.TOP_LEFT));
+                StartingPositions.set(0, generateRandomPosition(playerPositions.TOP_RIGHT));
+                StartingPositions.set(0, generateRandomPosition(playerPositions.BOTTOM_LEFT));
             }
             case 4: {
-
-            }
-            default: {
-
+                StartingPositions.set(0, generateRandomPosition(playerPositions.TOP_LEFT));
+                StartingPositions.set(0, generateRandomPosition(playerPositions.TOP_RIGHT));
+                StartingPositions.set(0, generateRandomPosition(playerPositions.BOTTOM_LEFT));
+                StartingPositions.set(0, generateRandomPosition(playerPositions.BOTTOM_RIGHT));
             }
         }
-    }*/
+        // Randomize starting positions between players
+        Collections.shuffle(StartingPositions);
+        for (int i = 0; i < Players.length; i++) {
+            Players[i].setPosition(StartingPositions.get(i));
+        }
+    }
 
+    public void initBoard() {
 
-    /*public void initColors(){
+    }
+
+    public void initColors(){
         // Create a randomized list from the colors
-        ArrayList<Color> colors = new ArrayList<Color>();
-        for (int i = 0; i < Color.values().length; i++) {
-            colors.set(i, Color.values()[i]);
+        ArrayList<Color> Colors = new ArrayList<>();
+        for (int i = 0; i < this.PlayerColors.length; i++) {
+            Colors.set(i, PlayerColors[i]);
         }
-        Collections.shuffle(colors);
+        Collections.shuffle(Colors);
         // Assign the random color values to the players
         for (int i = 0; i < this.Players.length; i++) {
-            this.Players[i].setPlayerColor(colors.get(i));
+            this.Players[i].setPlayerColor(Colors.get(i));
         }
-    }*/
+    }
 
     // Given three collinear points p, q, r, the function checks if
     // point q lies on line segment 'pr'
