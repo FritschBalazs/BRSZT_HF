@@ -116,6 +116,18 @@ public class Board extends JPanel {
         return PlayerNames.clone();
     }
 
+    public void setCurveColors(Color[] colors) {
+        for (int i = 0; i < Curves.length; i++) {
+            Curves[i].setColor(colors[i]);
+        }
+    }
+
+    public void addCurvePoints(CurvePoint[] newPositions) {
+        for (int i = 0; i < Curves.length; i++) {
+            Curves[i].addPoint(newPositions[i]);
+        }
+    }
+
     public void receiveFromPackageS2C(double[] scores, int currentRound, CurvePoint[] positions) {
         this.currentRound = currentRound;
         for (int i= 0; i < Points.length; i = i +1) {

@@ -38,9 +38,11 @@ public class Game {
     private Board mainBoard;
     private GameState gameState;
 
-    //------------------------------------------------------------
-    //--------- Constructors, getters, setters -------------------
-    //------------------------------------------------------------
+    /*
+    ------------------------------------------------------------
+    --------- Constructors, getters, setters -------------------
+    ------------------------------------------------------------
+    */
     public Game(ServerSidePlayer[] Players) {
         this.roundNum = 3;
         this.playerNum = 3;
@@ -100,9 +102,11 @@ public class Game {
         return this.mainBoard;
     }
 
-    //------------------------------------------------------------
-    //--------- Math for game logic methods ----------------------
-    //------------------------------------------------------------
+    /*
+    ------------------------------------------------------------
+    ------------ Math for game logic and init ------------------
+    ------------------------------------------------------------
+    */
 
     private double adjustDegree(double deg, circlePart cp){
         double angle = 0;   // Temporary
@@ -163,7 +167,6 @@ public class Game {
 
     public Vector2D generateRandomPosition(playerPositions playerPosition){
         double theta;
-        double R = 3;
         double r;
         double xTemp, yTemp;
         double x = 0, y = 0;
@@ -201,6 +204,77 @@ public class Game {
         return pos;
     }
 
+    /*
+    ------------------------------------------------------------
+    -------------- Initialization methods ----------------------
+    ------------------------------------------------------------
+    */
+
+    private void initPositions(){
+        ArrayList<Vector2D> StartingPositions = new ArrayList<>();
+        switch(this.playerNum){
+            case 2:{
+                StartingPositions.set(0, generateRandomPosition(playerPositions.TOP_LEFT));
+                StartingPositions.set(1, generateRandomPosition(playerPositions.BOTTOM_RIGHT));
+            }
+            case 3: {
+                StartingPositions.set(0, generateRandomPosition(playerPositions.TOP_LEFT));
+                StartingPositions.set(0, generateRandomPosition(playerPositions.TOP_RIGHT));
+                StartingPositions.set(0, generateRandomPosition(playerPositions.BOTTOM_LEFT));
+            }
+            case 4: {
+                StartingPositions.set(0, generateRandomPosition(playerPositions.TOP_LEFT));
+                StartingPositions.set(0, generateRandomPosition(playerPositions.TOP_RIGHT));
+                StartingPositions.set(0, generateRandomPosition(playerPositions.BOTTOM_LEFT));
+                StartingPositions.set(0, generateRandomPosition(playerPositions.BOTTOM_RIGHT));
+            }
+        }
+        // Randomize starting positions between players
+        Collections.shuffle(StartingPositions);
+        for (int i = 0; i < Players.length; i++) {
+            Players[i].setPosition(StartingPositions.get(i));
+        }
+    }
+
+    private void initColors(){
+        // Create a randomized list from the colors
+        ArrayList<Color> Colors = new ArrayList<>();
+        for (int i = 0; i < this.PlayerColors.length; i++) {
+            Colors.set(i, PlayerColors[i]);
+        }
+        Collections.shuffle(Colors);
+        // Assign the random color values to the players
+        for (int i = 0; i < this.Players.length; i++) {
+            this.Players[i].setPlayerColor(Colors.get(i));
+        }
+    }
+
+    private void initBoard() {
+        Color[] initColors = new Color[Players.length];
+        CurvePoint[] initPoints = new CurvePoint[Players.length];
+        Vector2D[] initPositions = new Vector2D[Players.length];
+        for (int i = 0; i < Players.length; i++) {
+            initColors[i] = Players[i].getPlayerColor();
+            initPositions[i] = Players[i].getPosition();
+            initPoints[i].setIsColored(true);
+            initPoints[i].setCoordinates(initPositions[i].getX(), initPositions[i].getY());
+        }
+        mainBoard.addCurvePoints(initPoints);
+        mainBoard.setCurveColors(initColors);
+    }
+
+    public void initGame() {
+        initPositions();
+        initColors();
+        initBoard();
+    }
+
+
+    /*
+    ------------------------------------------------------------
+    -------------- Methods for game running --------------------
+    ------------------------------------------------------------
+    */
 
     public void updatePositions(ControlState[] Controls) {
         for (int i = 0; i < Players.length; i++){
@@ -232,48 +306,7 @@ public class Game {
     }
 
 
-    public void initPositions(){
-        ArrayList<Vector2D> StartingPositions = new ArrayList<>();
-        switch(this.playerNum){
-            case 2:{
-                StartingPositions.set(0, generateRandomPosition(playerPositions.TOP_LEFT));
-                StartingPositions.set(1, generateRandomPosition(playerPositions.BOTTOM_RIGHT));
-            }
-            case 3: {
-                StartingPositions.set(0, generateRandomPosition(playerPositions.TOP_LEFT));
-                StartingPositions.set(0, generateRandomPosition(playerPositions.TOP_RIGHT));
-                StartingPositions.set(0, generateRandomPosition(playerPositions.BOTTOM_LEFT));
-            }
-            case 4: {
-                StartingPositions.set(0, generateRandomPosition(playerPositions.TOP_LEFT));
-                StartingPositions.set(0, generateRandomPosition(playerPositions.TOP_RIGHT));
-                StartingPositions.set(0, generateRandomPosition(playerPositions.BOTTOM_LEFT));
-                StartingPositions.set(0, generateRandomPosition(playerPositions.BOTTOM_RIGHT));
-            }
-        }
-        // Randomize starting positions between players
-        Collections.shuffle(StartingPositions);
-        for (int i = 0; i < Players.length; i++) {
-            Players[i].setPosition(StartingPositions.get(i));
-        }
-    }
 
-    public void initBoard() {
-
-    }
-
-    public void initColors(){
-        // Create a randomized list from the colors
-        ArrayList<Color> Colors = new ArrayList<>();
-        for (int i = 0; i < this.PlayerColors.length; i++) {
-            Colors.set(i, PlayerColors[i]);
-        }
-        Collections.shuffle(Colors);
-        // Assign the random color values to the players
-        for (int i = 0; i < this.Players.length; i++) {
-            this.Players[i].setPlayerColor(Colors.get(i));
-        }
-    }
 
     // Given three collinear points p, q, r, the function checks if
     // point q lies on line segment 'pr'
