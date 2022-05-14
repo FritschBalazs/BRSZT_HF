@@ -1,5 +1,6 @@
 package CurveFever;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Game {
@@ -28,7 +29,7 @@ public class Game {
 
     }
 
-    public Game(int playerNum, int roundNum, ServerSidePlayer[] Players){
+    public Game(int playerNum, int roundNum, ServerSidePlayer[] Players, Color[] Colors){
         if (roundNum >= MIN_ROUNDS && roundNum < MAX_ROUNDS)
             this.roundNum = roundNum;
         else
@@ -43,6 +44,12 @@ public class Game {
         this.Players = Players.clone();
         //this.mainBoard = new Board(100, 100, playerNum);
         this.gameState = GameState.MENU;
+
+        String[] playerNames = new String[this.playerNum];
+        for (int i = 0; i < this.playerNum; i++) {
+            playerNames[i] = Players[i].getName();
+        }
+        this.mainBoard = new Board(this.playerNum,this.roundNum,playerNames,Colors);
     }
 
     public int getRoundNum() {

@@ -9,11 +9,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import javax.swing.Timer;
 
+//TODO ha nem kell ezt torolni
+import java.util.Random;
+
 public class Server extends Client{
 
     private Game game;
     private Timer gameTimer;
     private int numOfClients;   //NOT the number of players!!!!!!!!
+    private int numOfRounds;
     private ServerSocket ss;
     private Socket[] Sockets;
     private ObjectOutputStream[] ObjOutStreams;
@@ -22,26 +26,29 @@ public class Server extends Client{
     private SendPoints[] SPRunnables;
     private Thread[] GCThreads;
     private Thread[] SPThreads;
+    private PackageS2C currentPkg;
 
     private ControlState[] ContorlStates;
 
     private static final int timerInterval = 1000;
+    private int cycleCounter;
 
 
     public Server(int numOfPlayers,int numOfRounds, String playerName) {
         super("", playerName, true);
 
-        board = new Board( numOfPlayers, numOfRounds);
-        numOfClients = numOfPlayers - 1;
-        Sockets = new Socket[numOfClients];
-        ObjInStreams = new ObjectInputStream[numOfClients];
-        ObjOutStreams = new ObjectOutputStream[numOfClients];
-        GCRunnables = new GetControl[numOfClients];
-        SPRunnables = new SendPoints[numOfClients];
-        GCThreads = new Thread[numOfClients];
-        SPThreads = new Thread[numOfClients];
 
-        ContorlStates = new ControlState[numOfPlayers];
+        this.numOfClients = numOfPlayers - 1;
+        this.numOfRounds = numOfRounds;
+        this.Sockets = new Socket[numOfClients];
+        this.ObjInStreams = new ObjectInputStream[numOfClients];
+        this.ObjOutStreams = new ObjectOutputStream[numOfClients];
+        this.GCRunnables = new GetControl[numOfClients];
+        this.SPRunnables = new SendPoints[numOfClients];
+        this.GCThreads = new Thread[numOfClients];
+        this.SPThreads = new Thread[numOfClients];
+
+        this.ContorlStates = new ControlState[numOfPlayers];
 
 
         try {
@@ -100,7 +107,7 @@ public class Server extends Client{
         pkg.currentRound = 0;
         pkg.gameState = GameState.MENU; //TODO ez igy ok Marci/Dani?
         pkg.CurvePoints = null;
-        pkg.numOfRounds = board.getRoundNum();
+        pkg.numOfRounds = this.numOfRounds;
 
 
         /* get all the player names */
@@ -119,6 +126,18 @@ public class Server extends Client{
             /* add the local player's name */
             pkg.playerNames[numOfClients] = this.player.getName();
         }
+
+        /* generate random colors for the players */
+        //TODO Marci random szingeneralojat illeszteni, ezt a borzalmat meg torolni
+        pkg.Colors[0] = new java.awt.Color(255,105,180);
+        pkg.Colors[1] = new java.awt.Color(0,255,255);
+        if (numOfClients+1 > 2) {
+            pkg.Colors[1] = new java.awt.Color(255,0,0);
+        }
+        if (numOfClients+1 > 3) {
+            pkg.Colors[3] = new java.awt.Color(0,255,0);
+        }
+        //****** idaig kell majd torolni
 
 
         /* send out init packages for all players */
@@ -146,9 +165,13 @@ public class Server extends Client{
             SSPlayers[idx] = new ServerSidePlayer(pkg.playerNames[idx],idx);
         }
 
-        game = new Game(numOfClients+1, pkg.numOfRounds, SSPlayers);
+        game = new Game(numOfClients+1, pkg.numOfRounds, SSPlayers,pkg.Colors);
         //TODO init game
+        //TODO setup server
 
+
+
+        cycleCounter = 0;
         /*setup timer*/
         setUpTimer();
 
@@ -172,8 +195,9 @@ public class Server extends Client{
 
 
 
-    public void sendToClient() {
+    public void sendToClient(PackageS2C pkg) {
 
+        currentPkg = pkg;
         /* create and start data sending threads */
         for (int idx = 0; idx < numOfClients; idx++) {
             SPThreads[idx] = new Thread(SPRunnables [idx]);
@@ -214,11 +238,34 @@ public class Server extends Client{
 
     public void runServer() {
         requestInputs();
-        // TODO call game main function
-        board.setCurrentRound(board.getCurrentRound()+1);
-        System.out.println("Current round  = " + board.getCurrentRound());
 
-        sendToClient();
+        // TODO call game main function
+
+        /* test code, not final -------------------------------------------------  */
+        //board.setCurrentRound(board.getCurrentRound()+1);
+        //System.out.println("Current round  = " + board.getCurrentRound());
+
+        int rangeMin = 0;
+        int rangeMax = 500;
+        float percentOfIsColored = 80;
+        percentOfIsColored = percentOfIsColored/100;
+        //CurvePoint[] randomPoints = new CurvePoint[numOfClients+1];
+        PackageS2C pkg = new PackageS2C(numOfClients+1);
+        for (int i = 0; i < numOfClients+1; i = i + 1) {
+            Random x = new Random();
+            double randomx = rangeMin + (rangeMax - rangeMin) * x.nextDouble();
+            Random y = new Random();
+            double randomy = rangeMin + (rangeMax - rangeMin) * y.nextDouble();
+            Random help = new Random();
+            boolean isColoredWProbability = (help.nextFloat() < percentOfIsColored);
+            pkg.CurvePoints[i] = new CurvePoint(randomx, randomy, isColoredWProbability);
+        }
+
+        pkg.currentRound = cycleCounter;
+        /* end of test code ---------------------------------------------------------- */
+
+        cycleCounter++;
+        sendToClient(pkg);
 
     }
 
@@ -262,12 +309,12 @@ public class Server extends Client{
 
             try {
                 //TODO megcsinalni hogy a tenyleges adatot kuldje,
-                //----------------------------***************************--------------
+                /*----------------------------***************************--------------
                 PackageS2C dummyForClient = new PackageS2C(4);
                 dummyForClient.currentRound = board.getCurrentRound();
-                //---------------------------*****------------------------------
+                //---------------------------*****------------------------------ */
 
-                ObjOutStreams[clientId].writeObject(dummyForClient);
+                ObjOutStreams[clientId].writeObject(currentPkg);
             } catch (IOException e) {
                 System.out.println("IOException from SendPoints runnable #" + clientId);
             }

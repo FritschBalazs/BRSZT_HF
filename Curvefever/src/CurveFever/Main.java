@@ -6,6 +6,9 @@ import java.util.Random;
 
 public class Main {
 
+    /* this is a file to test baoard and menu objects */
+    /* created by Dani */
+
     private static final Color BLACK = new Color(0,0,0);
     private static final Color PINK = new Color(255,105,180);
     private static final Color BLUE = new Color(0,255,255);

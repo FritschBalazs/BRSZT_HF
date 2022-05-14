@@ -1,6 +1,8 @@
 package CurveFever;
 
-public class Vector2D {
+import java.io.Serializable;
+
+public class Vector2D implements Serializable {
     protected double x,y;
 
     public Vector2D() {

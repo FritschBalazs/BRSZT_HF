@@ -22,14 +22,20 @@ public class Board extends JPanel {
     private int roundNum;
     private String[] PlayerNames;
 
-    public Board(int numOfPlayers, int numOfRounds) {
-        this.Curves = new ArrayList[numOfPlayers];
-        this.Points = new int[numOfPlayers];
+    public Board(int numOfPlayers, int numOfRounds, String[] playerNames) {//playernamest visszairni
+        this.Curves = new Curve[numOfPlayers];
+        this.Points = new double[numOfPlayers];
         this.currentRound = 0;
         this.roundNum = numOfRounds;
-        this.PlayerNames = new String[numOfPlayers];
+        this.PlayerNames = playerNames.clone();
+        this.Points = new double[numOfPlayers];
+
+        setPreferredSize(new Dimension(width, height));
     }
 
+    public Board(int numOfPlayers, int numOfRounds, String[] playerNames, Color[] colors) {
+        this.Curves = new Curve[numOfPlayers];
+        this.Points = new double[numOfPlayers];
         this.currentRound = 0;
         this.roundNum = numOfRounds;
         this.PlayerNames = playerNames.clone();
@@ -37,13 +43,17 @@ public class Board extends JPanel {
 
         setPreferredSize(new Dimension(width, height));
 
-
+        for (int i = 0; i < numOfPlayers; i++) {
+            Curves[i] = new Curve();
+            Curves[i].setColor(colors[i]);
+        }
     }
 
     public Board(InitPackageS2C pkg) {
         int numOfPlayers = pkg.playerNames.length;
         this.Curves = new Curve[numOfPlayers];
         for(int i = 0; i < numOfPlayers; i = i +1) {
+            Curves[i] = new Curve();
             Curves[i].setColor(pkg.Colors[i]);
         }
         this.Points = pkg.Scores;
@@ -53,8 +63,12 @@ public class Board extends JPanel {
 
         setPreferredSize(new Dimension(width, height));
 
-    }
+        for (int i = 0; i < numOfPlayers; i++) {
+            Curves[i] = new Curve();
+            Curves[i].setColor(pkg.Colors[i]);
+        }
 
+    }
 
 
     public void setCurves(Curve[] curves) {Curves = curves.clone();}
@@ -62,6 +76,7 @@ public class Board extends JPanel {
     public void setPoints(double[] P) {
         Points = P.clone();
     }
+
 
     public void setCurrentRound(int numOfRound) {
         currentRound = numOfRound;
@@ -106,6 +121,15 @@ public class Board extends JPanel {
         for (int i= 0; i < Points.length; i = i +1) {
             Points[i] = scores[i];
             Curves[i].addPoint(positions[i]);
+        }
+    }
+
+    public void receiveFromPackageS2C(PackageS2C pkg) {
+        this.currentRound = pkg.currentRound;
+        this.Points = pkg.Scores.clone();
+
+        for (int i= 0; i < Points.length; i = i +1) {
+            Curves[i].addPoint(pkg.CurvePoints[i]);
         }
     }
 

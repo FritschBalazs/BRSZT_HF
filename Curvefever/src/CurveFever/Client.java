@@ -141,7 +141,6 @@ public class Client{
             System.out.println("ClassNotFoundException");
         }
 
-        //TODO feldolgozni a kapott package-et
 
 
 
