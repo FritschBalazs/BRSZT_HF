@@ -25,7 +25,6 @@ public class Main {
             double randomy = rangeMin + (rangeMax - rangeMin) * y.nextDouble();
             Random help = new Random();
             boolean isColoredWProbability = (help.nextFloat() < percentOfIsColored);
-            System.out.println(isColoredWProbability);
             CurvePoint randomCurvePoint = new CurvePoint(randomx, randomy, isColoredWProbability);
             curve.addPoint(randomCurvePoint);
         }
@@ -46,7 +45,7 @@ public class Main {
         window.add(board); // add the jpanel to the window
         window.setResizable(false); // don't allow the user to resize the window
         ImageIcon logo = new ImageIcon("src/curvefeverlogo.jpg");
-        window.setIconImage(logo.getImage());
+        window.setIconImage(logo.getImage()); //adding logo to window
         window.pack(); // fit the window size around the components (just our jpanel).
         window.setLocationRelativeTo(null); // open window in the center of the screen
         board.setCurves(new Curve[]{curve, curve1, curve2, curve3}); //setting the random curves
