@@ -12,6 +12,18 @@ public class Curve {
 
     public ArrayList<CurvePoint> getPoints() {return new ArrayList<CurvePoint>(Points);}
 
+    public CurvePoint getPoint(int idx) {
+        return Points.get(idx);
+    }
+
+    public int getCurveSize() {
+        return Points.size();
+    }
+
+    public CurvePoint getLastPoint() {
+        return Points.get(Points.size()-1);
+    }
+
     public void setColor(Color color) {this.color = color;}
 
     public void setPoints(ArrayList<CurvePoint> points) {Points = new ArrayList<CurvePoint>(points);}

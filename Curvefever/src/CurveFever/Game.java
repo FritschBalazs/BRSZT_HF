@@ -2,26 +2,28 @@ package CurveFever;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 import static java.lang.Math.*;
 
 public class Game {
-    private enum circlePart{
+    private enum circlePart {
         UPPER_RIGHT,
         LOWER_RIGHT,
         LOWER_LEFT,
         UPPER_LEFT
     }
 
-    private enum playerPositions{
+    private enum playerPositions {
         BOTTOM_LEFT,
         TOP_LEFT,
         TOP_RIGHT,
         BOTTOM_RIGHT
     }
+
     private static final java.awt.Color[] PlayerColors = {
-        Color.RED, Color.ORANGE, Color.PINK, Color.GREEN, Color.YELLOW, Color.BLUE, Color.CYAN};
+            Color.RED, Color.ORANGE, Color.PINK, Color.GREEN, Color.YELLOW, Color.BLUE, Color.CYAN};
     private static final double R = 10.0;
     public static final int MAX_PLAYERS = 4;
     public static final int MIN_PLAYERS = 2;
@@ -29,8 +31,8 @@ public class Game {
     public static final int MIN_ROUNDS = 1;
     public static final int SCORE_PER_SECOND = 50;
     public static final int SYSTEM_TICK = 10;
-    public static final double SCORE_PER_TICK = (double)SCORE_PER_SECOND / (double)SYSTEM_TICK;
-    
+    public static final double SCORE_PER_TICK = (double) SCORE_PER_SECOND / (double) SYSTEM_TICK;
+
     private int playerNum;
     private ServerSidePlayer[] Players;
     private int roundNum;
@@ -53,13 +55,13 @@ public class Game {
             playerNames[i] = Players[i].getName();
         }
         this.mainBoard = new Board(this.playerNum, this.roundNum, playerNames);
-        
+
         this.Players = Players.clone();
         this.gameState = GameState.MENU;
 
     }
 
-    public Game(int playerNum, int roundNum, ServerSidePlayer[] Players, Color[] Colors){
+    public Game(int playerNum, int roundNum, ServerSidePlayer[] Players, Color[] Colors) {
         if (roundNum >= MIN_ROUNDS && roundNum < MAX_ROUNDS)
             this.roundNum = roundNum;
         else
@@ -79,7 +81,7 @@ public class Game {
         for (int i = 0; i < this.playerNum; i++) {
             playerNames[i] = Players[i].getName();
         }
-        this.mainBoard = new Board(this.playerNum,this.roundNum,playerNames,Colors);
+        this.mainBoard = new Board(this.playerNum, this.roundNum, playerNames, Colors);
     }
 
     public int getRoundNum() {
@@ -108,7 +110,7 @@ public class Game {
     ------------------------------------------------------------
     */
 
-    private double adjustDegree(double deg, circlePart cp){
+    private double adjustDegree(double deg, circlePart cp) {
         double angle = 0;   // Temporary
         switch (cp) {
             case UPPER_RIGHT -> {
@@ -165,7 +167,7 @@ public class Game {
         }
     }
 
-    public Vector2D generateRandomPosition(playerPositions playerPosition){
+    public Vector2D generateRandomPosition(playerPositions playerPosition) {
         double theta;
         double r;
         double xTemp, yTemp;
@@ -200,7 +202,7 @@ public class Game {
                 y = yTemp + mainBoard.getHeight();
             }
         }
-        Vector2D pos = new Vector2D(x,y);
+        Vector2D pos = new Vector2D(x, y);
         return pos;
     }
 
@@ -210,10 +212,10 @@ public class Game {
     ------------------------------------------------------------
     */
 
-    private void initPositions(){
+    private void initPositions() {
         ArrayList<Vector2D> StartingPositions = new ArrayList<>();
-        switch(this.playerNum){
-            case 2:{
+        switch (this.playerNum) {
+            case 2: {
                 StartingPositions.set(0, generateRandomPosition(playerPositions.TOP_LEFT));
                 StartingPositions.set(1, generateRandomPosition(playerPositions.BOTTOM_RIGHT));
             }
@@ -236,7 +238,7 @@ public class Game {
         }
     }
 
-    private void initColors(){
+    private void initColors() {
         // Create a randomized list from the colors
         ArrayList<Color> Colors = new ArrayList<>();
         for (int i = 0; i < this.PlayerColors.length; i++) {
@@ -277,7 +279,7 @@ public class Game {
     */
 
     public void updatePositions(ControlState[] Controls) {
-        for (int i = 0; i < Players.length; i++){
+        for (int i = 0; i < Players.length; i++) {
             Players[i].setControlState(Controls[i]);
             if (Players[i].getIsAlive())
                 Players[i].move();
@@ -286,34 +288,46 @@ public class Game {
 
     public boolean[] detectCollisions() {
         boolean[] collisionDetected = new boolean[Players.length];
-        for (int i = 0; i < Players.length; i++) {   // No collisions at the beginning
-            collisionDetected[i] = false;
+        // Initial value is false
+        Arrays.fill(collisionDetected, false);
+
+        Curve[] Curves;
+        Curves = mainBoard.getCurves();
+        CurvePoint currentPos;
+        CurvePoint lastPos;
+        CurvePoint curveSegment1;
+        CurvePoint curveSegment2;
+        for (int i = 0; i < Curves.length; i++) {   // Iterate over players
+            // Store last two points of the actual player curve
+            currentPos = Curves[i].getLastPoint();
+            lastPos = Curves[i].getPoint(Curves[i].getCurveSize()-2);
+
+            // Iterate over all of the curves on the board
+            for (int j = 0; j < Curves.length; j++) {
+
+                // Iterate over point pairs of the selected curve
+                for (int k = 0; k < Curves[i].getCurveSize() - 1; k++) {
+
+                    curveSegment1 = Curves[j].getPoint(k);
+                    curveSegment2 = Curves[j].getPoint(k+1);
+                    // Check if points are not in a hole in the curve
+                    if (curveSegment1.getIsColored() && curveSegment2.getIsColored())
+                        // Check intersection
+                        if (doIntersect(currentPos, curveSegment1, lastPos, curveSegment2))
+                            collisionDetected[i] = true;
+                }
+            }
         }
-        /* TODO Detect collision part of the method*/
+
         return collisionDetected;
     }
-    public void evaluateStep(ControlState[] Controls) {
-        boolean[] collisions = detectCollisions();
-        for (int i = 0; i < Players.length; i++) {
-            if (collisions[i]) {
-                Players[i].setAlive(false);
-            }
-            if (Players[i].getIsAlive()){
-                Players[i].updateScore(SCORE_PER_TICK);
-            }
-        }
-        updatePositions(Controls);
-    }
-
-
-
 
     // Given three collinear points p, q, r, the function checks if
     // point q lies on line segment 'pr'
     static boolean onSegment(Vector2D p, Vector2D q, Vector2D r)
     {
-        if (q.x <= Math.max(p.x, r.x) && q.x >= Math.min(p.x, r.x) &&
-                q.y <= Math.max(p.y, r.y) && q.y >= Math.min(p.y, r.y))
+        if (q.getX() <= Math.max(p.getX(), r.getX()) && q.getX() >= Math.min(p.getX(), r.getX()) &&
+                q.getY() <= Math.max(p.getY(), r.getY()) && q.getY() >= Math.min(p.getY(), r.getY()))
             return true;
 
         return false;
@@ -328,8 +342,8 @@ public class Game {
     {
         // See https://www.geeksforgeeks.org/orientation-3-ordered-points/
         // for details of below formula.
-        double val = (q.y - p.y) * (r.x - q.x) -
-                (q.x - p.x) * (r.y - q.y);
+        double val = (q.getY() - p.getY()) * (r.getX() - q.getX()) -
+                (q.getX() - p.getX()) * (r.getY() - q.getY());
 
         if (val == 0) return 0; // collinear
 
@@ -366,4 +380,18 @@ public class Game {
 
         return false; // Doesn't fall in any of the above cases
     }
+
+    public void evaluateStep(ControlState[] Controls) {
+        boolean[] collisions = detectCollisions();
+        for (int i = 0; i < Players.length; i++) {
+            if (collisions[i]) {
+                Players[i].setAlive(false);
+            }
+            if (Players[i].getIsAlive()) {
+                Players[i].updateScore(SCORE_PER_TICK);
+            }
+        }
+        updatePositions(Controls);
+    }
 }
+
