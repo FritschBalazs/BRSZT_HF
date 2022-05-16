@@ -7,10 +7,7 @@ public class test_client_2 {
 
     public static void main(String[] args){
 
-        Client myClient = new Client("localhost","en",false);
-        Player myPlayer = new Player("2_bela");
-
-        myClient.setPlayer(myPlayer);
+        Client myClient = new Client("localhost","2_bela");
         myClient.receiveFromServerInit();
 
         JFrame window = new JFrame("Kurve Fívör");

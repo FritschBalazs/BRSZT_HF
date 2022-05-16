@@ -9,7 +9,7 @@ public class test_server {
     public static void main(String[] args){
 
 
-        Server myServer = new Server(4,4,"Szerver pisti");
+        Server myServer = new Server(2,4,"Szerver pisti");
 
         myServer.acceptConnections();
         myServer.setupGame();

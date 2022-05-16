@@ -9,7 +9,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import javax.swing.Timer;
 
-//TODO ha nem kell ezt torolni
+//TODO torolni ha nem kell ezt torolni
 import java.util.Random;
 
 public class Server extends Client{
@@ -30,12 +30,12 @@ public class Server extends Client{
 
     private ControlState[] ContorlStates;
 
-    private static final int timerInterval = 1000;
+    private static final int timerInterval = 20;
     private int cycleCounter;
 
 
     public Server(int numOfPlayers,int numOfRounds, String playerName) {
-        super("", playerName, true);
+        super("", playerName);
 
 
         this.numOfClients = numOfPlayers - 1;
@@ -132,7 +132,7 @@ public class Server extends Client{
         pkg.Colors[0] = new java.awt.Color(255,105,180);
         pkg.Colors[1] = new java.awt.Color(0,255,255);
         if (numOfClients+1 > 2) {
-            pkg.Colors[1] = new java.awt.Color(255,0,0);
+            pkg.Colors[2] = new java.awt.Color(255,0,0);
         }
         if (numOfClients+1 > 3) {
             pkg.Colors[3] = new java.awt.Color(0,255,0);
