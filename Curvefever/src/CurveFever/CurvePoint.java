@@ -3,8 +3,6 @@ package CurveFever;
 public class CurvePoint extends Vector2D implements java.io.Serializable{
     private boolean isColored;
 
-
-
     public CurvePoint(boolean isColored) {
         this.isColored = isColored;
     }

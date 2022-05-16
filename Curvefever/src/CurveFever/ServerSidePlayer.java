@@ -27,12 +27,6 @@ public class ServerSidePlayer extends Player{
         this.score = 0;
     }
 
-    private void rotateSpeed(double angle){
-        double xTemp = this.speed.getX() * cos(toRadians(angle)) - this.speed.getY() * sin(toRadians(angle));
-        double yTemp = this.speed.getX() * sin(toRadians(angle)) + this.speed.getY() * cos(toRadians(angle));
-        speed.setCoordinates(xTemp, yTemp);
-    }
-
     public void setPosition(Vector2D pos) {
         this.position = pos;
     }
@@ -71,6 +65,12 @@ public class ServerSidePlayer extends Player{
 
     public double getScore() {
         return score;
+    }
+
+    private void rotateSpeed(double angle){
+        double xTemp = this.speed.getX() * cos(toRadians(angle)) - this.speed.getY() * sin(toRadians(angle));
+        double yTemp = this.speed.getX() * sin(toRadians(angle)) + this.speed.getY() * cos(toRadians(angle));
+        speed.setCoordinates(xTemp, yTemp);
     }
 
     public void move(){

@@ -2,7 +2,7 @@ package CurveFever;
 
 import javax.swing.*;
 
-public class Menu {
+public class Menu extends  JPanel{
     private Client client;
     private Server server; //only one Server or one Client will be used
     private MenuState menuState;

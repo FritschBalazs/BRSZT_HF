@@ -4,13 +4,25 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Curve {
-    private ArrayList<CurvePoint> Points = new ArrayList<CurvePoint>();;
+    private ArrayList<CurvePoint> Points = new ArrayList<CurvePoint>();
     private Color color;
 
-    public void Curve(){}
+    public Curve(){}
     public Color getColor() {return color;}
 
     public ArrayList<CurvePoint> getPoints() {return new ArrayList<CurvePoint>(Points);}
+
+    public CurvePoint getPoint(int idx) {
+        return Points.get(idx);
+    }
+
+    public int getCurveSize() {
+        return Points.size();
+    }
+
+    public CurvePoint getLastPoint() {
+        return Points.get(Points.size()-1);
+    }
 
     public void setColor(Color color) {this.color = color;}
 
