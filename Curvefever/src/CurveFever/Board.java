@@ -1,19 +1,25 @@
 package CurveFever;
 
+import CurveFever.gui.InfoPanel;
+
 import java.awt.*;
 import java.awt.Color;
-import java.awt.event.*;
 import java.awt.geom.Line2D;
-import java.util.ArrayList;
-import java.util.Random;
 import javax.swing.*;
-import java.util.ArrayList;
-
-import static java.lang.Boolean.TRUE;
 
 public class Board extends JPanel {
-    private static final int width = 1280;
-    private static final int height = 720;
+
+    private static final int windowWidth = 1280;
+    private static final int windowHeight = 720;
+    private static final int infoPanelWidth = 250;
+    private static final int infoPanelHeight = 720;
+
+    private static final int gameWidth = windowWidth - infoPanelWidth; //actual game board width
+    private static final int gameHeight = windowHeight - infoPanelHeight; //actual game board height
+
+
+
+
     private static final Color WHITE = new Color(255,255,255);
     private static final Color BLACK = new Color(0,0,0);
     private Curve[] Curves;
@@ -21,17 +27,9 @@ public class Board extends JPanel {
     private int currentRound;
     private int roundNum;
     private String[] PlayerNames;
+    private InfoPanel infoPanel;
+    //private InfoPanel infoPanel = new InfoPanel();
 
-    public Board(int numOfPlayers, int numOfRounds, String[] playerNames) {//playernamest visszairni
-        this.Curves = new Curve[numOfPlayers];
-        this.Points = new double[numOfPlayers];
-        this.currentRound = 0;
-        this.roundNum = numOfRounds;
-        this.PlayerNames = playerNames.clone();
-        this.Points = new double[numOfPlayers];
-
-        setPreferredSize(new Dimension(width, height));
-    }
 
     public Board(int numOfPlayers, int numOfRounds, String[] playerNames, Color[] colors) {
         this.Curves = new Curve[numOfPlayers];
@@ -40,19 +38,23 @@ public class Board extends JPanel {
         this.roundNum = numOfRounds;
         this.PlayerNames = playerNames.clone();
         this.Points = new double[numOfPlayers];
-
-        setPreferredSize(new Dimension(width, height));
-
         for (int i = 0; i < numOfPlayers; i++) {
             Curves[i] = new Curve();
             Curves[i].setColor(colors[i]);
+            Points[i] = 0;
         }
+        setPreferredSize(new Dimension(windowWidth, windowHeight));
+        setBorder(BorderFactory.createLineBorder(Color.pink));
+        infoPanel = new InfoPanel(infoPanelWidth,infoPanelHeight);
+        infoPanel.setPlayerNames(playerNames);
+        infoPanel.setRoundNum(numOfRounds);
+
     }
 
     public Board(InitPackageS2C pkg) {
         int numOfPlayers = pkg.playerNames.length;
         this.Curves = new Curve[numOfPlayers];
-        for(int i = 0; i < numOfPlayers; i = i +1) {
+        for(int i = 0; i < numOfPlayers; i = i + 1) {
             Curves[i] = new Curve();
             Curves[i].setColor(pkg.Colors[i]);
         }
@@ -61,13 +63,18 @@ public class Board extends JPanel {
         this.roundNum = pkg.numOfRounds;
         this.PlayerNames = pkg.playerNames.clone();
 
-        setPreferredSize(new Dimension(width, height));
+        setPreferredSize(new Dimension(gameWidth, gameHeight));
 
         for (int i = 0; i < numOfPlayers; i++) {
             Curves[i] = new Curve();
             Curves[i].setColor(pkg.Colors[i]);
         }
 
+    }
+    public void addInfoPanel(){
+        this.setLayout(new BorderLayout());
+        this.add(infoPanel, BorderLayout.EAST);
+        //repaint();
     }
 
 
@@ -90,12 +97,12 @@ public class Board extends JPanel {
         this.PlayerNames = names.clone();
     }
 
-    public int getWidth() {
-        return width;
+    public int getGameWidthWidth() {
+        return gameWidth;
     }
 
-    public int getHeight() {
-        return height;
+    public int getGameHeightHeight() {
+        return gameHeight;
     }
 
     public Curve[] getCurves() {return Curves.clone();}
@@ -133,7 +140,7 @@ public class Board extends JPanel {
         }
     }
 
-    public void drawCurves(Graphics g) {
+    public void drawCurves(Graphics g) { //not used here, instead in gui
 
         Graphics2D g2d = (Graphics2D) g;
         g2d.setStroke(new BasicStroke(3));
@@ -146,20 +153,7 @@ public class Board extends JPanel {
             }
         }
     }
-    public void drawScore(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(WHITE);
-        g2d.drawRect(width-150,2,148,PlayerNames.length*50);
-        g2d.setFont(new Font("Lato", Font.BOLD, 20));
-        g2d.drawString("Scores:", width-125,  20);
-        g2d.setFont(new Font("Lato", Font.PLAIN, 15));
-        int y = 20;
-        for (int i = 0; i < PlayerNames.length; i = i + 1) {
-            g2d.drawString(PlayerNames[i] + ": " + Points, width-110, y += 15);
-        }
-    }
-
-
+    /* //commented out to test gui
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -171,8 +165,18 @@ public class Board extends JPanel {
         // draw our graphics.
         setBackground(BLACK);
         drawCurves(g);
-        drawScore(g);
+        //drawScore(g); //commented out si I can test the infopanel
+
+
+
         // this smooths out animations on some systems
         Toolkit.getDefaultToolkit().sync();
+    }*/
+
+    public void render(){//not used, the function is in gui
+        infoPanel.setPoints(this.Points);
+        infoPanel.setCurrentRound(this.currentRound);
+        repaint();
     }
+
 }
