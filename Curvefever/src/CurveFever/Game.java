@@ -322,6 +322,15 @@ public class Game {
         return collisionDetected;
     }
 
+
+
+/*
+---------------------------------------------------------------------------
+-------------- Code from https://www.geeksforgeeks.org/ -------------------
+---------------------------------------------------------------------------
+*/
+// Changed type of the points to Vector2D
+
     // Given three collinear points p, q, r, the function checks if
     // point q lies on line segment 'pr'
     static boolean onSegment(Vector2D p, Vector2D q, Vector2D r)
