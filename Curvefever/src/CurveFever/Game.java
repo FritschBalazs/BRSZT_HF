@@ -24,7 +24,7 @@ public class Game {
 
     private static final java.awt.Color[] PlayerColors = {
             Color.RED, Color.ORANGE, Color.PINK, Color.GREEN, Color.YELLOW, Color.BLUE, Color.CYAN};
-    private static final double R = 10.0;
+    private static final double R = 100.0;
     public static final int MAX_PLAYERS = 4;
     public static final int MIN_PLAYERS = 2;
     public static final int MAX_ROUNDS = 10;
@@ -49,12 +49,15 @@ public class Game {
         this.roundNum = 3;
         this.playerNum = 3;
         this.currentRound = 0;
+        Color[] Colors = new Color[playerNum];
+
+        Arrays.fill(Colors, Color.BLACK);
 
         String[] playerNames = new String[Players.length];
         for (int i = 0; i < Players.length; i++) {
             playerNames[i] = Players[i].getName();
         }
-        this.mainBoard = new Board(this.playerNum, this.roundNum, playerNames);
+        this.mainBoard = new Board(this.playerNum, this.roundNum, playerNames, Colors);
 
         this.Players = Players.clone();
         this.gameState = GameState.MENU;
@@ -104,6 +107,14 @@ public class Game {
         return this.mainBoard;
     }
 
+    public double[] getScores(){
+        double[] temp = new double[playerNum];
+        for (int i = 0; i < Players.length; i++) {
+            temp[i] = Players[i].getScore();
+        }
+        return temp.clone();
+    }
+
     /*
     ------------------------------------------------------------
     ------------ Math for game logic and init ------------------
@@ -114,7 +125,7 @@ public class Game {
         double angle = 0;   // Temporary
         switch (cp) {
             case UPPER_RIGHT -> {
-                if (deg >= toRadians(90) && deg <= toRadians(180))
+                if (deg >= 90 && deg <= 180)
                     angle = deg - 90;
                 else if (deg >= 180 && deg <= 270)
                     angle = deg - 180;
@@ -126,19 +137,19 @@ public class Game {
                 return angle;
             }
             case LOWER_RIGHT -> {
-                if (deg >= toRadians(0) && deg <= toRadians(90))
-                    angle = deg + 90;
+                if (deg >= 0 && deg <= 90)
+                    angle = deg + 270;
+                else if (deg >= 90 && deg <= 180)
+                    angle = deg + 180;
                 else if (deg >= 180 && deg <= 270)
-                    angle = deg - 90;
-                else if (deg >= 270 && deg <= 360)
-                    angle = deg - 180;
+                    angle = deg + 90;
                 else
                     angle = deg;
 
                 return angle;
             }
             case LOWER_LEFT -> {
-                if (deg >= toRadians(0) && deg <= toRadians(90))
+                if (deg >= 0 && deg <= 90)
                     angle = deg + 180;
                 else if (deg >= 90 && deg <= 180)
                     angle = deg + 90;
@@ -150,12 +161,12 @@ public class Game {
                 return angle;
             }
             case UPPER_LEFT -> {
-                if (deg >= toRadians(0) && deg <= toRadians(90))
-                    angle = deg + 270;
-                else if (deg >= 90 && deg <= 180)
-                    angle = deg + 180;
-                else if (deg >= 180 && deg <= 270)
+                if (deg >= 0 && deg <= 90)
                     angle = deg + 90;
+                else if (deg >= 180 && deg <= 270)
+                    angle = deg - 90;
+                else if (deg >= 270 && deg <= 360)
+                    angle = deg - 180;
                 else
                     angle = deg;
 
@@ -168,41 +179,50 @@ public class Game {
     }
 
     public Vector2D generateRandomPosition(playerPositions playerPosition) {
-        double theta;
+        double theta, theta_temp;
         double r;
         double xTemp, yTemp;
         double x = 0, y = 0;
 
-        r = R * Math.sqrt(random());    // https://stackoverflow.com/questions/5837572/generate-a-random-point-within-a-circle-uniformly
+        r = R * Math.sqrt(random()) + 20;    // https://stackoverflow.com/questions/5837572/generate-a-random-point-within-a-circle-uniformly
         theta = random() * 2 * Math.PI;
-
+        theta_temp = toDegrees(theta);
+        System.out.println("theta_temp: " + theta_temp + ", player position: " + playerPosition);
         switch (playerPosition) {
-            case BOTTOM_LEFT -> theta = adjustDegree(theta, circlePart.UPPER_RIGHT);
-            case TOP_LEFT -> theta = adjustDegree(theta, circlePart.LOWER_RIGHT);
-            case TOP_RIGHT -> theta = adjustDegree(theta, circlePart.LOWER_LEFT);
-            case BOTTOM_RIGHT -> theta = adjustDegree(theta, circlePart.UPPER_LEFT);
+            case BOTTOM_LEFT -> theta = adjustDegree(theta_temp, circlePart.UPPER_RIGHT);
+            case TOP_LEFT -> theta = adjustDegree(theta_temp, circlePart.LOWER_RIGHT);
+            case TOP_RIGHT -> theta = adjustDegree(theta_temp, circlePart.LOWER_LEFT);
+            case BOTTOM_RIGHT -> theta = adjustDegree(theta_temp, circlePart.UPPER_LEFT);
         }
         xTemp = r * cos(toRadians(theta));
         yTemp = r * sin(toRadians(theta));
+        System.out.println("xtemp: " + xTemp + ", ytemp: " + yTemp);
         switch (playerPosition) {
             case BOTTOM_LEFT -> {
-                x = xTemp;
-                y = yTemp + mainBoard.getHeight();
+                x = mainBoard.getGameWidthWidth() - xTemp;
+                y = mainBoard.getGameHeightHeight() - yTemp;
+                break;
             }
             case TOP_LEFT -> {
                 x = xTemp;
-                y = yTemp;
+                y = -1 * yTemp;
+                break;
             }
             case TOP_RIGHT -> {
-                x = xTemp + mainBoard.getWidth();
-                y = yTemp;
+                x = mainBoard.getGameWidthWidth() + xTemp;
+                y = -1 * yTemp;
+                break;
             }
             case BOTTOM_RIGHT -> {
-                x = xTemp + mainBoard.getWidth();
-                y = yTemp + mainBoard.getHeight();
+                x = -1 * xTemp + mainBoard.getGameWidthWidth();
+                y = yTemp + mainBoard.getGameHeightHeight();
+                break;
             }
         }
         Vector2D pos = new Vector2D(x, y);
+        System.out.println("theta: " + theta + ", r: " + r);
+        System.out.println("x: " + x + " y: " + y);
+        System.out.println("--------------------------------------");
         return pos;
     }
 
@@ -213,23 +233,23 @@ public class Game {
     */
 
     private void initPositions() {
-        ArrayList<Vector2D> StartingPositions = new ArrayList<>();
+        ArrayList<Vector2D> StartingPositions = new ArrayList<>(this.playerNum);
         switch (this.playerNum) {
             case 2: {
-                StartingPositions.set(0, generateRandomPosition(playerPositions.TOP_LEFT));
-                StartingPositions.set(1, generateRandomPosition(playerPositions.BOTTOM_RIGHT));
-            }
+                StartingPositions.add(0, generateRandomPosition(playerPositions.TOP_LEFT));
+                StartingPositions.add(1, generateRandomPosition(playerPositions.BOTTOM_RIGHT));
+            } break;
             case 3: {
-                StartingPositions.set(0, generateRandomPosition(playerPositions.TOP_LEFT));
-                StartingPositions.set(0, generateRandomPosition(playerPositions.TOP_RIGHT));
-                StartingPositions.set(0, generateRandomPosition(playerPositions.BOTTOM_LEFT));
-            }
+                StartingPositions.add(0, generateRandomPosition(playerPositions.TOP_LEFT));
+                StartingPositions.add(1, generateRandomPosition(playerPositions.TOP_RIGHT));
+                StartingPositions.add(2, generateRandomPosition(playerPositions.BOTTOM_LEFT));
+            } break;
             case 4: {
-                StartingPositions.set(0, generateRandomPosition(playerPositions.TOP_LEFT));
-                StartingPositions.set(0, generateRandomPosition(playerPositions.TOP_RIGHT));
-                StartingPositions.set(0, generateRandomPosition(playerPositions.BOTTOM_LEFT));
-                StartingPositions.set(0, generateRandomPosition(playerPositions.BOTTOM_RIGHT));
-            }
+                StartingPositions.add(0, generateRandomPosition(playerPositions.TOP_LEFT));
+                StartingPositions.add(1, generateRandomPosition(playerPositions.TOP_RIGHT));
+                StartingPositions.add(2, generateRandomPosition(playerPositions.BOTTOM_LEFT));
+                StartingPositions.add(3, generateRandomPosition(playerPositions.BOTTOM_RIGHT));
+            } break;
         }
         // Randomize starting positions between players
         Collections.shuffle(StartingPositions);
@@ -240,9 +260,9 @@ public class Game {
 
     private void initColors() {
         // Create a randomized list from the colors
-        ArrayList<Color> Colors = new ArrayList<>();
+        ArrayList<Color> Colors = new ArrayList<>(this.playerNum);
         for (int i = 0; i < this.PlayerColors.length; i++) {
-            Colors.set(i, PlayerColors[i]);
+            Colors.add(i, PlayerColors[i]);
         }
         Collections.shuffle(Colors);
         // Assign the random color values to the players
@@ -258,8 +278,7 @@ public class Game {
         for (int i = 0; i < Players.length; i++) {
             initColors[i] = Players[i].getPlayerColor();
             initPositions[i] = Players[i].getPosition();
-            initPoints[i].setIsColored(true);
-            initPoints[i].setCoordinates(initPositions[i].getX(), initPositions[i].getY());
+            initPoints[i] = new CurvePoint(initPositions[i].getX(), initPositions[i].getY(), true);
         }
         mainBoard.addCurvePoints(initPoints);
         mainBoard.setCurveColors(initColors);
@@ -267,6 +286,9 @@ public class Game {
 
     public void initGame() {
         initPositions();
+        for (int i = 0; i < Players.length; i++) {
+            System.out.println("Players[" + i + "] : x: " + Players[i].getPosition().getX() + "; y: " + Players[i].getPosition().getY());
+        }
         initColors();
         initBoard();
     }
@@ -279,11 +301,16 @@ public class Game {
     */
 
     public void updatePositions(ControlState[] Controls) {
+        Vector2D pos;
+        CurvePoint[] newPositions = new CurvePoint[playerNum];
         for (int i = 0; i < Players.length; i++) {
             Players[i].setControlState(Controls[i]);
             if (Players[i].getIsAlive())
                 Players[i].move();
+            pos = Players[i].getPosition();
+            newPositions[i] = new CurvePoint(pos.getX(), pos.getY(), Players[i].getIsAlive());
         }
+        mainBoard.addCurvePoints(newPositions);
     }
 
     public boolean[] detectCollisions() {
@@ -391,9 +418,9 @@ public class Game {
     }
 
     public void evaluateStep(ControlState[] Controls) {
-        boolean[] collisions = detectCollisions();
+        //boolean[] collisions = detectCollisions();
         for (int i = 0; i < Players.length; i++) {
-            if (collisions[i]) {
+            if (/*collisions[i]*/false) {
                 Players[i].setAlive(false);
             }
             if (Players[i].getIsAlive()) {
@@ -402,5 +429,11 @@ public class Game {
         }
         updatePositions(Controls);
     }
+
+    public Curve[] getBoardCurves() {
+        return mainBoard.getCurves().clone();
+    }
 }
+
+
 

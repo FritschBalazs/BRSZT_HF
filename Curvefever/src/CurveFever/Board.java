@@ -15,7 +15,7 @@ public class Board extends JPanel {
     private static final int infoPanelHeight = 720;
 
     private static final int gameWidth = windowWidth - infoPanelWidth; //actual game board width
-    private static final int gameHeight = windowHeight - infoPanelHeight; //actual game board height
+    private static final int gameHeight = windowHeight;// - infoPanelHeight; //actual game board height
 
 
 

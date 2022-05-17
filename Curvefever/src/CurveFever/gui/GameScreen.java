@@ -1,6 +1,7 @@
 package CurveFever.gui;
 
 import CurveFever.Curve;
+import CurveFever.Game;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,6 +40,35 @@ public class GameScreen extends JPanel {
         infoPanel = new InfoPanel(numOfPlayers);
         infoPanel.setPreferredSize(new Dimension(infoPanelWidth,infoPanelHeight)); //was preferred
 
+        footer = new JLabel();
+        footer.setPreferredSize(new Dimension(gamePanelWidth+infoPanelWidth,15));
+        footer.setFont(new Font("Lato", Font.PLAIN, 10));
+        footer.setAlignmentX(Component.CENTER_ALIGNMENT);
+        footer.setHorizontalAlignment(CENTER);
+        footer.setForeground(Color.black);
+        footer.setText("Kurve Fíver Inc. Copyright, All rights reserved");
+        //hateret+atlatszosagot beallitani
+        add(footer, BorderLayout.SOUTH);
+        add(gamePanel, BorderLayout.CENTER);
+        add(infoPanel, BorderLayout.EAST);
+        //infoPanel.setPlayerNames(this.PlayerNames);
+    }
+
+    public GameScreen(Game game){
+        this.numOfPlayers = game.getPlayerNum();
+        this.Curves = game.getBoardCurves().clone();
+        this.PlayerNames = game.getMainBoard().getPlayerNames();
+        this.Points = game.getScores();
+        this.currentRound = game.getCurrentRound();
+        this.roundNum = game.getRoundNum();
+
+        setLayout(new BorderLayout(0,0));
+
+        gamePanel = new GamePanel();
+        gamePanel.setPreferredSize(new Dimension(gamePanelWidth,gamePanelHeight)); //was preferred
+
+        infoPanel = new InfoPanel(numOfPlayers);
+        infoPanel.setPreferredSize(new Dimension(infoPanelWidth,infoPanelHeight)); //was preferred
         footer = new JLabel();
         footer.setPreferredSize(new Dimension(gamePanelWidth+infoPanelWidth,15));
         footer.setFont(new Font("Lato", Font.PLAIN, 10));
@@ -100,7 +130,7 @@ public class GameScreen extends JPanel {
         infoPanel.setCurrentRound(this.currentRound);
         infoPanel.setPlayerNames(this.PlayerNames);
         infoPanel.setNumOfPlayers(numOfPlayers);
-        System.out.println(numOfPlayers);
+        //System.out.println(numOfPlayers);
         Color[] colors = new Color[numOfPlayers];  //this only needed for testing purposes. In creation time Colors will be known from initpackage
         for (int i = 0; i < numOfPlayers; i = i +1) {
             colors[i] = Curves[i].getColor();
