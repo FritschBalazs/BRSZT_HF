@@ -5,7 +5,7 @@ import javax.swing.*;
 public class Menu extends  JPanel{
     private Client client;
     private Server server; //only one Server or one Client will be used
-    private MenuState menuState;
+    private ProgramState programState;
     private ControlOptions controlOptions;
     private String serverIp; //To give to Server or Client constructor
     private String playerName; //To give to Player constructor (player name can be entered in menu, in a textbox)
@@ -14,7 +14,7 @@ public class Menu extends  JPanel{
 
     public Menu(){}
 
-    public void setMenuState(MenuState menuState) {this.menuState = menuState;}
+    public void setProgramState(ProgramState programState) {this.programState = programState;}
     public void setControlOptions(ControlOptions controlOptions) {this.controlOptions = controlOptions;}
     public void setServerIp(String serverIp) {this.serverIp = serverIp;}
     public void setPlayerName(String playerName) {this.playerName = playerName;}
@@ -22,7 +22,7 @@ public class Menu extends  JPanel{
     public void setNumOfRounds(int numOfRounds) {this.numOfRounds = numOfRounds;}
     public Client getClient() {return client;}
     public Server getServer() {return server;}
-    public MenuState getMenuState() {return menuState;}
+    public ProgramState getProgramStateState() {return programState;}
     public ControlOptions getControlOptions() {return controlOptions;}
     public String getServerIp() {return serverIp;}
     public String getPlayerName() {return playerName;}

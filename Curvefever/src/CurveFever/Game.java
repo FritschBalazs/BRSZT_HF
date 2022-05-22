@@ -44,7 +44,7 @@ public class Game {
         for (int i = 0; i < Players.length; i++) {
             playerNames[i] = Players[i].getName();
         }
-        this.mainBoard = new Board(this.playerNum, this.roundNum, playerNames);
+        /*this.mainBoard = new Board(this.playerNum, this.roundNum, playerNames);*/ //commented out
         
         this.Players = Players.clone();
         this.gameState = GameState.MENU;
