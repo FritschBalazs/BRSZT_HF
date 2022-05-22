@@ -1,5 +1,6 @@
 package CurveFever.gui;
 
+import CurveFever.ControlState;
 import CurveFever.Curve;
 
 import javax.swing.*;
@@ -22,6 +23,7 @@ public class GameScreen extends JPanel {
     private int roundNum;
     private String[] PlayerNames;
     private int numOfPlayers;
+    private ControlState[] controlStates;
 
     public GameScreen(int numOfPlayers) {
         this.numOfPlayers = numOfPlayers;
