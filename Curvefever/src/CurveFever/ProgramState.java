@@ -1,7 +1,8 @@
 package CurveFever;
 
-public enum MenuState {
+public enum ProgramState {
     MAIN_MENU,
     END_OF_GAME,
     IN_GAME
 }
+

@@ -165,25 +165,6 @@ public class Board extends JPanel {
             }
         }
     }
-    /* //commented out to test gui
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        // when calling g.drawImage() we can use "this" for the ImageObserver
-        // because Component implements the ImageObserver interface, and JPanel
-        // extends from Component. So "this" Board instance, as a Component, can
-        // react to imageUpdate() events triggered by g.drawImage()
-
-        // draw our graphics.
-        setBackground(BLACK);
-        drawCurves(g);
-        //drawScore(g); //commented out si I can test the infopanel
-
-
-
-        // this smooths out animations on some systems
-        Toolkit.getDefaultToolkit().sync();
-    }*/
 
     public void render(){//not used, the function is in gui
         infoPanel.setPoints(this.Points);
