@@ -1,6 +1,6 @@
 package CurveFever;
 
-public enum ControlOptions {
+public enum ControlOption {
     A_D,
     ARROW,
 }

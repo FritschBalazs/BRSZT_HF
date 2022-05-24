@@ -25,11 +25,11 @@ public class GamePanel extends JPanel {
     public void drawCurves(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setStroke(new BasicStroke(3));
-        for (int i = 0; i < Curves.length; i = i + 1) {
-            g2d.setColor(Curves[i].getColor());
-            for (int j = 1; j < Curves[i].getPoints().size(); j = j+1) {
-                if ((Curves[i].getPoints().get(j).getIsColored()) && (Curves[i].getPoints().get(j-1).getIsColored())) {
-                    g2d.draw(new Line2D.Double(Curves[i].getPoints().get(j-1).getX(), Curves[i].getPoints().get(j-1).getY(), Curves[i].getPoints().get(j).getX(), Curves[i].getPoints().get(j).getY()));
+        for (Curve curve : Curves) {
+            g2d.setColor(curve.getColor());
+            for (int j = 1; j < curve.getPoints().size(); j = j + 1) {
+                if ((curve.getPoints().get(j).getIsColored()) && (curve.getPoints().get(j - 1).getIsColored())) {
+                    g2d.draw(new Line2D.Double(curve.getPoints().get(j - 1).getX(), curve.getPoints().get(j - 1).getY(), curve.getPoints().get(j).getX(), curve.getPoints().get(j).getY()));
                 }
             }
         }

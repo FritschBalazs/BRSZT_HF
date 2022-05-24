@@ -5,12 +5,13 @@ import CurveFever.gui.ScreenManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class TestEvents {
     public static void main(String[] args){
         JFrame window = new JFrame("Kurve Fívör gui");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ScreenManager screenManager = new ScreenManager(4);
+        ScreenManager screenManager = new ScreenManager();
 
         Curve curve = Main.generateRandomCurve(500,0, 720, Color.PINK, 70);
         Curve curve1 = Main.generateRandomCurve(500,0, 720, Color.BLUE, 70);
@@ -47,11 +48,14 @@ public class TestEvents {
         window.add(screenManager);
         window.pack();
         window.setVisible(true);
-        while (true)
-        {
-            screenManager.update();
-            //System.out.println(new java.io.File("src/CurveFever/gui/menulogo.png").exists());
-        }
+        Timer timer = new Timer(100, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
+                screenManager.update();
+
+            }
+        });
+        timer.start();
     }
 }

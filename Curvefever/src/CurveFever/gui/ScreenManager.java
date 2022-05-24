@@ -1,13 +1,17 @@
 package CurveFever.gui;
 
+import CurveFever.ControlOption;
+import CurveFever.ControlState;
 import CurveFever.ProgramState;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-public class ScreenManager extends JPanel implements ActionListener{
+public class ScreenManager extends JPanel implements ActionListener, KeyListener{
     final static String MENUSCREEN = "menuScreen";
     final static String GAMESCREEN = "gameScreen";
     final static String ENDGAMESCREEN = "endGameScreen";
@@ -17,7 +21,18 @@ public class ScreenManager extends JPanel implements ActionListener{
     private ProgramState programState;
     private ProgramState prevProgramState;
     private CardLayout layout = new CardLayout();
-    public ScreenManager(int numOfPlayers){
+    private String playerName;
+    private String serverIP;
+    private boolean isServer;
+    private ControlOption controlOption;
+    private int numOfPlayers;
+    private int numOfRounds;
+    private ControlState controlState;
+    private boolean pressedLeft;
+    private boolean pressedRight;
+    private boolean lastPressedLeft;
+
+    public ScreenManager(){
         setLayout(layout);
         programState = ProgramState.MAIN_MENU; //changed from main menu
         prevProgramState = programState;
@@ -27,9 +42,16 @@ public class ScreenManager extends JPanel implements ActionListener{
         menuScreen.createGameButton.addActionListener(this);
         menuScreen.joinGameButton.addActionListener(this);
         menuScreen.exitButton.addActionListener(this);
+        menuScreen.playerNameTextField.addActionListener(this);
+        menuScreen.IPTextField.addActionListener(this);
+        menuScreen.numOfPlayersComboBox.addActionListener(this);
+
+
         this.add(menuScreen, MENUSCREEN);
         this.add(gameScreen, GAMESCREEN);
         this.add(endGameScreen, ENDGAMESCREEN);
+        this.addKeyListener(this);
+        this.setFocusable(true);
     }
 
     public MenuScreen getMenuScreen() {
@@ -44,6 +66,34 @@ public class ScreenManager extends JPanel implements ActionListener{
         return this.gameScreen;
     }
 
+    public ProgramState getProgramState() {
+        return programState;
+    }
+
+    public boolean isServer() {
+        return isServer;
+    }
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public String getServerIP() {
+        return serverIP;
+    }
+
+    public int getNumOfPlayers() {
+        return numOfPlayers;
+    }
+
+    public int getNumOfRounds() {
+        return numOfRounds;
+    }
+
+    public ControlState getControlState() {
+        return controlState;
+    }
+
     public void update(){
         if(programState != prevProgramState){
             switch (programState) {
@@ -51,23 +101,107 @@ public class ScreenManager extends JPanel implements ActionListener{
                     layout.show(this, GAMESCREEN);
                     break;
                 case MAIN_MENU: layout.show(this, MENUSCREEN);
-                    System.out.println("menucase");
+
                     break;
                 case END_OF_GAME: layout.show(this, ENDGAMESCREEN);
                     break;
-                default: System.out.println("Nemmukszik");
+                default:
                     break;
             }
         }
+        evaluateInput();
         prevProgramState = programState;
+    }
+
+    public void evaluateInput(){
+        if(pressedLeft && pressedRight){
+            if(lastPressedLeft){
+                controlState = ControlState.LEFT;
+            }
+            else controlState = ControlState.RIGHT;
+        } else if (pressedLeft) {
+            controlState = ControlState.LEFT;
+        } else if (pressedRight) {
+            controlState = ControlState.RIGHT;
+        }
+        else controlState = ControlState.STRAIGHT;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if((e.getSource() == menuScreen.createGameButton) || (e.getSource() == menuScreen.joinGameButton)) {
+        if((e.getSource() == menuScreen.createGameButton)) {
+            //TODO check playername, numofrounds
+            playerName = menuScreen.playerNameTextField.getText();
+            if(menuScreen.arrowsButton.isSelected()){
+                controlOption = ControlOption.ARROW;
+            }
+            else controlOption = ControlOption.A_D;
+            //noinspection ConstantConditions
+            numOfPlayers = ((Integer) menuScreen.numOfPlayersComboBox.getSelectedItem());
+            numOfRounds = Integer.parseInt(menuScreen.numOfRoundsTextField.getText());
             programState = ProgramState.IN_GAME;
+        } else if (e.getSource() == menuScreen.joinGameButton) {
+            //TODO check playername,ip
+            playerName = menuScreen.playerNameTextField.getText();
+            serverIP = menuScreen.IPTextField.getText();
+            if(menuScreen.arrowsButton.isSelected()){
+                controlOption = ControlOption.ARROW;
+            }
+            else controlOption = ControlOption.A_D;
+            programState = ProgramState.IN_GAME;
+
+
         } else if (e.getSource() == menuScreen.exitButton) {
-            System.out.println("Valamit meghívni h kilepjen az alkalmazás");
+            System. exit(0);
         }
     }
+
+
+    @Override
+    public void keyTyped(KeyEvent e) {}
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if(controlOption == ControlOption.ARROW){
+            if(e.getKeyCode() == KeyEvent.VK_LEFT){
+                pressedLeft = true;
+                lastPressedLeft = true;
+            }
+            if(e.getKeyCode() == KeyEvent.VK_RIGHT){
+                pressedRight = true;
+                lastPressedLeft = false;
+            }
+        }
+        if(controlOption == ControlOption.A_D){
+            if(e.getKeyCode() == KeyEvent.VK_A){
+                pressedLeft = true;
+                lastPressedLeft = true;
+            }
+            if(e.getKeyCode() == KeyEvent.VK_D){
+                pressedRight = true;
+                lastPressedLeft = false;
+            }
+        }
+    }
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if(controlOption == ControlOption.ARROW){
+            if(e.getKeyCode() == KeyEvent.VK_LEFT){
+                pressedLeft = false;
+            }
+            if(e.getKeyCode() == KeyEvent.VK_RIGHT){
+                pressedRight = false;
+            }
+        }
+        if(controlOption == ControlOption.A_D){
+            if(e.getKeyCode() == KeyEvent.VK_A){
+                pressedLeft = false;
+            }
+            if(e.getKeyCode() == KeyEvent.VK_D){
+                pressedRight = false;
+            }
+        }
+    }
+
+
 }
+

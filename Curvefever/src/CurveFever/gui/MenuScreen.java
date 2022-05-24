@@ -23,9 +23,12 @@ public class MenuScreen extends JPanel {
     JButton exitButton;
     JRadioButton arrowsButton;
     JRadioButton ADbutton;
+    ButtonGroup radioButtonGroup;
     JTextField playerNameTextField;
     JTextField IPTextField;
+    JTextField numOfRoundsTextField;
     JComboBox numOfPlayersComboBox;
+
 
     public MenuScreen() {
         //Basic settings for screen
@@ -73,6 +76,11 @@ public class MenuScreen extends JPanel {
         exitButton.setText("Exit");
 
         //Creating and setting components for settings panel
+        JLabel settingsTextLabel = new JLabel();
+        settingsTextLabel.setFont(new Font("Lato", Font.BOLD, 50));
+        settingsTextLabel.setBackground(BUTTONCOLOR2);
+        settingsTextLabel.setText("Settings");
+
         playerNameTextField = new JTextField();
         playerNameTextField.setPreferredSize(new Dimension(250, 40));
         playerNameTextField.setFont(new Font("Lato", Font.PLAIN, 20));
@@ -92,18 +100,25 @@ public class MenuScreen extends JPanel {
         JPanel radioButtonPanel = new JPanel();
         radioButtonPanel.setLayout(new GridBagLayout());
         radioButtonPanel.setPreferredSize(new Dimension(250,40));
+        radioButtonPanel.setBackground(BUTTONCOLOR2);
         JLabel radioButtonTextLabel = new JLabel();
         radioButtonTextLabel.setFont(new Font("Lato", Font.PLAIN, 20));
+        radioButtonTextLabel.setBackground(BUTTONCOLOR2);
         radioButtonTextLabel.setText("Control: ");
         arrowsButton = new JRadioButton();
         arrowsButton.setFont(new Font("Lato", Font.PLAIN, 15));
+        arrowsButton.setBackground(BUTTONCOLOR2);
         arrowsButton.setText("Arrows");
+        arrowsButton.setFocusable(false);
+        arrowsButton.setSelected(true); //This will be selected by default
         ADbutton = new JRadioButton();
         ADbutton.setFont(new Font("Lato", Font.PLAIN, 15));
+        ADbutton.setBackground(BUTTONCOLOR2);
         ADbutton.setText("A/D");
-        ButtonGroup buttonGroup = new ButtonGroup(); //maybe kivinni tagváltozónak
-        buttonGroup.add(arrowsButton);
-        buttonGroup.add(ADbutton);
+        ADbutton.setFocusable(false);
+        radioButtonGroup = new ButtonGroup();
+        radioButtonGroup.add(arrowsButton);
+        radioButtonGroup.add(ADbutton);
         radioButtonPanel.add(radioButtonTextLabel);
         radioButtonPanel.add(arrowsButton);
         radioButtonPanel.add(ADbutton);
@@ -114,9 +129,31 @@ public class MenuScreen extends JPanel {
         numOfPlayersPanel.setLayout(new GridBagLayout());
         JLabel numOfPlayersTextLabel = new JLabel(); //szépíteni
         numOfPlayersTextLabel.setFont(new Font("Lato", Font.PLAIN, 20));
+        numOfPlayersTextLabel.setBackground(BUTTONCOLOR2);
+        numOfPlayersTextLabel.setOpaque(true);
         numOfPlayersTextLabel.setText("Number of players: ");
         numOfPlayersPanel.add(numOfPlayersTextLabel);
         numOfPlayersPanel.add(numOfPlayersComboBox);
+
+
+        numOfRoundsTextField = new JTextField();
+        numOfRoundsTextField.setPreferredSize(new Dimension(35, 30));
+        numOfRoundsTextField.setFont(new Font("Lato", Font.PLAIN, 15));
+        numOfRoundsTextField.setText("5");
+        numOfRoundsTextField.setToolTipText("Number of rounds");
+        numOfRoundsTextField.setHorizontalAlignment(JTextField.CENTER);
+        numOfRoundsTextField.setSelectedTextColor(Color.MAGENTA);
+        JPanel numOfRoundsPanel = new JPanel();
+        numOfRoundsPanel.setLayout(new GridBagLayout());
+        numOfRoundsPanel.setBackground(BUTTONCOLOR2);
+        JLabel numOfRoundsTextLabel = new JLabel(); //szépíteni
+        numOfRoundsTextLabel.setFont(new Font("Lato", Font.PLAIN, 20));
+        numOfRoundsTextLabel.setBackground(BUTTONCOLOR2);
+        numOfRoundsTextLabel.setOpaque(true);
+        numOfRoundsTextLabel.setText("Number of rounds: ");
+        numOfRoundsPanel.add(numOfRoundsTextLabel);
+        numOfRoundsPanel.add(numOfRoundsTextField);
+
 
 
         //Adding logo and buttons to center panel
@@ -141,20 +178,29 @@ public class MenuScreen extends JPanel {
         //Adding components to settings panel
         constraints.gridx = 0;
         constraints.gridy = 0;
+        constraints.insets = new Insets(0, 20, 100, 20);
+        settingsPanel.add(settingsTextLabel, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 1;
         constraints.insets = new Insets(25, 20, 25, 20);
         settingsPanel.add(playerNameTextField, constraints);
 
         constraints.gridx = 0;
-        constraints.gridy = 1;
+        constraints.gridy = 2;
         settingsPanel.add(IPTextField, constraints);
 
         constraints.gridx = 0;
-        constraints.gridy = 2;
+        constraints.gridy = 3;
         settingsPanel.add(radioButtonPanel, constraints);
 
         constraints.gridx = 0;
-        constraints.gridy = 3;
+        constraints.gridy = 4;
         settingsPanel.add(numOfPlayersPanel,constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 5;
+        settingsPanel.add(numOfRoundsPanel,constraints);
 
 
 
