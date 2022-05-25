@@ -25,12 +25,12 @@ public class Game {
 
     private static final java.awt.Color[] PlayerColors = {
             Color.RED, Color.ORANGE, Color.PINK, Color.GREEN, Color.YELLOW, Color.BLUE, Color.CYAN};
-    private static final double R = 100.0;
+    private static final double R = 200.0;
     public static final int MAX_PLAYERS = 4;
     public static final int MIN_PLAYERS = 2;
     public static final int MAX_ROUNDS = 10;
     public static final int MIN_ROUNDS = 1;
-    public static final int SCORE_PER_SECOND = 50;
+    public static final int SCORE_PER_SECOND = 10;
     public static final int SYSTEM_TICK = ServerSidePlayer.SYSTEM_TICK;
     public static final double SCORE_PER_TICK = (double) SCORE_PER_SECOND / (double) SYSTEM_TICK;
 
@@ -108,7 +108,7 @@ public class Game {
         return this.mainBoard;
     }
 
-    public double[] getScores(){
+    public double[] getScores() {
         double[] temp = new double[playerNum];
         for (int i = 0; i < Players.length; i++) {
             temp[i] = Players[i].getScore();
@@ -116,7 +116,7 @@ public class Game {
         return temp.clone();
     }
 
-    public Color[] getColors(){
+    public Color[] getColors() {
         Color[] tempColors = new Color[playerNum];
         for (int i = 0; i < playerNum; i++) {
             tempColors[i] = Players[i].getPlayerColor();
@@ -243,29 +243,31 @@ public class Game {
 
     private void initPositions() {
         ArrayList<Vector2D> StartingPositions = new ArrayList<>(this.playerNum);
-
         switch (this.playerNum) {
             case 2: {
                 StartingPositions.add(0, generateRandomPosition(playerPositions.TOP_LEFT));
                 StartingPositions.add(1, generateRandomPosition(playerPositions.BOTTOM_RIGHT));
-            } break;
+            }
+            break;
             case 3: {
                 StartingPositions.add(0, generateRandomPosition(playerPositions.TOP_LEFT));
                 StartingPositions.add(1, generateRandomPosition(playerPositions.TOP_RIGHT));
                 StartingPositions.add(2, generateRandomPosition(playerPositions.BOTTOM_LEFT));
-            } break;
+            }
+            break;
             case 4: {
                 StartingPositions.add(0, generateRandomPosition(playerPositions.TOP_LEFT));
                 StartingPositions.add(1, generateRandomPosition(playerPositions.TOP_RIGHT));
                 StartingPositions.add(2, generateRandomPosition(playerPositions.BOTTOM_LEFT));
                 StartingPositions.add(3, generateRandomPosition(playerPositions.BOTTOM_RIGHT));
-            } break;
+            }
+            break;
         }
         // Randomize starting positions between players
         Collections.shuffle(StartingPositions);
         for (int i = 0; i < Players.length; i++) {
-            Vector2D speed = new Vector2D(-1, -1);
             Players[i].setPosition(StartingPositions.get(i));
+            Vector2D speed = new Vector2D(-1, -1);
             Players[i].setSpeed(speed);
         }
     }
@@ -284,6 +286,7 @@ public class Game {
     }
 
     private void initBoard() {
+        boolean[] playersAlive = {true, true, true};
         Color[] initColors = new Color[Players.length];
         CurvePoint[] initPoints = new CurvePoint[Players.length];
         Vector2D[] initPositions = new Vector2D[Players.length];
@@ -292,7 +295,7 @@ public class Game {
             initPositions[i] = Players[i].getPosition();
             initPoints[i] = new CurvePoint(initPositions[i].getX(), initPositions[i].getY(), true);
         }
-        mainBoard.addCurvePoints(initPoints);
+        mainBoard.addCurvePoints(initPoints, playersAlive);
         mainBoard.setCurveColors(initColors);
     }
 
@@ -305,79 +308,9 @@ public class Game {
         initBoard();
     }
 
-
-    /*
-    ------------------------------------------------------------
-    -------------- Methods for game running --------------------
-    ------------------------------------------------------------
-    */
-
-    public void updatePositions(ControlState[] Controls) {
-        Vector2D pos;
-        CurvePoint[] newPositions = new CurvePoint[playerNum];
-        for (int i = 0; i < Players.length; i++) {
-            Players[i].setControlState(Controls[i]);
-            if (Players[i].getIsAlive())
-                Players[i].move();
-            pos = Players[i].getPosition();
-            newPositions[i] = new CurvePoint(pos.getX(), pos.getY(), Players[i].getIsAlive());
-
-            double x = Players[i].getSpeed().getX();
-            double y = Players[i].getSpeed().getY();
-        }
-        System.out.println();
-        mainBoard.addCurvePoints(newPositions.clone());
-    }
-
-    public boolean[] detectCollisions() {
-        boolean[] collisionDetected = new boolean[Players.length];
-        // Initial value is false
-        Arrays.fill(collisionDetected, false);
-
-        Curve[] Curves;
-        Curves = mainBoard.getCurves();
-        CurvePoint currentPos;
-        CurvePoint lastPos;
-        CurvePoint curveSegment1;
-        CurvePoint curveSegment2;
-        for (int i = 0; i < Curves.length; i++) {   // Iterate over players
-            // Store last two points of the actual player curve
-            currentPos = Curves[i].getLastPoint();
-            lastPos = Curves[i].getPoint(Curves[i].getCurveSize()-2);
-
-            // Iterate over all of the curves on the board
-            for (int j = 0; j < Curves.length; j++) {
-
-                // Iterate over point pairs of the selected curve
-                for (int k = 0; k < Curves[i].getCurveSize() - 1; k++) {
-
-                    curveSegment1 = Curves[j].getPoint(k);
-                    curveSegment2 = Curves[j].getPoint(k+1);
-                    // Check if points are not in a hole in the curve
-                    if (curveSegment1.getIsColored() && curveSegment2.getIsColored())
-                        // Check intersection
-                        if (doIntersect(currentPos, curveSegment1, lastPos, curveSegment2))
-                            collisionDetected[i] = true;
-                }
-            }
-        }
-
-        return collisionDetected;
-    }
-
-
-
-/*
----------------------------------------------------------------------------
--------------- Code from https://www.geeksforgeeks.org/ -------------------
----------------------------------------------------------------------------
-*/
-// Changed type of the points to Vector2D
-
     // Given three collinear points p, q, r, the function checks if
     // point q lies on line segment 'pr'
-    static boolean onSegment(Vector2D p, Vector2D q, Vector2D r)
-    {
+    static boolean onSegment(Vector2D p, Vector2D q, Vector2D r) {
         if (q.getX() <= Math.max(p.getX(), r.getX()) && q.getX() >= Math.min(p.getX(), r.getX()) &&
                 q.getY() <= Math.max(p.getY(), r.getY()) && q.getY() >= Math.min(p.getY(), r.getY()))
             return true;
@@ -390,8 +323,7 @@ public class Game {
     // 0 --> p, q and r are collinear
     // 1 --> Clockwise
     // 2 --> Counterclockwise
-    static int orientation(Vector2D p, Vector2D q, Vector2D r)
-    {
+    static int orientation(Vector2D p, Vector2D q, Vector2D r) {
         // See https://www.geeksforgeeks.org/orientation-3-ordered-points/
         // for details of below formula.
         double val = (q.getY() - p.getY()) * (r.getX() - q.getX()) -
@@ -399,13 +331,12 @@ public class Game {
 
         if (val == 0) return 0; // collinear
 
-        return (val > 0)? 1: 2; // clock or counterclock wise
+        return (val > 0) ? 1 : 2; // clock or counterclock wise
     }
 
     // The main function that returns true if line segment 'p1q1'
     // and 'p2q2' intersect.
-    static boolean doIntersect(Vector2D p1, Vector2D q1, Vector2D p2, Vector2D q2)
-    {
+    static boolean doIntersect(Vector2D p1, Vector2D q1, Vector2D p2, Vector2D q2) {
         // Find the four orientations needed for general and
         // special cases
         int o1 = orientation(p1, q1, p2);
@@ -433,10 +364,94 @@ public class Game {
         return false; // Doesn't fall in any of the above cases
     }
 
+
+    /*
+    ------------------------------------------------------------
+    -------------- Methods for game running --------------------
+    ------------------------------------------------------------
+    */
+
+    public void updatePositions(ControlState[] Controls) {
+        // Get player states
+        boolean[] playersAlive = new boolean[playerNum];
+        for (int i = 0; i < playerNum; i++) {
+            playersAlive[i] = Players[i].getIsAlive();
+        }
+        Vector2D pos = new Vector2D(0,0);
+        CurvePoint newPosition;/*new CurvePoint[playerNum];*/
+        // Check collisions of alive players
+        boolean[] collisions = detectCollisions(playersAlive);
+
+        // Set parameters according to collision event
+        for (int i = 0; i < Players.length; i++) {
+            Players[i].setControlState(Controls[i]);
+            if (collisions[i]) {
+                Players[i].setAlive(false);
+                System.out.println("Collision detected, Player ID: " + i);
+            } else {
+                Players[i].move();
+                pos = Players[i].getPosition();
+                newPosition = new CurvePoint(pos.getX(), pos.getY(), Players[i].getIsAlive());
+                mainBoard.addCurvePoint(newPosition, i);
+            }
+        }
+    }
+
+    public boolean[] detectCollisions(boolean[] playersAlive) {
+        boolean[] collisionDetected = new boolean[playerNum];
+        // Initial value is false
+        Arrays.fill(collisionDetected, false);
+
+        Curve[] Curves;
+        Curves = mainBoard.getCurves();
+        CurvePoint currentPos;
+        CurvePoint lastPos;
+        // Store the last two points of the players
+        /*for (int i = 0; i < playerNum; i++) {
+            currentPos[i] = Curves[i].getLastPoint();
+            lastPos[i] = Curves[i].getPoint(Curves[i].getCurveSize() - 2);
+            // Check if out of board boundaries - TODO Debug célból kommentezve, később fog kelleni - Marci
+            /*if ((currentPos[i].getX() > mainBoard.getGameWidthWidth()) || (currentPos[i].getX() < 0)
+            || (currentPos[i].getY() > mainBoard.getGameHeightHeight()) || (currentPos[i].getY() < 0))
+                collisionDetected[i] = true;*/
+        //}
+        // Variables to store the point pairs in the Curves
+        CurvePoint curveSegment1;
+        CurvePoint curveSegment2;
+        for (int i = 0; i < playerNum; i++) {   // Iterate over players
+            if (playersAlive[i] == true)
+                if (Curves[i].getCurveSize() > 4) {
+                    // Store last two points of the actual player curve
+                    currentPos = Curves[i].getLastPoint();
+                    lastPos = Curves[i].getPoint(Curves[i].getCurveSize() - 2);
+
+                    // Iterate over all of the curves on the board
+                    for (int j = 0; j < playerNum; j++) {
+
+                        // Iterate over point pairs of the selected curve
+                        for (int k = 0; k < Curves[j].getCurveSize() - 2; k++) {
+                            // Avoid false detection of the last curve point (actual position)
+                            if (!((i == j) && (k >= Curves[j].getCurveSize() - 4))) {
+                                curveSegment1 = Curves[j].getPoint(k);
+                                curveSegment2 = Curves[j].getPoint(k + 1);
+                                // Check if points are not in a hole in the curve
+                                if (curveSegment1.getIsColored() && curveSegment2.getIsColored())
+                                    // Check intersection
+                                    if (doIntersect(currentPos, lastPos, curveSegment1, curveSegment2))
+                                        collisionDetected[i] = true;
+                            }
+                        }
+                    }
+                }
+        }
+
+        return collisionDetected;
+    }
+
     public void evaluateStep(ControlState[] Controls) {
         //boolean[] collisions = detectCollisions();
 
-        double tmpScore[] = new double[Players.length];
+        double tmpScore[] = new double[playerNum];
         for (int i = 0; i < Players.length; i++) {
             if (/*collisions[i]*/false) {
                 Players[i].setAlive(false);
@@ -464,14 +479,15 @@ public class Game {
 
         return retval.clone();
     }
+}
 
 
     //TODO (B low prio) ezt torolni ha mar nem szukseges teszteleshez
-    public void addRandomPosForDebug(int counter){
+    /*public void addRandomPosForDebug(int counter){*/
         /* test code, not final -------------------------------------------------  */
         //board.setCurrentRound(board.getCurrentRound()+1);
         //System.out.println("Current round  = " + board.getCurrentRound());
-
+/*
         int rangeMin = 0;
         int rangeMax = 500;
         float percentOfIsColored = 80;
@@ -497,7 +513,7 @@ public class Game {
         mainBoard.setScores(tmpScores);
 
     }
-}
+}*/
 
 
 

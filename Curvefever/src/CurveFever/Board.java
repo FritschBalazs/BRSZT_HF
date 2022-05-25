@@ -129,10 +129,15 @@ public class Board extends JPanel {
         }
     }
 
-    public void addCurvePoints(CurvePoint[] newPositions) {
+    public void addCurvePoints(CurvePoint[] newPositions, boolean[] playersAlive) {
         for (int i = 0; i < Curves.length; i++) {
-            Curves[i].addPoint(newPositions[i]);
+            if (playersAlive[i])
+                Curves[i].addPoint(newPositions[i]);
         }
+    }
+
+    public void addCurvePoint(CurvePoint newPosition, int idx) {
+        Curves[idx].addPoint(newPosition);
     }
 
     public void receiveFromPackageS2C(double[] scores, int currentRound, CurvePoint[] positions) {
