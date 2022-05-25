@@ -76,9 +76,9 @@ public class ServerSidePlayer extends Player{
     public void move(){
         double angle;   // in degrees
         if (this.controlState == ControlState.LEFT)
-            angle = TURN_DEGREE_PER_TICK;
-        else if (this.controlState == ControlState.RIGHT)
             angle = -1 * TURN_DEGREE_PER_TICK;
+        else if (this.controlState == ControlState.RIGHT)
+            angle = TURN_DEGREE_PER_TICK;
         else angle = 0;
 
         rotateSpeed(angle);

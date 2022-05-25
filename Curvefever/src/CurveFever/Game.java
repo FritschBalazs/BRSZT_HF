@@ -31,7 +31,7 @@ public class Game {
     public static final int MAX_ROUNDS = 10;
     public static final int MIN_ROUNDS = 1;
     public static final int SCORE_PER_SECOND = 50;
-    public static final int SYSTEM_TICK = 10;
+    public static final int SYSTEM_TICK = ServerSidePlayer.SYSTEM_TICK;
     public static final double SCORE_PER_TICK = (double) SCORE_PER_SECOND / (double) SYSTEM_TICK;
 
     private int playerNum;
@@ -116,6 +116,14 @@ public class Game {
         return temp.clone();
     }
 
+    public Color[] getColors(){
+        Color[] tempColors = new Color[playerNum];
+        for (int i = 0; i < playerNum; i++) {
+            tempColors[i] = Players[i].getPlayerColor();
+        }
+        return tempColors.clone();
+    }
+
     /*
     ------------------------------------------------------------
     ------------ Math for game logic and init ------------------
@@ -185,7 +193,7 @@ public class Game {
         double xTemp, yTemp;
         double x = 0, y = 0;
 
-        r = R * Math.sqrt(random()) + 20;    // https://stackoverflow.com/questions/5837572/generate-a-random-point-within-a-circle-uniformly
+        r = R * Math.sqrt(random()) + 50;    // https://stackoverflow.com/questions/5837572/generate-a-random-point-within-a-circle-uniformly
         theta = random() * 2 * Math.PI;
         theta_temp = toDegrees(theta);
         System.out.println("theta_temp: " + theta_temp + ", player position: " + playerPosition);
@@ -216,7 +224,7 @@ public class Game {
             }
             case BOTTOM_RIGHT -> {
                 x = -1 * xTemp + mainBoard.getGameWidthWidth();
-                y = yTemp + mainBoard.getGameHeightHeight();
+                y = -1 * yTemp + mainBoard.getGameHeightHeight();
                 break;
             }
         }
@@ -235,6 +243,7 @@ public class Game {
 
     private void initPositions() {
         ArrayList<Vector2D> StartingPositions = new ArrayList<>(this.playerNum);
+        Vector2D speed = new Vector2D(-1, -1);
         switch (this.playerNum) {
             case 2: {
                 StartingPositions.add(0, generateRandomPosition(playerPositions.TOP_LEFT));
@@ -256,6 +265,7 @@ public class Game {
         Collections.shuffle(StartingPositions);
         for (int i = 0; i < Players.length; i++) {
             Players[i].setPosition(StartingPositions.get(i));
+            Players[i].setSpeed(speed);
         }
     }
 

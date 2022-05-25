@@ -92,7 +92,7 @@ public class MenuScreen extends JPanel {
         IPTextField = new JTextField();
         IPTextField.setPreferredSize(new Dimension(250, 40));
         IPTextField.setFont(new Font("Lato", Font.PLAIN, 20));
-        IPTextField.setText("Server IP");
+        IPTextField.setText(/*"Server IP"*/"localhost");
         IPTextField.setToolTipText("Server IP to Join Game");
         IPTextField.setHorizontalAlignment(JTextField.CENTER);
         IPTextField.setSelectedTextColor(Color.MAGENTA);

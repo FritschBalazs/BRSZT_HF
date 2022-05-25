@@ -116,7 +116,7 @@ public class Menu {
             /* create client */
             String playerName = screenManager.getPlayerName();
             String serverIp = screenManager.getServerIP();
-            client = new Client("localhost",playerName);
+            client = new Client(serverIp,playerName);
             //TODO (B) localhost hardcodeot kiszedni
 
             /* wait for server to send init package,
