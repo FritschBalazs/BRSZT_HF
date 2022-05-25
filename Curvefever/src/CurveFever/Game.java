@@ -477,6 +477,7 @@ public class Game {
         }
 
         mainBoard.setCurrentRound(counter);
+        this.currentRound = counter;
         mainBoard.addCurvePoints(tmpPoints);
         mainBoard.setScores(tmpScores);
 

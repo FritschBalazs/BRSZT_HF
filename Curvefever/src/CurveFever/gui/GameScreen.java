@@ -96,7 +96,8 @@ public class GameScreen extends JPanel {
         infoPanel.setPoints(this.Scores);
         infoPanel.setCurrentRound(this.currentRound);
         infoPanel.setPlayerNames(this.PlayerNames);
-        infoPanel.setNumOfPlayers(numOfPlayers);    //TODO cleanup majd egyszer, itt csak azt kene atkuldeni ami valtozik
+        infoPanel.setNumOfPlayers(this.numOfPlayers);    //TODO cleanup majd egyszer, itt csak azt kene atkuldeni ami valtozik
+        infoPanel.setRoundNum(this.roundNum);
 
         Color[] colors = new Color[numOfPlayers];  //this only needed for testing purposes. In creation time Colors will be known from initpackage
         for (int i = 0; i < numOfPlayers; i = i +1) {

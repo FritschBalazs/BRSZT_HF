@@ -100,6 +100,7 @@ public class Menu {
                 screenManager.getGameScreen().setScores(boardToDisplay.getScores());
                 screenManager.getGameScreen().setRoundNum(boardToDisplay.getRoundNum());
 
+                server.getPlayer().setControlState(screenManager.getControlState());
                 screenManager.update();
             }
         }
@@ -130,6 +131,10 @@ public class Menu {
 
             /* enter game loop */
             while (screenManager.getProgramState() == ProgramState.IN_GAME) {
+
+                /* update control state. Note: if this is not working nicely,
+                 * it should be moved inside sendToServer somehow */
+                client.getPlayer().setControlState(screenManager.getControlState());
 
                 /* wait for server to request data, and then send it */
                 client.sendToServer();

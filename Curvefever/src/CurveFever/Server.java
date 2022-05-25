@@ -30,7 +30,7 @@ public class Server extends Client{
 
     private ControlState[] ContorlStates;
 
-    private static final int timerInterval = 1000;
+    private static final int timerInterval = 500;
     private int cycleCounter;
 
 
@@ -130,9 +130,9 @@ public class Server extends Client{
         /* generate random colors for the players */
         //TODO Marci random szingeneralojat illeszteni, ezt a borzalmat meg torolni
         pkg.Colors[0] = new java.awt.Color(255,105,180);
-        pkg.Colors[1] = new java.awt.Color(0,255,255);
+        pkg.Colors[1] = new java.awt.Color(124,255,255);
         if (numOfClients+1 > 2) {
-            pkg.Colors[1] = new java.awt.Color(255,0,0);
+            pkg.Colors[2] = new java.awt.Color(255,0,0);
         }
         if (numOfClients+1 > 3) {
             pkg.Colors[3] = new java.awt.Color(0,255,0);

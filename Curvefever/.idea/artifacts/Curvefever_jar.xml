@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Curvefever:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Curvefever_jar</output-path>
+    <root id="archive" name="Curvefever.jar">
+      <element id="module-output" name="Curvefever" />
+    </root>
+  </artifact>
+</component>
