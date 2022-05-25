@@ -243,7 +243,7 @@ public class Game {
 
     private void initPositions() {
         ArrayList<Vector2D> StartingPositions = new ArrayList<>(this.playerNum);
-        Vector2D speed = new Vector2D(-1, -1);
+
         switch (this.playerNum) {
             case 2: {
                 StartingPositions.add(0, generateRandomPosition(playerPositions.TOP_LEFT));
@@ -264,6 +264,7 @@ public class Game {
         // Randomize starting positions between players
         Collections.shuffle(StartingPositions);
         for (int i = 0; i < Players.length; i++) {
+            Vector2D speed = new Vector2D(-1, -1);
             Players[i].setPosition(StartingPositions.get(i));
             Players[i].setSpeed(speed);
         }
@@ -320,8 +321,12 @@ public class Game {
                 Players[i].move();
             pos = Players[i].getPosition();
             newPositions[i] = new CurvePoint(pos.getX(), pos.getY(), Players[i].getIsAlive());
+
+            double x = Players[i].getSpeed().getX();
+            double y = Players[i].getSpeed().getY();
         }
-        mainBoard.addCurvePoints(newPositions);
+        System.out.println();
+        mainBoard.addCurvePoints(newPositions.clone());
     }
 
     public boolean[] detectCollisions() {

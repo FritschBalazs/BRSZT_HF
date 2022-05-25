@@ -30,6 +30,7 @@ public class Server extends Client{
 
     private static final int timerInterval = ServerSidePlayer.SYSTEM_TICK;
     private int cycleCounter;
+    private boolean waitWithDraw = true;
 
 
     public Server(int numOfPlayers,int numOfRounds, String playerName) {
@@ -68,6 +69,16 @@ public class Server extends Client{
 
     public int getPort() {
         return port;
+    }
+
+    /* used for signaling to menu class */
+    public boolean waitForDraw() {
+        return waitWithDraw;
+    }
+
+    /* used for signaling to menu class */
+    public void drawFinished(){
+        waitWithDraw = true;
     }
 
     public void acceptConnections()
@@ -186,6 +197,7 @@ public class Server extends Client{
             public void actionPerformed(ActionEvent e) {
                 /* call server.run(), the main function */
                 runServer();
+
             }
         };
         gameTimer = new Timer(timerInterval,al);
@@ -236,7 +248,7 @@ public class Server extends Client{
         ControlStates[numOfClients] = player.getControlState();
 
         //debug
-        System.out.println("Input client[0]:" + ControlStates[0] + "   Input client[1]: " + ControlStates[1]);
+        //System.out.println("Input client[0]:" + ControlStates[0] + "   Input client[1]: " + ControlStates[1]);
 
     }
 
@@ -255,6 +267,13 @@ public class Server extends Client{
         pkg.gameState = game.getGameState();
         cycleCounter++;
         sendToClient(pkg);
+
+        if (cycleCounter >= 2500){
+            gameTimer.stop();
+        }
+        System.out.print("cycle count: " + cycleCounter + " ");
+
+        waitWithDraw = false;
 
     }
 

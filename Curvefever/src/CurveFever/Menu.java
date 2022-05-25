@@ -70,6 +70,12 @@ public class Menu {
         /* wait for the player to start click create game or joing game */
         while (screenManager.getProgramState() == ProgramState.MAIN_MENU) {
             screenManager.update(true);
+            try {
+                Thread.sleep(5);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
         }
 
         /* if this instance is a server, create the server, and start the game */
@@ -106,8 +112,11 @@ public class Menu {
                 /* get Control input for local player */
                 server.getPlayer().setControlState(screenManager.getControlState());
 
-                /* draw */
+                /* wait for timer thread to finish (server.runServer)*/
+                while(server.waitForDraw() == true) {}
+
                 screenManager.update(false);
+                server.drawFinished();
             }
         }
 
