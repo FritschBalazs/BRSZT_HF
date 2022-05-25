@@ -31,4 +31,8 @@ public class Curve {
     public void addPoint(CurvePoint curvePoint) {
         Points.add(curvePoint);
     }
+
+    public void clearCurves(){
+        Points.clear();
+    }
 }

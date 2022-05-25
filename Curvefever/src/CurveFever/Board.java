@@ -7,10 +7,10 @@ import java.awt.Color;
 import java.awt.geom.Line2D;
 import javax.swing.*;
 
-public class Board extends JPanel {
+public class Board /*extends JPanel*/ {
 
-    private static final int windowWidth = 1280;
-    private static final int windowHeight = 720;
+    private static final int windowWidth = 1280; //TODO (M/D low prio) magic constans purgalast kene majd csinalni.
+    private static final int windowHeight = 720; //ahogy nezem ezeknek amr semmi koze a tenyleges megjeleniteshez, scak Marci hasznaéja meg game-ben
     private static final int infoPanelWidth = 250;
     private static final int infoPanelHeight = 720;
 
@@ -27,7 +27,7 @@ public class Board extends JPanel {
     private int currentRound;
     private int roundNum;
     private String[] PlayerNames;
-    private InfoPanel infoPanel; //TODO (D) Dani ez miert kell ide? Ha lehet toroljuk pls
+    //private InfoPanel infoPanel; //TODO (D) Dani ez miert kell ide? Ha lehet toroljuk pls
     //private InfoPanel infoPanel = new InfoPanel();
 
 
@@ -43,8 +43,8 @@ public class Board extends JPanel {
             Curves[i].setColor(colors[i]);
             Scores[i] = 0;
         }
-        setPreferredSize(new Dimension(windowWidth, windowHeight));
-        setBorder(BorderFactory.createLineBorder(Color.pink));
+        //setPreferredSize(new Dimension(windowWidth, windowHeight));
+        //setBorder(BorderFactory.createLineBorder(Color.pink));
         //infoPanel = new InfoPanel(infoPanelWidth,infoPanelHeight);
         //infoPanel.setPlayerNames(playerNames);
         //infoPanel.setRoundNum(numOfRounds);
@@ -63,7 +63,7 @@ public class Board extends JPanel {
         this.roundNum = pkg.numOfRounds;
         this.PlayerNames = pkg.playerNames.clone();
 
-        setPreferredSize(new Dimension(gameWidth, gameHeight));
+        //setPreferredSize(new Dimension(gameWidth, gameHeight));
 
         for (int i = 0; i < numOfPlayers; i++) {
             Curves[i] = new Curve();
@@ -71,11 +71,11 @@ public class Board extends JPanel {
         }
 
     }
-    public void addInfoPanel(){
+    /*public void addInfoPanel(){
         this.setLayout(new BorderLayout());
         this.add(infoPanel, BorderLayout.EAST);
         //repaint();
-    }
+    }*/
 
 
     public void setCurves(Curve[] curves) {Curves = curves.clone();}
@@ -147,11 +147,34 @@ public class Board extends JPanel {
         this.currentRound = pkg.currentRound;
         this.Scores = pkg.Scores.clone();
 
-        for (int i = 0; i < Scores.length; i = i +1) {
-            Curves[i].addPoint(pkg.CurvePoints[i]);
+        if (pkg.gameState == GameState.PREP){
+            for (int i = 0; i < Scores.length; i++) {
+
+                CurvePoint dummyPoint = new CurvePoint(pkg.prepSpeed.x,pkg.prepSpeed.y,true);
+
+                if (Curves[i].getPoints().size() == 0) {
+                    Curves[i].addPoint(pkg.CurvePoints[i]);
+                    Curves[i].addPoint(dummyPoint);
+                } else {
+                    Curves[i].getPoints().get(1) = dummyPoint;
+                }
+
+            }
+
+        } else if (pkg.gameState == GameState.PLAYING) {
+            for (int i = 0; i < Scores.length; i = i + 1) {
+                Curves[i].addPoint(pkg.CurvePoints[i]);
+            }
         }
     }
 
+    public void clearBoard() {
+        for (int i = 0; i < Curves.length; i++) {
+            Curves[i].clearCurves();
+        }
+    }
+
+    /*
     public void drawCurves(Graphics g) { //not used here, instead in gui
 
         Graphics2D g2d = (Graphics2D) g;
@@ -164,12 +187,13 @@ public class Board extends JPanel {
                 }
             }
         }
-    }
+    }*/
 
+    /*
     public void render(){//not used, the function is in gui
         infoPanel.setScores(this.Scores);
         infoPanel.setCurrentRound(this.currentRound);
         repaint();
-    }
+    }*/
 
 }
