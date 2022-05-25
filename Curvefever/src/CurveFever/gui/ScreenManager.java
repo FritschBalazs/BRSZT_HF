@@ -95,20 +95,22 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
     }
 
     public void update(){
-        if(programState != prevProgramState){
-            switch (programState) {
-                case IN_GAME: gameScreen.render();
-                    layout.show(this, GAMESCREEN);
-                    break;
-                case MAIN_MENU: layout.show(this, MENUSCREEN);
 
-                    break;
-                case END_OF_GAME: layout.show(this, ENDGAMESCREEN);
-                    break;
-                default:
-                    break;
-            }
+        switch (programState) {  //note B2D: nem volt jo mert folyamatosan ujra kell renderelni, nem csak amikor valtozik a state
+            case IN_GAME:
+                gameScreen.render();
+                layout.show(this, GAMESCREEN);
+                break;
+            case MAIN_MENU:
+                layout.show(this, MENUSCREEN);
+                break;
+            case END_OF_GAME:
+                layout.show(this, ENDGAMESCREEN);
+                break;
+            default:
+                break;
         }
+
         evaluateInput();
         prevProgramState = programState;
     }
@@ -131,6 +133,7 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
     public void actionPerformed(ActionEvent e) {
         if((e.getSource() == menuScreen.createGameButton)) {
             //TODO check playername, numofrounds
+            isServer = true; //ennek elorebb kell lenni mint a program state valtasnak, kulonben nem jo
             playerName = menuScreen.playerNameTextField.getText();
             if(menuScreen.arrowsButton.isSelected()){
                 controlOption = ControlOption.ARROW;
@@ -140,8 +143,10 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
             numOfPlayers = ((Integer) menuScreen.numOfPlayersComboBox.getSelectedItem());
             numOfRounds = Integer.parseInt(menuScreen.numOfRoundsTextField.getText());
             programState = ProgramState.IN_GAME;
+
         } else if (e.getSource() == menuScreen.joinGameButton) {
             //TODO check playername,ip
+            isServer = false;
             playerName = menuScreen.playerNameTextField.getText();
             serverIP = menuScreen.IPTextField.getText();
             if(menuScreen.arrowsButton.isSelected()){

@@ -23,31 +23,31 @@ public class Board extends JPanel {
     private static final Color WHITE = new Color(255,255,255);
     private static final Color BLACK = new Color(0,0,0);
     private Curve[] Curves;
-    private double[] Points;
+    private double[] Scores;
     private int currentRound;
     private int roundNum;
     private String[] PlayerNames;
-    private InfoPanel infoPanel;
+    private InfoPanel infoPanel; //TODO Dani ez miert kell ide?
     //private InfoPanel infoPanel = new InfoPanel();
 
 
     public Board(int numOfPlayers, int numOfRounds, String[] playerNames, Color[] colors) {
         this.Curves = new Curve[numOfPlayers];
-        this.Points = new double[numOfPlayers];
+        this.Scores = new double[numOfPlayers];
         this.currentRound = 0;
         this.roundNum = numOfRounds;
         this.PlayerNames = playerNames.clone();
-        this.Points = new double[numOfPlayers];
+        this.Scores = new double[numOfPlayers];
         for (int i = 0; i < numOfPlayers; i++) {
             Curves[i] = new Curve();
             Curves[i].setColor(colors[i]);
-            Points[i] = 0;
+            Scores[i] = 0;
         }
         setPreferredSize(new Dimension(windowWidth, windowHeight));
         setBorder(BorderFactory.createLineBorder(Color.pink));
-        infoPanel = new InfoPanel(infoPanelWidth,infoPanelHeight);
-        infoPanel.setPlayerNames(playerNames);
-        infoPanel.setRoundNum(numOfRounds);
+        //infoPanel = new InfoPanel(infoPanelWidth,infoPanelHeight);
+        //infoPanel.setPlayerNames(playerNames);
+        //infoPanel.setRoundNum(numOfRounds);
 
     }
 
@@ -58,7 +58,7 @@ public class Board extends JPanel {
             Curves[i] = new Curve();
             Curves[i].setColor(pkg.Colors[i]);
         }
-        this.Points = pkg.Scores;
+        this.Scores = pkg.Scores;
         this.currentRound = pkg.currentRound;
         this.roundNum = pkg.numOfRounds;
         this.PlayerNames = pkg.playerNames.clone();
@@ -80,8 +80,8 @@ public class Board extends JPanel {
 
     public void setCurves(Curve[] curves) {Curves = curves.clone();}
 
-    public void setPoints(double[] P) {
-        Points = P.clone();
+    public void setScores(double[] P) {
+        Scores = P.clone();
     }
 
 
@@ -107,8 +107,8 @@ public class Board extends JPanel {
 
     public Curve[] getCurves() {return Curves.clone();}
 
-    public double[] getPoints() {
-        return Points.clone();
+    public double[] getScores() {
+        return Scores.clone();
     }
 
     public int getCurrentRound() {
@@ -137,17 +137,17 @@ public class Board extends JPanel {
 
     public void receiveFromPackageS2C(double[] scores, int currentRound, CurvePoint[] positions) {
         this.currentRound = currentRound;
-        for (int i= 0; i < Points.length; i = i +1) {
-            Points[i] = scores[i];
+        for (int i = 0; i < Scores.length; i = i +1) {
+            Scores[i] = scores[i];
             Curves[i].addPoint(positions[i]);
         }
     }
 
     public void receiveFromPackageS2C(PackageS2C pkg) {
         this.currentRound = pkg.currentRound;
-        this.Points = pkg.Scores.clone();
+        this.Scores = pkg.Scores.clone();
 
-        for (int i= 0; i < Points.length; i = i +1) {
+        for (int i = 0; i < Scores.length; i = i +1) {
             Curves[i].addPoint(pkg.CurvePoints[i]);
         }
     }
@@ -167,7 +167,7 @@ public class Board extends JPanel {
     }
 
     public void render(){//not used, the function is in gui
-        infoPanel.setPoints(this.Points);
+        infoPanel.setPoints(this.Scores);
         infoPanel.setCurrentRound(this.currentRound);
         repaint();
     }

@@ -28,7 +28,7 @@ public class TestEvents {
         gamescreen.setPlayerNames(board.getPlayerNames());
         //System.out.println(gamescreen.getPlayerNames()[0]);
         gamescreen.setCurves(board.getCurves());
-        gamescreen.setPoints(board.getPoints());
+        gamescreen.setScores(board.getScores());
         //System.out.println(gamescreen.getInfoPanel().getPlayerNames()[0]);
         gamescreen.setNumOfPlayers(4);
 
@@ -36,7 +36,7 @@ public class TestEvents {
         for (int i = 0; i < 4; i = i+1) {
             points[i] = i;
         }
-        gamescreen.setPoints(points);
+        gamescreen.setScores(points);
         //gamescreen.render();
         //System.out.println(gamescreen.getInfoPanel().getPlayerNames()[0]);
         screenManager.setGameScreen(gamescreen);

@@ -234,6 +234,9 @@ public class Server extends Client{
         /* get the local player's input */
         ContorlStates[numOfClients] = player.getControlState();
 
+        //debug
+        System.out.println("Input client[0]:" + ContorlStates[0] + "   Input client[1]: " + ContorlStates[1]);
+
     }
 
     public void runServer() {
@@ -244,25 +247,15 @@ public class Server extends Client{
         /* test code, not final -------------------------------------------------  */
         //board.setCurrentRound(board.getCurrentRound()+1);
         //System.out.println("Current round  = " + board.getCurrentRound());
+        game.addRandomPosForDebug(cycleCounter);
 
-        int rangeMin = 0;
-        int rangeMax = 500;
-        float percentOfIsColored = 80;
-        percentOfIsColored = percentOfIsColored/100;
-        //CurvePoint[] randomPoints = new CurvePoint[numOfClients+1];
-        PackageS2C pkg = new PackageS2C(numOfClients+1);
-        for (int i = 0; i < numOfClients+1; i = i + 1) {
-            Random x = new Random();
-            double randomx = rangeMin + (rangeMax - rangeMin) * x.nextDouble();
-            Random y = new Random();
-            double randomy = rangeMin + (rangeMax - rangeMin) * y.nextDouble();
-            Random help = new Random();
-            boolean isColoredWProbability = (help.nextFloat() < percentOfIsColored);
-            pkg.CurvePoints[i] = new CurvePoint(randomx, randomy, isColoredWProbability);
-        }
-
-        pkg.currentRound = cycleCounter;
         /* end of test code ---------------------------------------------------------- */
+
+        PackageS2C pkg = new PackageS2C(numOfClients+1);
+        pkg.CurvePoints = game.getNewCurvePoints();
+        pkg.currentRound = game.getCurrentRound();
+        pkg.Scores = game.getScores();
+        pkg.gameState = game.getGameState();
 
         cycleCounter++;
         sendToClient(pkg);

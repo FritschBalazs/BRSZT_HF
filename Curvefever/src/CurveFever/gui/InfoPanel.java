@@ -22,11 +22,14 @@ public class InfoPanel extends JPanel {
     private JLabel roundLabel;
     private static final Color BACKGROUND = new Color(128, 164, 252);
     private int numOfPlayers;
-    public InfoPanel(int width, int height) {
+    public InfoPanel(int width, int height) { //TODO ne legyen ket konsturktor mert csunyan megzavart
         this.setPreferredSize(new Dimension(width,height));
     }
     public InfoPanel(int numOfPlayers) {
         this.numOfPlayers = numOfPlayers;
+        this.PlayerNames = new String[numOfPlayers];
+        this.Colors = new Color[numOfPlayers];
+        this.Points = new double[numOfPlayers];
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         roundLabel = new JLabel();
         roundLabel.setFont(new Font("Lato", Font.BOLD, 20));
@@ -41,6 +44,7 @@ public class InfoPanel extends JPanel {
             ScoreLabels[i].setFont(new Font("Lato", Font.PLAIN, 15));
             ScoreLabels[i].setAlignmentX(Component.CENTER_ALIGNMENT);
             add(ScoreLabels[i]);
+            PlayerNames[i] = " ";
         }
     }
     public double[] getPoints() {return Points;}

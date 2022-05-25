@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Random;
 
 import static java.lang.Math.*;
 
@@ -419,19 +420,66 @@ public class Game {
 
     public void evaluateStep(ControlState[] Controls) {
         //boolean[] collisions = detectCollisions();
+
+        double tmpScore[] = new double[Players.length];
         for (int i = 0; i < Players.length; i++) {
             if (/*collisions[i]*/false) {
                 Players[i].setAlive(false);
             }
             if (Players[i].getIsAlive()) {
-                Players[i].updateScore(SCORE_PER_TICK);
+                Players[i].updateScore(SCORE_PER_TICK); //TODO Marci azt mondtuk, hogy ez pozicio fuggo is
+                tmpScore[i] = Players[i].getScore();
             }
         }
         updatePositions(Controls);
+        mainBoard.setScores(tmpScore);
     }
 
     public Curve[] getBoardCurves() {
         return mainBoard.getCurves().clone();
+    }
+
+    /* returns the newly calculated CurvePoints */
+    public CurvePoint[] getNewCurvePoints() {
+        CurvePoint[] retval = new CurvePoint[playerNum];
+        Curve[] cureves = mainBoard.getCurves();
+        for (int i = 0; i < playerNum; i++) {
+            retval[i] = cureves[i].getLastPoint();
+        }
+
+        return retval.clone();
+    }
+
+
+    //TODO ezt torolni
+    public void addRandomPosForDebug(int counter){
+        /* test code, not final -------------------------------------------------  */
+        //board.setCurrentRound(board.getCurrentRound()+1);
+        //System.out.println("Current round  = " + board.getCurrentRound());
+
+        int rangeMin = 0;
+        int rangeMax = 500;
+        float percentOfIsColored = 80;
+        percentOfIsColored = percentOfIsColored/100;
+        double tmpScores[] = new double[playerNum];
+
+        CurvePoint[] tmpPoints = new CurvePoint[playerNum];
+        for (int i = 0; i < playerNum; i = i + 1) {
+            Random x = new Random();
+            double randomx = rangeMin + (rangeMax - rangeMin) * x.nextDouble();
+            Random y = new Random();
+            double randomy = rangeMin + (rangeMax - rangeMin) * y.nextDouble();
+            Random help = new Random();
+            boolean isColoredWProbability = (help.nextFloat() < percentOfIsColored);
+            tmpPoints[i] = new CurvePoint(randomx, randomy, isColoredWProbability);
+            Players[i].setScore(counter*(i+1));
+            tmpScores[i] = Players[i].getScore();
+        }
+
+        mainBoard.setCurrentRound(counter);
+        mainBoard.addCurvePoints(tmpPoints);
+        mainBoard.setScores(tmpScores);
+
     }
 }
 

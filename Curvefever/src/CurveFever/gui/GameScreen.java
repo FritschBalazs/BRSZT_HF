@@ -18,7 +18,7 @@ public class GameScreen extends JPanel {
     private InfoPanel infoPanel;
     private JLabel footer;
     private Curve[] Curves;
-    private double[] Points;
+    private double[] Scores;
     private int currentRound;
     private int roundNum;
     private String[] PlayerNames;
@@ -68,12 +68,12 @@ public class GameScreen extends JPanel {
         this.roundNum = roundNum;
     }
 
-    public void setPoints(double[] points) {
-        Points = points;
+    public void setScores(double[] scores) {
+        Scores = scores.clone();
     }
 
     public void setCurves(Curve[] curves) {
-        Curves = curves;
+        Curves = curves.clone();
     }
     public String[] getPlayerNames(){
         return PlayerNames;
@@ -88,12 +88,16 @@ public class GameScreen extends JPanel {
     }
 
     public void render(){
-        infoPanel.setPoints(this.Points);
+        //TODO ezt torolni mert ez igy eleg troger. Inditasnal hibat dob ha hamarabb lefut az uodate mint a setName()
+        if (PlayerNames == null) {
+            return;
+        }
+
+        infoPanel.setPoints(this.Scores);
         infoPanel.setCurrentRound(this.currentRound);
         infoPanel.setPlayerNames(this.PlayerNames);
+        infoPanel.setNumOfPlayers(numOfPlayers);    //TODO cleanup majd egyszer, itt csak azt kene atkuldeni ami valtozik
 
-
-        infoPanel.setNumOfPlayers(numOfPlayers);
         Color[] colors = new Color[numOfPlayers];  //this only needed for testing purposes. In creation time Colors will be known from initpackage
         for (int i = 0; i < numOfPlayers; i = i +1) {
             colors[i] = Curves[i].getColor();

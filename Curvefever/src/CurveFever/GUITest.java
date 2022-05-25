@@ -1,7 +1,6 @@
 package CurveFever;
 
 import CurveFever.gui.GameScreen;
-import CurveFever.gui.MenuScreen;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,13 +21,13 @@ public class GUITest {
         gamescreen.setCurrentRound(board.getCurrentRound());
         gamescreen.setPlayerNames(board.getPlayerNames());
         gamescreen.setCurves(board.getCurves());
-        gamescreen.setPoints(board.getPoints());
+        gamescreen.setScores(board.getScores());
         gamescreen.setNumOfPlayers(4);
         double[] points = new double[4];
         for (int i = 0; i < 4; i = i+1) {
             points[i] = i;
         }
-        gamescreen.setPoints(points);
+        gamescreen.setScores(points);
         //window.add(gamescreen,BorderLayout.CENTER);
 
         //TESTING MENUSCREEN
