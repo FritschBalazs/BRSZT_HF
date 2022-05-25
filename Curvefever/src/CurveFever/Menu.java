@@ -14,7 +14,7 @@ public class Menu {
     private String playerName; //To give to Player constructor (player name can be entered in menu, in a textbox)
     //private int numOfPlayers;
     //private int numOfRounds;
-    //TODO ha nagyjabol kesz a menu osztaly akkor ezt purgalni
+    //TODO (B) ha nagyjabol kesz a menu osztaly akkor ezt purgalni (nem tudom kell-e majd ujrakezdesnel esetleg pl a numOfRounds)
 
     private ScreenManager sManager;
 
@@ -44,13 +44,18 @@ public class Menu {
         //Start game in Client mode
     }
 
-    public void updateMenu(){
-        //Controlling menu logic (big while loop)
+    public void updateMenu(Board boardToDisplay, GameScreen gameScreen) {
+        gameScreen.setCurves(boardToDisplay.getCurves());
+        gameScreen.setCurrentRound(boardToDisplay.getCurrentRound());
+        gameScreen.setScores(boardToDisplay.getScores());
     }
 
-    public void renderMenu(){
-        //Drawing Menu
-    }
+    public void renderMenu(Board boardToDisplay, GameScreen gameScreen){
+        gameScreen.setCurves(boardToDisplay.getCurves());
+        gameScreen.setCurrentRound(boardToDisplay.getCurrentRound());
+        gameScreen.setPlayerNames(boardToDisplay.getPlayerNames());
+        gameScreen.setScores(boardToDisplay.getScores());
+        gameScreen.setRoundNum(boardToDisplay.getRoundNum());    }
 
     public void runMenu(){
         JFrame window = new JFrame("Kurve Fívör gui");
@@ -64,44 +69,45 @@ public class Menu {
 
         /* wait for the player to start click create game or joing game */
         while (screenManager.getProgramState() == ProgramState.MAIN_MENU) {
-            screenManager.update();
+            screenManager.update(true);
         }
 
         /* if this instance is a server, create the server, and start the game */
         if (screenManager.isServer() == true){
-
-
 
             /* create server */
             int numOfPlayers = screenManager.getNumOfPlayers();
             int numOfRounds = screenManager.getNumOfRounds();
             String serverPlayerName = screenManager.getPlayerName();
             this.server = new Server(numOfPlayers,numOfRounds,serverPlayerName);
-            this.client = null;
 
+            /* update window title */
             window.setTitle("Kurve Fívör gui (szerver, player: " + serverPlayerName + ")");
+            //TODO (D, low prio) megoldani hogy egyertelmu legyen ha valaki rakattintott valamire es a tobbiekre varunk
 
             /* create game screen and add it to screenManager */ //servernel lehetne a scrrenmanager-en belulre, kliensnel nehezebb
             GameScreen gameScr = new GameScreen(numOfPlayers);
             screenManager.setGameScreen(gameScr);
 
-
-
             /* setup connections and configure game */
             this.server.acceptConnections();
             this.server.setupGame();
 
+            Board boardToDisplay = this.server.getGame().getMainBoard();
+            renderMenu(boardToDisplay,screenManager.getGameScreen());
+            screenManager.update(true);
+
             /* eneter game loop */
             while (screenManager.getProgramState() == ProgramState.IN_GAME) {
-                Board boardToDisplay = this.server.getGame().getMainBoard(); //todo ezt optimalizalni
-                screenManager.getGameScreen().setCurves(boardToDisplay.getCurves());
-                screenManager.getGameScreen().setCurrentRound(boardToDisplay.getCurrentRound());
-                screenManager.getGameScreen().setPlayerNames(boardToDisplay.getPlayerNames());
-                screenManager.getGameScreen().setScores(boardToDisplay.getScores());
-                screenManager.getGameScreen().setRoundNum(boardToDisplay.getRoundNum());
 
+                /* update data in GUI classes */
+                updateMenu(boardToDisplay,screenManager.getGameScreen());
+
+                /* get Control input for local player */
                 server.getPlayer().setControlState(screenManager.getControlState());
-                screenManager.update();
+
+                /* draw */
+                screenManager.update(false);
             }
         }
 
@@ -110,9 +116,9 @@ public class Menu {
             /* create client */
             String playerName = screenManager.getPlayerName();
             String serverIp = screenManager.getServerIP();
-            client = new Client("localhost",playerName,false); //todo utolso argra nincs szukseg
-            //TODO localhost hardcodeot kiszedni
-            server = null;
+            client = new Client("localhost",playerName);
+            //TODO (B) localhost hardcodeot kiszedni
+
             /* wait for server to send init package,
              * containing other the other players' data
              */
@@ -125,9 +131,12 @@ public class Menu {
 
             window.setTitle("Kurve Fívör gui (kliens: #" + client.player.id + ", player: " + client.player.getName() + ")");
 
-            screenManager.update();
+            Board boardToDisplay = this.client.getBoard();
+            renderMenu(boardToDisplay,screenManager.getGameScreen());
 
-            //TODO itt meg kene oldani hogy a player egyhelyben forogjon
+            screenManager.update(true);
+
+            //TODO (B/M) itt meg kene oldani hogy a player egyhelyben forogjon
 
             /* enter game loop */
             while (screenManager.getProgramState() == ProgramState.IN_GAME) {
@@ -139,23 +148,20 @@ public class Menu {
                 /* wait for server to request data, and then send it */
                 client.sendToServer();
 
-                /* receive game data from the latest cycle */
+                /* receive game data containing data from the latest cycle */
                 PackageS2C message = client.receiveFromServer();
                 if (message != null )  {
                     this.client.board.receiveFromPackageS2C(message);
                 }
 
-                Board boardToDisplay = this.client.getBoard();
-                screenManager.getGameScreen().setCurves(boardToDisplay.getCurves());  //todo ezt is optimalizalni
-                screenManager.getGameScreen().setCurrentRound(boardToDisplay.getCurrentRound());
-                screenManager.getGameScreen().setPlayerNames(boardToDisplay.getPlayerNames());
-                //screenManager.getGameScreen().setNumOfPlayers(boardToDisplay.getRoundNum());
-                screenManager.getGameScreen().setScores(boardToDisplay.getScores());
-                screenManager.getGameScreen().setRoundNum(boardToDisplay.getRoundNum());
+                /* actualize data stored in gui classes */
+                updateMenu(boardToDisplay,screenManager.getGameScreen());
 
-
-                screenManager.update();
+                /* draw */
+                screenManager.update(false);
             }
+
+            //TODO (M/B) kitalalni, hogy mi legyen ha vege egy jatekanak (osszes kornek)
         }
     }
 }

@@ -9,8 +9,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import javax.swing.Timer;
 
-//TODO torolni ha nem kell ezt torolni
-import java.util.Random;
 
 public class Server extends Client{
 
@@ -105,7 +103,7 @@ public class Server extends Client{
         /* Create init package */
         InitPackageS2C pkg = new InitPackageS2C(numOfClients+1);
         pkg.currentRound = 0;
-        pkg.gameState = GameState.MENU; //TODO ez igy ok Marci/Dani?
+        pkg.gameState = GameState.MENU; //TODO (M) ez igy ok Marci? aka.: mi legyen a gameState-el
         pkg.CurvePoints = null;
         pkg.numOfRounds = this.numOfRounds;
 
@@ -128,7 +126,7 @@ public class Server extends Client{
         }
 
         /* generate random colors for the players */
-        //TODO Marci random szingeneralojat illeszteni, ezt a borzalmat meg torolni
+        //TODO (M/B) Marci random szingeneralojat illeszteni, ezt a borzalmat meg torolni
         pkg.Colors[0] = new java.awt.Color(255,105,180);
         pkg.Colors[1] = new java.awt.Color(124,255,255);
         if (numOfClients+1 > 2) {
@@ -166,8 +164,8 @@ public class Server extends Client{
         }
 
         game = new Game(numOfClients+1, pkg.numOfRounds, SSPlayers,pkg.Colors);
-        //TODO init game
-        //TODO setup server
+        //TODO (M) init game
+        //TODO (B) setup server. Nem tudom mire gondoltam pontosan
 
 
 
@@ -197,7 +195,9 @@ public class Server extends Client{
 
     public void sendToClient(PackageS2C pkg) {
 
+        /* save data to a member variable, so all runnables can acces it */
         currentPkg = pkg;
+
         /* create and start data sending threads */
         for (int idx = 0; idx < numOfClients; idx++) {
             SPThreads[idx] = new Thread(SPRunnables [idx]);
@@ -242,13 +242,10 @@ public class Server extends Client{
     public void runServer() {
         requestInputs();
 
-        // TODO call game main function
+        // TODO (M/B) call game main function, to calculate everything
 
         /* test code, not final -------------------------------------------------  */
-        //board.setCurrentRound(board.getCurrentRound()+1);
-        //System.out.println("Current round  = " + board.getCurrentRound());
         game.addRandomPosForDebug(cycleCounter);
-
         /* end of test code ---------------------------------------------------------- */
 
         PackageS2C pkg = new PackageS2C(numOfClients+1);
@@ -301,12 +298,6 @@ public class Server extends Client{
         public void run() {
 
             try {
-                //TODO megcsinalni hogy a tenyleges adatot kuldje,
-                /*----------------------------***************************--------------
-                PackageS2C dummyForClient = new PackageS2C(4);
-                dummyForClient.currentRound = board.getCurrentRound();
-                //---------------------------*****------------------------------ */
-
                 ObjOutStreams[clientId].writeObject(currentPkg);
             } catch (IOException e) {
                 System.out.println("IOException from SendPoints runnable #" + clientId);

@@ -52,7 +52,7 @@ public class TestEvents {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                screenManager.update();
+                screenManager.update(true);
 
             }
         });

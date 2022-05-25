@@ -427,7 +427,7 @@ public class Game {
                 Players[i].setAlive(false);
             }
             if (Players[i].getIsAlive()) {
-                Players[i].updateScore(SCORE_PER_TICK); //TODO Marci azt mondtuk, hogy ez pozicio fuggo is
+                Players[i].updateScore(SCORE_PER_TICK); //TODO (M) Marci azt mondtuk, hogy ez pozicio fuggo is nem? -B
                 tmpScore[i] = Players[i].getScore();
             }
         }
@@ -451,7 +451,7 @@ public class Game {
     }
 
 
-    //TODO ezt torolni
+    //TODO (B low prio) ezt torolni ha mar nem szukseges teszteleshez
     public void addRandomPosForDebug(int counter){
         /* test code, not final -------------------------------------------------  */
         //board.setCurrentRound(board.getCurrentRound()+1);

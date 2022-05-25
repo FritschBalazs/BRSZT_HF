@@ -87,17 +87,16 @@ public class GameScreen extends JPanel {
         return gamePanel;
     }
 
-    public void render(){
-        //TODO ezt torolni mert ez igy eleg troger. Inditasnal hibat dob ha hamarabb lefut az uodate mint a setName()
-        if (PlayerNames == null) {
-            return;
-        }
+    public void render(boolean firstCall){
 
-        infoPanel.setPoints(this.Scores);
+        if (firstCall){
+            infoPanel.setPlayerNames(this.PlayerNames);
+            infoPanel.setNumOfPlayers(this.numOfPlayers);
+            infoPanel.setRoundNum(this.roundNum);
+        }
+        infoPanel.setScores(this.Scores);
         infoPanel.setCurrentRound(this.currentRound);
-        infoPanel.setPlayerNames(this.PlayerNames);
-        infoPanel.setNumOfPlayers(this.numOfPlayers);    //TODO cleanup majd egyszer, itt csak azt kene atkuldeni ami valtozik
-        infoPanel.setRoundNum(this.roundNum);
+
 
         Color[] colors = new Color[numOfPlayers];  //this only needed for testing purposes. In creation time Colors will be known from initpackage
         for (int i = 0; i < numOfPlayers; i = i +1) {

@@ -41,7 +41,7 @@ public class GUITest {
         window.pack(); // fit the window size around the components (just our jpanel).
 
         window.setLocationRelativeTo(null); // open window in the center of the screen
-        gamescreen.render();
+        gamescreen.render(true);
         window.setVisible(true); // display the window
     }
 }

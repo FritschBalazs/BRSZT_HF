@@ -94,11 +94,11 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
         return controlState;
     }
 
-    public void update(){
+    public void update(boolean firstCall){
 
         switch (programState) {  //note B2D: nem volt jo mert folyamatosan ujra kell renderelni, nem csak amikor valtozik a state
             case IN_GAME:
-                gameScreen.render();
+                gameScreen.render(firstCall);
                 layout.show(this, GAMESCREEN);
                 break;
             case MAIN_MENU:
@@ -132,7 +132,7 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
     @Override
     public void actionPerformed(ActionEvent e) {
         if((e.getSource() == menuScreen.createGameButton)) {
-            //TODO check playername, numofrounds
+            //TODO (D) check playername, numofrounds
             isServer = true; //ennek elorebb kell lenni mint a program state valtasnak, kulonben nem jo
             playerName = menuScreen.playerNameTextField.getText();
             if(menuScreen.arrowsButton.isSelected()){
@@ -145,7 +145,7 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
             programState = ProgramState.IN_GAME;
 
         } else if (e.getSource() == menuScreen.joinGameButton) {
-            //TODO check playername,ip
+            //TODO (D) check playername,ip
             isServer = false;
             playerName = menuScreen.playerNameTextField.getText();
             serverIP = menuScreen.IPTextField.getText();

@@ -1,11 +1,7 @@
 package CurveFever.gui;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 
 import static java.util.Arrays.sort;
 import static java.util.Collections.reverseOrder;
@@ -13,7 +9,7 @@ import static java.util.Collections.reverseOrder;
 
 //GamePanelen belül lesz!
 public class InfoPanel extends JPanel {
-    private double[] Points;
+    private double[] Scores;
     private String[] PlayerNames;
     private int roundNum;
     private int currentRound;
@@ -22,14 +18,14 @@ public class InfoPanel extends JPanel {
     private JLabel roundLabel;
     private static final Color BACKGROUND = new Color(128, 164, 252);
     private int numOfPlayers;
-    public InfoPanel(int width, int height) { //TODO ne legyen ket konsturktor mert csunyan megzavart
+    public InfoPanel(int width, int height) { //TODO (D) pls ne legyen ket konsturktor mert csunyan megzavart -B
         this.setPreferredSize(new Dimension(width,height));
     }
     public InfoPanel(int numOfPlayers) {
         this.numOfPlayers = numOfPlayers;
         this.PlayerNames = new String[numOfPlayers];
         this.Colors = new Color[numOfPlayers];
-        this.Points = new double[numOfPlayers];
+        this.Scores = new double[numOfPlayers];
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         roundLabel = new JLabel();
         roundLabel.setFont(new Font("Lato", Font.BOLD, 20));
@@ -47,9 +43,10 @@ public class InfoPanel extends JPanel {
             PlayerNames[i] = " ";
         }
     }
-    public double[] getPoints() {return Points;}
+    public double[] getScores() {return Scores;}
 
-    public void setPoints(double[] points) {Points = points;}
+    public void setScores(double[] scores) {
+        Scores = scores;}
 
     public void setRoundNum(int roundNum) {
         this.roundNum = roundNum;
@@ -76,10 +73,10 @@ public class InfoPanel extends JPanel {
 
 
     public void drawScore() {
-        //TODO esetleg sorrendbe irni ki a scoreokat
+        //TODO (D) esetleg sorrendbe irni ki a scoreokat
         roundLabel.setText("Round "+currentRound+"/"+roundNum);
         for (int i = 0; i < numOfPlayers; i = i + 1) {
-            ScoreLabels[i].setText(PlayerNames[i]+": "+Points[i]);
+            ScoreLabels[i].setText(PlayerNames[i]+": "+ Scores[i]);
             ScoreLabels[i].setForeground(Colors[i]);
         }
     }

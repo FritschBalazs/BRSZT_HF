@@ -27,7 +27,7 @@ public class Board extends JPanel {
     private int currentRound;
     private int roundNum;
     private String[] PlayerNames;
-    private InfoPanel infoPanel; //TODO Dani ez miert kell ide?
+    private InfoPanel infoPanel; //TODO (D) Dani ez miert kell ide? Ha lehet toroljuk pls
     //private InfoPanel infoPanel = new InfoPanel();
 
 
@@ -167,7 +167,7 @@ public class Board extends JPanel {
     }
 
     public void render(){//not used, the function is in gui
-        infoPanel.setPoints(this.Scores);
+        infoPanel.setScores(this.Scores);
         infoPanel.setCurrentRound(this.currentRound);
         repaint();
     }
