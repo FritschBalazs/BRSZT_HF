@@ -9,7 +9,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import javax.swing.Timer;
 
-//TODO ha nem kell ezt torolni
+//TODO torolni ha nem kell ezt torolni
 import java.util.Random;
 
 public class Server extends Client{
@@ -35,7 +35,7 @@ public class Server extends Client{
 
 
     public Server(int numOfPlayers,int numOfRounds, String playerName) {
-        super("", playerName, true);
+        super("", playerName);
 
 
         this.numOfClients = numOfPlayers - 1;

@@ -11,9 +11,8 @@ public class test_client_1 {
 
 
 
-        Client myClient = new Client("localhost","en",false);
-        Player myPlayer = new Player("1_sanyi");
-        myClient.setPlayer(myPlayer);
+        //Client myClient = new Client("152.66.176.82","1_sanyi");
+        Client myClient = new Client("localhost","1_sanyi");
         myClient.receiveFromServerInit();
 
         JFrame window = new JFrame("Kurve Fívör");

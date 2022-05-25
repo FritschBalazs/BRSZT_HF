@@ -8,7 +8,6 @@ import java.net.UnknownHostException;
 public class Client{
     protected Player player;
     protected Board board;
-    protected boolean isGameHost; //TODO ezt torolni, csak nem akarok tul sok merge conflict-ot
     private String serverIp;
 
     private Socket socket;
@@ -18,14 +17,10 @@ public class Client{
     protected static final int port = 7785;
 
 
-    public Client(String serverIp, String playerName, boolean isGameHost) {
-        if (isGameHost) {
-            this.serverIp = "localhost";
-        } else {
-            this.serverIp = serverIp;
-        }
-        this.player = new Player(playerName);
+    public Client(String serverIp, String playerName) {
 
+        this.serverIp = serverIp;
+        this.player = new Player(playerName);
     }
 
 
@@ -37,9 +32,6 @@ public class Client{
         this.board = board;
     }
 
-    public void setGameHost(boolean isGameHost) {
-        this.isGameHost = isGameHost;
-    }
 
     public void setServerIp(String serverIp) {
         this.serverIp = serverIp;
@@ -53,10 +45,6 @@ public class Client{
         return board;
     }
 
-    public boolean getIsGameHost() {
-        return isGameHost;
-    }
-
     public String getServerIp() {
         return serverIp;
     }
@@ -67,10 +55,8 @@ public class Client{
 
     public void receiveFromServerInit(){
 
-        /* if the connection got closed, or it has never been started */
-        if (socket == null || socket.isClosed() ) {
-            establishConnection();
-        }
+        /* Connect to server*/
+        establishConnection();
 
         try {
             /* wait for signal */
@@ -152,21 +138,36 @@ public class Client{
 
     private void establishConnection() {
 
-        System.out.println("Connecting to server...");
-        try {
-            socket = new Socket(InetAddress.getByName(serverIp),port);
-            InputStream iStream = socket.getInputStream();
-            OutputStream oStream = socket.getOutputStream();
+        int cnt = 0;
 
-            objIStream = new ObjectInputStream(iStream);
-            objOStream = new ObjectOutputStream(oStream);
+        System.out.println("Connecting to server at " + serverIp + " ");
+        while(objIStream == null) {
+            try {
+                socket = new Socket(InetAddress.getByName(serverIp), port);
+                InputStream iStream = socket.getInputStream();
+                OutputStream oStream = socket.getOutputStream();
 
-        } catch (UnknownHostException e) {
-            System.out.println("Server IP not valid");
-        } catch (IOException e) {
-            System.out.println("IOException when trying to connect");
+                objIStream = new ObjectInputStream(iStream);
+                objOStream = new ObjectOutputStream(oStream);
+
+                System.out.println("Connection to server complete");
+
+            } catch (UnknownHostException e) {
+                System.out.println("Server IP not valid");
+            } catch (IOException e) {
+                /* if server is localhost, and not running yet */
+                if (  e.getMessage().equals("Connection refused") ) {
+                    cnt++;
+                    if (cnt % 10000 == 0){
+                        System.out.print(".");
+                    }
+                } else {
+                    System.out.println("IOException when trying to connect: " + e.getMessage());
+                }
+            }
+
         }
 
-        System.out.println("Connection to server complete");
+
     }
 }

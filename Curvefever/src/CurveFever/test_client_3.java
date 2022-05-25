@@ -8,9 +8,8 @@ public class test_client_3 {
     public static void main(String[] args){
 
 
-        Client myClient = new Client("localhost","en",false);
-        Player myPlayer = new Player("3_geza");
-        myClient.setPlayer(myPlayer);
+        Client myClient = new Client("localhost","3_geza");
+
         myClient.receiveFromServerInit();
 
         JFrame window = new JFrame("Kurve Fívör");
