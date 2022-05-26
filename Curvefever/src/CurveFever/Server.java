@@ -115,7 +115,6 @@ public class Server extends Client{
         InitPackageS2C pkg = new InitPackageS2C(numOfClients+1);
         pkg.currentRound = 0;
         pkg.gameState = GameState.MENU; //TODO (M) ez igy ok Marci? aka.: mi legyen a gameState-el
-        pkg.CurvePoints = null;
         pkg.numOfRounds = this.numOfRounds;
 
 
@@ -162,6 +161,7 @@ public class Server extends Client{
         //TODO (M) init game
         //TODO (B) setup server. Nem tudom mire gondoltam pontosan
 
+        pkg.CurvePoints = game.getMainBoard().getLastCurvePoints();
         pkg.Colors = game.getColors();
         /* send out init packages for all players */
         for (int i = 0; i < numOfClients; i++) {

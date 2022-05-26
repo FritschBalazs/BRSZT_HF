@@ -38,19 +38,13 @@ public class Board{
         this.Curves = new Curve[numOfPlayers];
         for(int i = 0; i < numOfPlayers; i = i + 1) {
             Curves[i] = new Curve();
-            Curves[i].addPoint(new CurvePoint());
+            Curves[i].addPoint(pkg.CurvePoints[i]);
             Curves[i].setColor(pkg.Colors[i]);
         }
         this.Scores = pkg.Scores;
         this.currentRound = pkg.currentRound;
         this.roundNum = pkg.numOfRounds;
         this.PlayerNames = pkg.playerNames.clone();
-
-
-        for (int i = 0; i < numOfPlayers; i++) {
-            Curves[i] = new Curve();
-            Curves[i].setColor(pkg.Colors[i]);
-        }
 
     }
 

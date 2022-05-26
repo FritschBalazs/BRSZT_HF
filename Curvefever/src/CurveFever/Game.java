@@ -286,7 +286,7 @@ public class Game {
     }
 
     private void initBoard() {
-        boolean[] playersAlive = {true, true, true};
+        boolean[] playersAlive = {true, true, true, true};
         Color[] initColors = new Color[Players.length];
         CurvePoint[] initPoints = new CurvePoint[Players.length];
         Vector2D[] initPositions = new Vector2D[Players.length];
@@ -465,9 +465,9 @@ public class Game {
         mainBoard.setScores(tmpScore);
     }
 
-    public Curve[] getBoardCurves() {
-        return mainBoard.getCurves().clone();
-    }
+    //public Curve[] getBoardCurves() {
+    //    return mainBoard.getCurves().clone();
+    //}
 
     /* returns the newly calculated CurvePoints */
 
