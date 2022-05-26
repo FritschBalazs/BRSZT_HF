@@ -17,12 +17,16 @@ public class InfoPanel extends JPanel {
     private JLabel[] ScoreLabels;
     private JLabel roundLabel;
     private static final Color BACKGROUND = new Color(128, 164, 252);
+    private static final Color BUTTONCOLOR2 = new Color(3, 252, 217);
+
+    private static final Color BUTTONCOLOR1 = new Color(72, 47, 155);
+
     private int numOfPlayers;
     public InfoPanel(int width, int height) { //TODO (D) pls ne legyen ket konsturktor mert csunyan megzavart -B
         this.setPreferredSize(new Dimension(width,height));
     }
-    public InfoPanel(int numOfPlayers) {
-        this.numOfPlayers = numOfPlayers;
+    public InfoPanel() {
+        this.numOfPlayers = 4;
         this.PlayerNames = new String[numOfPlayers];
         this.Colors = new Color[numOfPlayers];
         this.Scores = new double[numOfPlayers];
@@ -71,10 +75,26 @@ public class InfoPanel extends JPanel {
         return PlayerNames;
     }
 
+    public void sortScores () {
+        double tempScore;
+        String tempName;
+        for (int i = 0; i < Scores.length; i++) {
+            for (int j = i + 1; j < Scores.length; j++) {
+                if (Scores[i] < Scores[j]) {
+                    tempScore = Scores[i];
+                    tempName = PlayerNames[i];
+                    Scores[i] = Scores[j];
+                    Scores[j] = tempScore;
+                    PlayerNames[i] = PlayerNames[j];
+                    PlayerNames[j] = tempName;
+                }
+            }
+        }
+    }
 
     public void drawScore() {
-        //TODO (D) esetleg sorrendbe irni ki a scoreokat
         roundLabel.setText("Round "+currentRound+"/"+roundNum);
+        sortScores();
         for (int i = 0; i < numOfPlayers; i = i + 1) {
             ScoreLabels[i].setText(PlayerNames[i]+": "+ Scores[i]);
             ScoreLabels[i].setForeground(Colors[i]);
@@ -83,7 +103,7 @@ public class InfoPanel extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        setBackground(BACKGROUND);
+        setBackground(BUTTONCOLOR1);
         drawScore();
         Toolkit.getDefaultToolkit().sync(); // this smooths out animations on some systems
     }

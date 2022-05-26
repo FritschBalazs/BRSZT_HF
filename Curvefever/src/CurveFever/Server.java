@@ -261,9 +261,13 @@ public class Server extends Client{
         /* end of test code ---------------------------------------------------------- */
 
         PackageS2C pkg = new PackageS2C(numOfClients+1);
-        pkg.CurvePoints = game.getNewCurvePoints();
+        pkg.CurvePoints = game.getMainBoard().getLastCurvePoints();
         pkg.currentRound = game.getCurrentRound();
-        pkg.Scores = game.getScores();
+
+
+        //pkg.Scores = game.getScores(); //commeented out to test score sorrend xd
+        pkg.Scores = new double[]{1,5};
+
         pkg.gameState = game.getGameState();
         cycleCounter++;
         sendToClient(pkg);

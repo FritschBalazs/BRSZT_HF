@@ -2,9 +2,11 @@ package CurveFever.gui;
 
 import CurveFever.ControlState;
 import CurveFever.Curve;
+import CurveFever.CurvePoint;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 import static javax.swing.SwingConstants.CENTER;
 
@@ -17,7 +19,10 @@ public class GameScreen extends JPanel {
     private GamePanel gamePanel;
     private InfoPanel infoPanel;
     private JLabel footer;
-    private Curve[] Curves;
+    private Curve[] Curves; //majd lehet törölni kell, elég lesz a points is
+    private  Color[] Colors;
+    private CurvePoint[] CurvePoints;
+    private  CurvePoint[] PrevCurvePoints;
     private double[] Scores;
     private int currentRound;
     private int roundNum;
@@ -30,10 +35,20 @@ public class GameScreen extends JPanel {
         setLayout(new BorderLayout(0, 0));
         gamePanel = new GamePanel();
         gamePanel.setPreferredSize(new Dimension(gamePanelWidth, gamePanelHeight));
+        gamePanel.setBoardWidth(gamePanelWidth);
+        gamePanel.setBoardHeight(gamePanelHeight);
+        BufferedImage img = new BufferedImage(gamePanelWidth,gamePanelHeight,BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphics = img.createGraphics();
+        graphics.setPaint(new Color(26, 72, 98)); //bacground
+        graphics.fillRect(0, 0, img.getWidth(), img.getHeight());
+        graphics.setColor(Color.magenta);
+        graphics.setStroke(new BasicStroke(3));
+        graphics.drawRect(0,0,img.getWidth()-1, img.getHeight()-1);
+        gamePanel.setBoardImage(img);
 
 
 
-        infoPanel = new InfoPanel(numOfPlayers);
+        infoPanel = new InfoPanel();
         infoPanel.setPreferredSize(new Dimension(infoPanelWidth,infoPanelHeight));
 
         footer = new JLabel();
@@ -45,11 +60,10 @@ public class GameScreen extends JPanel {
         footer.setBackground(Color.white);
         footer.setText("Kurve Fívör Inc. Copyright, All rights reserved");
         footer.setOpaque(true);
-
         add(footer, BorderLayout.SOUTH);
-        add(gamePanel, BorderLayout.CENTER);
+        add(gamePanel, BorderLayout.CENTER); //first argument was gamepanel
         add(infoPanel, BorderLayout.EAST);
-        //infoPanel.setPlayerNames(this.PlayerNames);
+
     }
 
     public void setPlayerNames(String[] playerNames) {
@@ -75,6 +89,19 @@ public class GameScreen extends JPanel {
     public void setCurves(Curve[] curves) {
         Curves = curves.clone();
     }
+
+    public void setCurvePoints(CurvePoint[] curvePoints) {
+        CurvePoints = curvePoints.clone();
+    }
+
+    public void setPrevCurvePoints(CurvePoint[] prevCurvePoints) {
+        PrevCurvePoints = prevCurvePoints.clone();
+    }
+
+    public void setColors(Color[] colors) {
+        Colors = colors.clone();
+    }
+
     public String[] getPlayerNames(){
         return PlayerNames;
     }
@@ -88,24 +115,25 @@ public class GameScreen extends JPanel {
     }
 
     public void render(boolean firstCall){
-
         if (firstCall){
+            System.out.println("elobb ennek kene szerepelni");
             infoPanel.setPlayerNames(this.PlayerNames);
             infoPanel.setNumOfPlayers(this.numOfPlayers);
             infoPanel.setRoundNum(this.roundNum);
+            infoPanel.setColors(this.Colors);
+            gamePanel.setColors(this.Colors);
+            gamePanel.setNumOfPlayers(this.numOfPlayers);
+            gamePanel.setPrevCurvePoints(this.CurvePoints);
+            gamePanel.setCurvePoints(this.CurvePoints);
+            gamePanel.setInitHappened(true);
+
         }
         infoPanel.setScores(this.Scores);
         infoPanel.setCurrentRound(this.currentRound);
+        //gamePanel.setCurves(this.Curves); TEST--curvepoints is enough
+        gamePanel.setCurvePoints(this.CurvePoints);
+        System.out.println("fysfyfasdf");
 
-
-        Color[] colors = new Color[numOfPlayers];  //this only needed for testing purposes. In creation time Colors will be known from initpackage
-        for (int i = 0; i < numOfPlayers; i = i +1) {
-            colors[i] = Curves[i].getColor();
-        }
-        infoPanel.setColors(colors);
-
-        gamePanel.setCurves(this.Curves);
-        //infoPanel.setPlayerNames(this.PlayerNames);
         repaint();
     }
 }

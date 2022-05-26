@@ -470,15 +470,7 @@ public class Game {
     }
 
     /* returns the newly calculated CurvePoints */
-    public CurvePoint[] getNewCurvePoints() {
-        CurvePoint[] retval = new CurvePoint[playerNum];
-        Curve[] cureves = mainBoard.getCurves();
-        for (int i = 0; i < playerNum; i++) {
-            retval[i] = cureves[i].getLastPoint();
-        }
 
-        return retval.clone();
-    }
 }
 
 

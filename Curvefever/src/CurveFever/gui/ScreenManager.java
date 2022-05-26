@@ -95,22 +95,26 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
     }
 
     public void update(boolean firstCall){
-
-        switch (programState) {  //note B2D: nem volt jo mert folyamatosan ujra kell renderelni, nem csak amikor valtozik a state
+        switch (programState) {
             case IN_GAME:
                 gameScreen.render(firstCall);
-                layout.show(this, GAMESCREEN);
+                if(programState != prevProgramState) {
+                    layout.show(this, GAMESCREEN);
+                }
                 break;
             case MAIN_MENU:
-                layout.show(this, MENUSCREEN);
+                if(programState != prevProgramState) {
+                    layout.show(this, MENUSCREEN);
+                }
                 break;
             case END_OF_GAME:
-                layout.show(this, ENDGAMESCREEN);
+                if(programState != prevProgramState) {
+                    layout.show(this, ENDGAMESCREEN);
+                }
                 break;
             default:
                 break;
         }
-
         evaluateInput();
         prevProgramState = programState;
     }

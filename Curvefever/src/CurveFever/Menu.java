@@ -44,26 +44,49 @@ public class Menu {
         //Start game in Client mode
     }
 
-    public void updateMenu(Board boardToDisplay, GameScreen gameScreen) {
+    public void updateGuiData(Board boardToDisplay, GameScreen gameScreen) {
         gameScreen.setCurves(boardToDisplay.getCurves());
         gameScreen.setCurrentRound(boardToDisplay.getCurrentRound());
         gameScreen.setScores(boardToDisplay.getScores());
     }
+    public void updateGuiData2(Board boardToDisplay, GameScreen gameScreen, boolean init) {
+        //gameScreen.getGamePanel().setInitHappened(true);
 
-    public void renderMenu(Board boardToDisplay, GameScreen gameScreen){
+        if(init){
+            gameScreen.setCurvePoints(boardToDisplay.getLastCurvePoints());
+            gameScreen.setCurrentRound(boardToDisplay.getCurrentRound());
+            gameScreen.setScores(boardToDisplay.getScores());
+            gameScreen.setRoundNum(boardToDisplay.getRoundNum());
+            gameScreen.setPlayerNames(boardToDisplay.getPlayerNames());
+            gameScreen.setNumOfPlayers(boardToDisplay.getNumOfPlayers());
+            gameScreen.setColors(boardToDisplay.getColors());
+        }
+        else{
+            gameScreen.setCurvePoints(boardToDisplay.getLastCurvePoints());
+            gameScreen.setCurrentRound(boardToDisplay.getCurrentRound());
+            gameScreen.setScores(boardToDisplay.getScores());
+        }
+
+    }
+
+
+    public void initGuiData(Board boardToDisplay, GameScreen gameScreen){
         gameScreen.setCurves(boardToDisplay.getCurves());
         gameScreen.setCurrentRound(boardToDisplay.getCurrentRound());
         gameScreen.setPlayerNames(boardToDisplay.getPlayerNames());
         gameScreen.setScores(boardToDisplay.getScores());
-        gameScreen.setRoundNum(boardToDisplay.getRoundNum());    }
+        gameScreen.setRoundNum(boardToDisplay.getRoundNum());
+    }
 
     public void runMenu(){
-        JFrame window = new JFrame("Kurve Fívör gui");
+        JFrame window = new JFrame("Kurve Fívör");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ScreenManager screenManager = new ScreenManager();
 
         window.add(screenManager);
         window.pack();
+        window.setLocationRelativeTo(null); //locating window in the middle of the screen
+        window.setIconImage(new ImageIcon("src/curvefeverlogo.jpg").getImage()); //adding logo to window
         window.setVisible(true);
 
 
@@ -88,7 +111,7 @@ public class Menu {
             this.server = new Server(numOfPlayers,numOfRounds,serverPlayerName);
 
             /* update window title */
-            window.setTitle("Kurve Fívör gui (szerver, player: " + serverPlayerName + ")");
+            window.setTitle("Kurve Fívör(server, player: " + serverPlayerName + ")");
             //TODO (D, low prio) megoldani hogy egyertelmu legyen ha valaki rakattintott valamire es a tobbiekre varunk
 
             /* create game screen and add it to screenManager */ //servernel lehetne a scrrenmanager-en belulre, kliensnel nehezebb
@@ -100,14 +123,16 @@ public class Menu {
             this.server.setupGame();
 
             Board boardToDisplay = this.server.getGame().getMainBoard();
-            renderMenu(boardToDisplay,screenManager.getGameScreen());
+            //initGuiData(boardToDisplay,screenManager.getGameScreen()); TEST
+            updateGuiData2(boardToDisplay,screenManager.getGameScreen(),true);
             screenManager.update(true);
 
             /* eneter game loop */
             while (screenManager.getProgramState() == ProgramState.IN_GAME) {
 
                 /* update data in GUI classes */
-                updateMenu(boardToDisplay,screenManager.getGameScreen());
+                //updateGuiData(boardToDisplay,screenManager.getGameScreen()); //TEST
+                updateGuiData2(boardToDisplay,screenManager.getGameScreen(),false); //TEST
 
                 /* get Control input for local player */
                 server.getPlayer().setControlState(screenManager.getControlState());
@@ -138,10 +163,11 @@ public class Menu {
             GameScreen gameScr = new GameScreen(numOfPlayers);
             screenManager.setGameScreen(gameScr);
 
-            window.setTitle("Kurve Fívör gui (kliens: #" + client.player.id + ", player: " + client.player.getName() + ")");
+            window.setTitle("Kurve Fívör (client: #" + client.player.id + ", player: " + client.player.getName() + ")");
 
             Board boardToDisplay = this.client.getBoard();
-            renderMenu(boardToDisplay,screenManager.getGameScreen());
+            //initGuiData(boardToDisplay,screenManager.getGameScreen()); TEST
+            updateGuiData2(boardToDisplay,screenManager.getGameScreen(),true); //TEST
 
             screenManager.update(true);
 
@@ -164,7 +190,8 @@ public class Menu {
                 }
 
                 /* actualize data stored in gui classes */
-                updateMenu(boardToDisplay,screenManager.getGameScreen());
+                //updateGuiData(boardToDisplay,screenManager.getGameScreen()); TEST
+                updateGuiData2(boardToDisplay, screenManager.getGameScreen(),false);
 
                 /* draw */
                 screenManager.update(false);

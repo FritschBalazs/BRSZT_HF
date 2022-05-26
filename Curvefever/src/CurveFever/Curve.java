@@ -21,7 +21,10 @@ public class Curve {
     }
 
     public CurvePoint getLastPoint() {
-        return Points.get(Points.size()-1);
+        if (Points.size() != 0){
+            return Points.get(Points.size() - 1);
+        }
+        else return new CurvePoint();
     }
 
     public void setColor(Color color) {this.color = color;}
