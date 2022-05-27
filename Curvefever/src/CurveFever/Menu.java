@@ -90,8 +90,9 @@ public class Menu {
             }
 
         }
+/*
         //TESTCODE
-        Board Testboard = new Board(4,5,new String[]{"Hanti","Dani", "Frici","valaki"},new Color[]{Color.PINK,Color.PINK,Color.PINK,Color.PINK});
+        Board Testboard = new Board(4,5,new String[]{"Hanti","Dani", "Frici","valaki"},new Color[]{Color.PINK,Color.WHITE,Color.RED,Color.GREEN});
         while (screenManager.getProgramState() == ProgramState.END_OF_GAME) {
             initEndGameScrenData(Testboard,screenManager.getEndGameScreen());
             screenManager.update(true);
@@ -112,6 +113,7 @@ public class Menu {
 
         }
         //ENDOFTESTCODE
+*/
 
         /* if this instance is a server, create the server, and start the game */
         if (screenManager.isServer() == true){

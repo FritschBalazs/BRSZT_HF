@@ -28,6 +28,7 @@ public class MenuScreen extends JPanel {
     JTextField IPTextField;
     JTextField numOfRoundsTextField;
     JComboBox numOfPlayersComboBox;
+    JLabel waitingTextLabel;
 
 
     public MenuScreen() {
@@ -154,6 +155,11 @@ public class MenuScreen extends JPanel {
         numOfRoundsPanel.add(numOfRoundsTextLabel);
         numOfRoundsPanel.add(numOfRoundsTextField);
 
+        waitingTextLabel = new JLabel(); //szépíteni
+        waitingTextLabel.setFont(new Font("Lato", Font.BOLD, 20));
+        waitingTextLabel.setText("Waiting other players to join...");
+        waitingTextLabel.setVisible(false);
+
 
 
         //Adding logo and buttons to center panel
@@ -202,6 +208,10 @@ public class MenuScreen extends JPanel {
         constraints.gridy = 5;
         settingsPanel.add(numOfRoundsPanel,constraints);
 
+        constraints.gridx = 0;
+        constraints.gridy = 6;
+        constraints.insets = new Insets(50, 20, 25, 20);
+        settingsPanel.add(waitingTextLabel,constraints);
 
 
         //Adding center panel and settings panel to screen

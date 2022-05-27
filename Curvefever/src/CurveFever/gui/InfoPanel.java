@@ -19,7 +19,7 @@ public class InfoPanel extends JPanel {
     private static final Color BACKGROUND = new Color(128, 164, 252);
     private static final Color BUTTONCOLOR2 = new Color(3, 252, 217);
 
-    private static final Color BUTTONCOLOR1 = new Color(72, 47, 155);
+    private static final Color BUTTONCOLOR1 = new Color(84, 88, 255, 255);
 
     private int numOfPlayers;
     public InfoPanel(int width, int height) { //TODO (D) pls ne legyen ket konsturktor mert csunyan megzavart -B
@@ -30,20 +30,29 @@ public class InfoPanel extends JPanel {
         this.PlayerNames = new String[numOfPlayers];
         this.Colors = new Color[numOfPlayers];
         this.Scores = new double[numOfPlayers];
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        //setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
         roundLabel = new JLabel();
-        roundLabel.setFont(new Font("Lato", Font.BOLD, 20));
+        roundLabel.setFont(new Font("Lato", Font.BOLD, 25));
         roundLabel.setForeground(Color.white);
-        roundLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        roundLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 30, 0));
-        add(roundLabel);
+        //roundLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        //roundLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 30, 20));
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.insets = new Insets(0, 20, 50, 20);
+        add(roundLabel, constraints);
+        //add(roundLabel);
         ScoreLabels = new JLabel[numOfPlayers];
+        constraints.insets = new Insets(15, 20, 15, 20);
         for (int i = 0; i < numOfPlayers; i = i + 1){
             ScoreLabels[i] = new JLabel();
-            ScoreLabels[i].setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
-            ScoreLabels[i].setFont(new Font("Lato", Font.PLAIN, 15));
-            ScoreLabels[i].setAlignmentX(Component.CENTER_ALIGNMENT);
-            add(ScoreLabels[i]);
+            //ScoreLabels[i].setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 20));
+            ScoreLabels[i].setFont(new Font("Lato", Font.BOLD, 20));
+            //ScoreLabels[i].setAlignmentX(Component.CENTER_ALIGNMENT);
+            //add(ScoreLabels[i]);
+            constraints.gridy = i+1;
+            add(ScoreLabels[i],constraints);
             PlayerNames[i] = " ";
         }
     }
@@ -96,7 +105,7 @@ public class InfoPanel extends JPanel {
         roundLabel.setText("Round "+currentRound+"/"+roundNum);
         sortScores();
         for (int i = 0; i < numOfPlayers; i = i + 1) {
-            ScoreLabels[i].setText(PlayerNames[i]+": "+ Scores[i]);
+            ScoreLabels[i].setText(i+1+". "+PlayerNames[i]+": "+ Scores[i]);
             ScoreLabels[i].setForeground(Colors[i]);
         }
     }
