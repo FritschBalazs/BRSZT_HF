@@ -267,7 +267,7 @@ public class Game {
         Collections.shuffle(StartingPositions);
         for (int i = 0; i < Players.length; i++) {
             Players[i].setPosition(StartingPositions.get(i));
-            Vector2D speed = new Vector2D(-1, -1);
+            Vector2D speed = new Vector2D(-2, -2);
             Players[i].setSpeed(speed);
         }
     }
@@ -409,7 +409,6 @@ public class Game {
 
         Curve[] Curves;
         Curves = mainBoard.getCurves();
-        System.out.println("fasz: "+Curves[0].getCurveSize()); //TEST Dani
         CurvePoint currentPos;
         CurvePoint lastPos;
         // Store the last two points of the players
