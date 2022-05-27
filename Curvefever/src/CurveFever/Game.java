@@ -404,6 +404,7 @@ public class Game {
 
         Curve[] Curves;
         Curves = mainBoard.getCurves();
+        System.out.println("fasz: "+Curves[0].getCurveSize()); //TEST Dani
         CurvePoint currentPos;
         CurvePoint lastPos;
         // Store the last two points of the players
@@ -444,7 +445,6 @@ public class Game {
                     }
                 }
         }
-
         return collisionDetected;
     }
 

@@ -12,8 +12,8 @@ import java.io.IOException;
 //the part where the curves are drawn
 public class GamePanel extends JPanel {
     private static final Color BUTTONCOLOR2 = new Color(3, 252, 217);
-    private int boardWidth = 1280;
-    private int boardHeight = 720;
+    private int boardWidth;
+    private int boardHeight;
     private Curve[] Curves; //majd lehet torolni es eleg lesz a points is
     private CurvePoint[] PrevCurvePoints;
     private CurvePoint[] CurvePoints;
@@ -22,17 +22,7 @@ public class GamePanel extends JPanel {
     private int numOfPlayers;
     private BufferedImage boardImage;
 
-    public GamePanel() {
-        Curves = new Curve[0]; //lehet torolni majd
-        numOfPlayers = 5;
-        CurvePoints = new CurvePoint[numOfPlayers];
-        PrevCurvePoints = new CurvePoint[numOfPlayers];
-        /*for (int i = 0; i<numOfPlayers;i++){
-            CurvePoints[i] = new CurvePoint();
-            PrevCurvePoints[i] = new CurvePoint();
-        }*/
-
-    }
+    public GamePanel() {}
 
     public void setBoardImage(BufferedImage boardImage) {
         this.boardImage = boardImage;
@@ -113,21 +103,14 @@ public class GamePanel extends JPanel {
 
         Graphics2D g = (Graphics2D)boardImage.createGraphics();
         g.setStroke(new BasicStroke(3));
-        /*System.out.println((CurvePoints[0].getX()));
-        System.out.println((PrevCurvePoints[0].getX()));*/
+
         for (int i = 0; i < numOfPlayers; i++) {
-            if(initHappened) {
                 g.setColor(Colors[i]);
-                System.out.println(CurvePoints[0].getX());
-                System.out.println(CurvePoints[0].getY());
-                System.out.println(PrevCurvePoints[0].getX());
-                System.out.println(PrevCurvePoints[0].getY());
-                g.draw(new Line2D.Double(PrevCurvePoints[i].getX(), PrevCurvePoints[i].getY(), CurvePoints[i].getX(), CurvePoints[i].getY()));
-            }
+                if(CurvePoints[i].getIsColored()) {
+                    g.draw(new Line2D.Double(PrevCurvePoints[i].getX(), PrevCurvePoints[i].getY(), CurvePoints[i].getX(), CurvePoints[i].getY()));
+                }
         }
         PrevCurvePoints = CurvePoints.clone();
-        System.out.println(PrevCurvePoints[0].getX());
-        System.out.println(PrevCurvePoints[0].getY());
     }
     @Override
     public void paintComponent(Graphics g) {

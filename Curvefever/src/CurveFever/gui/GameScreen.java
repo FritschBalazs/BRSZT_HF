@@ -116,7 +116,7 @@ public class GameScreen extends JPanel {
 
     public void render(boolean firstCall){
         if (firstCall){
-            System.out.println("elobb ennek kene szerepelni");
+
             infoPanel.setPlayerNames(this.PlayerNames);
             infoPanel.setNumOfPlayers(this.numOfPlayers);
             infoPanel.setRoundNum(this.roundNum);
@@ -126,13 +126,12 @@ public class GameScreen extends JPanel {
             gamePanel.setPrevCurvePoints(this.CurvePoints);
             gamePanel.setCurvePoints(this.CurvePoints);
             gamePanel.setInitHappened(true);
-
         }
         infoPanel.setScores(this.Scores);
         infoPanel.setCurrentRound(this.currentRound);
         //gamePanel.setCurves(this.Curves); TEST--curvepoints is enough
         gamePanel.setCurvePoints(this.CurvePoints);
-        System.out.println("fysfyfasdf");
+
 
         repaint();
     }

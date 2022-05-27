@@ -265,8 +265,8 @@ public class Server extends Client{
         pkg.currentRound = game.getCurrentRound();
 
 
-        //pkg.Scores = game.getScores(); //commeented out to test score sorrend xd
-        pkg.Scores = new double[]{1,5};
+        pkg.Scores = game.getScores();
+
 
         pkg.gameState = game.getGameState();
         cycleCounter++;

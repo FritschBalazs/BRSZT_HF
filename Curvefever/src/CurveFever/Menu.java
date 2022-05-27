@@ -45,37 +45,19 @@ public class Menu {
     }
 
     public void updateGuiData(Board boardToDisplay, GameScreen gameScreen) {
-        gameScreen.setCurves(boardToDisplay.getCurves());
+        gameScreen.setCurvePoints(boardToDisplay.getLastCurvePoints());
         gameScreen.setCurrentRound(boardToDisplay.getCurrentRound());
         gameScreen.setScores(boardToDisplay.getScores());
     }
-    public void updateGuiData2(Board boardToDisplay, GameScreen gameScreen, boolean init) {
-        //gameScreen.getGamePanel().setInitHappened(true);
-
-        if(init){
-            gameScreen.setCurvePoints(boardToDisplay.getLastCurvePoints());
-            gameScreen.setCurrentRound(boardToDisplay.getCurrentRound());
-            gameScreen.setScores(boardToDisplay.getScores());
-            gameScreen.setRoundNum(boardToDisplay.getRoundNum());
-            gameScreen.setPlayerNames(boardToDisplay.getPlayerNames());
-            gameScreen.setNumOfPlayers(boardToDisplay.getNumOfPlayers());
-            gameScreen.setColors(boardToDisplay.getColors());
-        }
-        else{
-            gameScreen.setCurvePoints(boardToDisplay.getLastCurvePoints());
-            gameScreen.setCurrentRound(boardToDisplay.getCurrentRound());
-            gameScreen.setScores(boardToDisplay.getScores());
-        }
-
-    }
-
 
     public void initGuiData(Board boardToDisplay, GameScreen gameScreen){
-        gameScreen.setCurves(boardToDisplay.getCurves());
+        gameScreen.setCurvePoints(boardToDisplay.getLastCurvePoints());
         gameScreen.setCurrentRound(boardToDisplay.getCurrentRound());
-        gameScreen.setPlayerNames(boardToDisplay.getPlayerNames());
         gameScreen.setScores(boardToDisplay.getScores());
         gameScreen.setRoundNum(boardToDisplay.getRoundNum());
+        gameScreen.setPlayerNames(boardToDisplay.getPlayerNames());
+        gameScreen.setNumOfPlayers(boardToDisplay.getNumOfPlayers());
+        gameScreen.setColors(boardToDisplay.getColors());
     }
 
     public void runMenu(){
@@ -123,16 +105,15 @@ public class Menu {
             this.server.setupGame();
 
             Board boardToDisplay = this.server.getGame().getMainBoard();
-            //initGuiData(boardToDisplay,screenManager.getGameScreen()); TEST
-            updateGuiData2(boardToDisplay,screenManager.getGameScreen(),true);
+            initGuiData(boardToDisplay,screenManager.getGameScreen());
             screenManager.update(true);
 
             /* eneter game loop */
             while (screenManager.getProgramState() == ProgramState.IN_GAME) {
 
                 /* update data in GUI classes */
-                //updateGuiData(boardToDisplay,screenManager.getGameScreen()); //TEST
-                updateGuiData2(boardToDisplay,screenManager.getGameScreen(),false); //TEST
+                updateGuiData(boardToDisplay,screenManager.getGameScreen());
+
 
                 /* get Control input for local player */
                 server.getPlayer().setControlState(screenManager.getControlState());
@@ -166,8 +147,7 @@ public class Menu {
             window.setTitle("Kurve Fívör (client: #" + client.player.id + ", player: " + client.player.getName() + ")");
 
             Board boardToDisplay = this.client.getBoard();
-            //initGuiData(boardToDisplay,screenManager.getGameScreen()); TEST
-            updateGuiData2(boardToDisplay,screenManager.getGameScreen(),true); //TEST
+            initGuiData(boardToDisplay,screenManager.getGameScreen());
 
             screenManager.update(true);
 
@@ -190,8 +170,7 @@ public class Menu {
                 }
 
                 /* actualize data stored in gui classes */
-                //updateGuiData(boardToDisplay,screenManager.getGameScreen()); TEST
-                updateGuiData2(boardToDisplay, screenManager.getGameScreen(),false);
+                updateGuiData(boardToDisplay,screenManager.getGameScreen());
 
                 /* draw */
                 screenManager.update(false);
