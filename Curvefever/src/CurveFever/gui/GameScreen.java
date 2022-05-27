@@ -6,6 +6,7 @@ import CurveFever.CurvePoint;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
 
 import static javax.swing.SwingConstants.CENTER;
@@ -124,14 +125,17 @@ public class GameScreen extends JPanel {
             gamePanel.setColors(this.Colors);
             gamePanel.setNumOfPlayers(this.numOfPlayers);
             gamePanel.setPrevCurvePoints(this.CurvePoints);
+            gamePanel.setPrevPrevCurvePoints(this.CurvePoints);
             gamePanel.setCurvePoints(this.CurvePoints);
             gamePanel.setInitHappened(true);
+
+
+            gamePanel.Paths[0].moveTo(CurvePoints[0].getX(),CurvePoints[0].getY());
+            gamePanel.Paths[1].moveTo(CurvePoints[1].getX(),CurvePoints[1].getY());
         }
         infoPanel.setScores(this.Scores);
         infoPanel.setCurrentRound(this.currentRound);
-        //gamePanel.setCurves(this.Curves); TEST--curvepoints is enough
         gamePanel.setCurvePoints(this.CurvePoints);
-
 
         repaint();
     }
