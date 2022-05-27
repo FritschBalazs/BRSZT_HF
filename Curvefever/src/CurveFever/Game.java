@@ -208,23 +208,23 @@ public class Game {
         System.out.println("xtemp: " + xTemp + ", ytemp: " + yTemp);
         switch (playerPosition) {
             case BOTTOM_LEFT -> {
-                x = mainBoard.getGameWidthWidth() - xTemp;
-                y = mainBoard.getGameHeightHeight() - yTemp;
+                x = abs(xTemp);
+                y = mainBoard.getGameHeightHeight() - abs(yTemp);
                 break;
             }
             case TOP_LEFT -> {
-                x = xTemp;
-                y = -1 * yTemp;
+                x = abs(xTemp);
+                y = abs(yTemp);
                 break;
             }
             case TOP_RIGHT -> {
-                x = mainBoard.getGameWidthWidth() + xTemp;
-                y = -1 * yTemp;
+                x = mainBoard.getGameWidthWidth() - abs(xTemp);
+                y = abs(yTemp);
                 break;
             }
             case BOTTOM_RIGHT -> {
-                x = -1 * xTemp + mainBoard.getGameWidthWidth();
-                y = -1 * yTemp + mainBoard.getGameHeightHeight();
+                x = mainBoard.getGameWidthWidth() - abs(xTemp);
+                y = mainBoard.getGameHeightHeight() - abs(yTemp);
                 break;
             }
         }
@@ -372,6 +372,11 @@ public class Game {
     */
 
     public void updatePositions(ControlState[] Controls) {
+        System.out.println("CHECK length of the curves");
+        for (int i = 0; i < playerNum; i++) {
+            System.out.println("Player ID:" + i + "  Curve length: " + mainBoard.getCurves()[i].getCurveSize());
+            System.out.println("******************************");
+        }
         // Get player states
         boolean[] playersAlive = new boolean[playerNum];
         for (int i = 0; i < playerNum; i++) {
@@ -388,10 +393,10 @@ public class Game {
             if (collisions[i]) {
                 Players[i].setAlive(false);
                 System.out.println("Collision detected, Player ID: " + i);
-            } else {
+            } else if (Players[i].getIsAlive()){
                 Players[i].move();
                 pos = Players[i].getPosition();
-                newPosition = new CurvePoint(pos.getX(), pos.getY(), Players[i].getIsAlive());
+                newPosition = new CurvePoint(pos.getX(), pos.getY(), true);
                 mainBoard.addCurvePoint(newPosition, i);
             }
         }
@@ -449,13 +454,8 @@ public class Game {
     }
 
     public void evaluateStep(ControlState[] Controls) {
-        //boolean[] collisions = detectCollisions();
-
         double tmpScore[] = new double[playerNum];
         for (int i = 0; i < Players.length; i++) {
-            if (/*collisions[i]*/false) {
-                Players[i].setAlive(false);
-            }
             if (Players[i].getIsAlive()) {
                 Players[i].updateScore(SCORE_PER_TICK); //TODO (M) Marci azt mondtuk, hogy ez pozicio fuggo is nem? -B
                 tmpScore[i] = Players[i].getScore();
