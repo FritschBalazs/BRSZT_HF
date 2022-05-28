@@ -53,6 +53,7 @@ public class Menu {
 
     public void initGuiData(Board boardToDisplay, GameScreen gameScreen){
         gameScreen.setCurvePoints(boardToDisplay.getLastCurvePoints());
+        gameScreen.setPrevCurvePoints(boardToDisplay.getLastLastCurvePoints());
         gameScreen.setCurrentRound(boardToDisplay.getCurrentRound());
         gameScreen.setScores(boardToDisplay.getScores());
         gameScreen.setRoundNum(boardToDisplay.getRoundNum());
@@ -155,14 +156,16 @@ public class Menu {
 
                 /* update data in GUI classes */
                 updateGuiData(boardToDisplay,screenManager.getGameScreen());
-
+                if (server.getGame().getGameState() == GameState.PREP) {
+                    initGuiData(boardToDisplay,gameScr);
+                }
                 /* clear gui and board if needed */
                 if(server.getGame().getGameState() == GameState.PREP){
                     /* in prep mode we have to clear the image every time (new round also starts with prep) */
                     screenManager.getGameScreen().getGamePanel().resetBufferedImage();
                 }
 
-                screenManager.update(false);
+                screenManager.update(true);
                 server.drawFinished();
 
 
@@ -212,13 +215,19 @@ public class Menu {
                 PackageS2C message = client.receiveFromServer();
                 if (message != null )  {
                     if(message.gameState == GameState.PREP){
+
                         /* in prep mode we have to clear the image every time (new round also starts with prep) */
                         screenManager.getGameScreen().getGamePanel().resetBufferedImage();
+
+
                         if (prevRound != message.currentRound){
                             /* at new round we have to clear the lines on the board */
                             boardToDisplay.clearBoard();
                         }
                         prevRound = message.currentRound;
+                    }
+                    else if (message.gameState == GameState.PLAYING) {
+                        System.out.println("Started playing");
                     }
 
                     this.client.board.receiveFromPackageS2C(message);

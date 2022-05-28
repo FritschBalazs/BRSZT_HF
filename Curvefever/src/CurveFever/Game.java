@@ -123,6 +123,22 @@ public class Game {
         return tempColors.clone();
     }
 
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
+    }
+
+    public void incrCurrRound() {
+        this.currentRound = this.currentRound + 1;
+    }
+
+    public void setAllPlayersAlive(){
+        for (int i = 0; i < playerNum; i++) {
+            Players[i].setAlive(true);
+        }
+    }
+
+
+
     /*
     ------------------------------------------------------------
     ------------ Math for game logic and init ------------------
@@ -293,7 +309,7 @@ public class Game {
         }
     }
 
-    private void initBoard() {
+    public void initBoard() {
         boolean[] playersAlive = new boolean[playerNum];
         Arrays.fill(playersAlive,true);
         Color[] initColors = new Color[playerNum];
@@ -477,8 +493,46 @@ public class Game {
         return endgame;
     }
 
-    public void runGame(ControlState[] Controls) {
+    public boolean runGame(ControlState[] Controls, int debugCycleCount) {
 
+        //ez csak teszteleshez kellet, majd alakitsd at ahogy szeretned
+        if (gameState == GameState.PLAYING){
+            if (evaluateStep(Controls) == true) {
+                return true;
+            }
+        }
+        else if (gameState == GameState.PREP) {
+            //TODO (M)
+
+
+            //testcode, amig nincs rendes prepSpeed
+
+            CurvePoint[] arracyCP = new CurvePoint[playerNum];
+            Arrays.fill(arracyCP, new CurvePoint(250+debugCycleCount,250+debugCycleCount, true));
+
+            boolean[] arrayTrue = new boolean[playerNum];
+            Arrays.fill(arrayTrue,Boolean.TRUE);
+
+            CurvePoint singleCP = new CurvePoint(250 + debugCycleCount, 250 + debugCycleCount, true);
+
+
+            if(mainBoard.getCurves()[0].getPoints().size() == 1){
+                mainBoard.addCurvePoints(arracyCP,arrayTrue);
+            }
+            else{
+                for (int i = 0; i < playerNum; i++) {
+                    if(mainBoard.getCurves()[i].getPoints().size() == 2){
+                            mainBoard.getCurves()[i].setAPoint(1,singleCP);
+                        }
+                }
+            }
+
+            //end of testcode
+
+
+        }
+
+        return false;
     }
 
     //public Curve[] getBoardCurves() {

@@ -24,7 +24,7 @@ public class Board{
         for (int i = 0; i < numOfPlayers; i++) {
             Curves[i] = new Curve();
             Curves[i].setColor(colors[i]);
-            Curves[i].addPoint(new CurvePoint());
+            //Curves[i].addPoint(new CurvePoint());  //miert adunk nullat? ne mar
             Scores[i] = 0;
         }
     }
@@ -100,6 +100,14 @@ public class Board{
         }
         return retval.clone();
     }
+
+    public CurvePoint[] getLastLastCurvePoints() {
+        CurvePoint[] retval = new CurvePoint[numOfPlayers];
+        for (int i = 0; i < numOfPlayers; i++) {
+            retval[i] = Curves[i].getLastLastPoint();
+        }
+        return retval.clone();
+    }
     public Color[] getColors(){
         Color[] retval = new Color[numOfPlayers];
         for(int i = 0; i < numOfPlayers; i = i + 1){
@@ -143,11 +151,14 @@ public class Board{
             /* in prep state we want to rotate around the starting position */
             for (int i = 0; i < Scores.length; i++) {
 
-                CurvePoint indicatorPoint = new CurvePoint(pkg.prepSpeed.x,pkg.prepSpeed.y,true);
+                CurvePoint indicatorPoint = new CurvePoint(pkg.prepSpeed[i].x,pkg.prepSpeed[i].y,true);
 
 
-                /* if the curves are empty, add first 2 elements element*/
-                if (Curves[i].getPoints().size() == 0) {
+                /* if the curves are empty, or they have 1 element, add first 2 elements element*/ //note: in the first round they will have 1 element, but when starting the 2nd round they will have nonve
+                if (Curves[i].getPoints().size() == 0 || Curves[i].getPoints().size() == 1) {
+                    Curves[i].getPoints().clear();
+
+                    /* add starting pos, and perpSpeed */
                     Curves[i].addPoint(pkg.CurvePoints[i]);
                     Curves[i].addPoint(indicatorPoint);
                 }

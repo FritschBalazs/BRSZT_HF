@@ -27,12 +27,28 @@ public class Curve {
         //else return new CurvePoint();
     }
 
+    public CurvePoint getLastLastPoint() {
+        if (Points.size() >= 2){
+            return Points.get(Points.size() - 2);
+        }
+        else if (Points.size() >= 1){
+            return Points.get(Points.size() - 1);
+        }
+        else{
+            return null;
+        }
+    }
+
     public void setColor(Color color) {this.color = color;}
 
     public void setPoints(ArrayList<CurvePoint> points) {Points = new ArrayList<CurvePoint>(points);}
 
     public void addPoint(CurvePoint curvePoint) {
         Points.add(curvePoint);
+    }
+
+    public void setAPoint(int index, CurvePoint curvePoint){
+        Points.set(index,curvePoint);
     }
 
     public void clearCurves(){

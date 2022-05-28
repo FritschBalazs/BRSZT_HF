@@ -33,6 +33,7 @@ public class Server extends Client{
     private int cycleCounter;
     private boolean waitWithDraw = true;
     private int prevGameRound;
+    private int prepStartTime;
 
 
     public Server(int numOfPlayers,int numOfRounds, String playerName) {
@@ -172,6 +173,9 @@ public class Server extends Client{
 
 
         cycleCounter = 0;
+        game.setGameState(GameState.PREP);
+        prepStartTime = cycleCounter;
+
         /*setup timer*/
         setUpTimer();
 
@@ -243,34 +247,65 @@ public class Server extends Client{
     }
 
     public void runServer() {
+        /* request control inputs from all clients */
         requestInputs();
 
-        // TODO (M/B) call game main function, to calculate everything
-        /* test code, not final -------------------------------------------------  */
-        game.evaluateStep(ControlStates);
-        /* end of test code ---------------------------------------------------------- */
+        boolean endRound;
+
+        endRound = game.runGame(ControlStates,cycleCounter);
+
+
+
+        if (false){ //TODO B ezt vissza
+            /* increment the round number */
+            game.incrCurrRound();
+
+            /* end of game, stop the counter */
+            if (game.getMainBoard().getCurrentRound() == game.getRoundNum()){
+                gameTimer.stop();
+                game.setGameState(GameState.MENU);
+                //TODO (B) ujrakezdes
+            }
+
+            /* prepare game for the next round */
+            else{
+                game.getMainBoard().clearBoard();
+
+                game.initBoard();
+
+                //TODO (B) ha lesz rendes korveg akkor ezt befejezni, es elrakni innen
+                prepStartTime = cycleCounter;
+                //TODO (M) generate new random starting positions
+            }
+        }
 
         PackageS2C pkg = new PackageS2C(numOfClients+1);
+
+        if(game.getGameState() == GameState.PREP){
+
+            // dummy prepSpeed //TODO (M/B) cahnge dummy prep speed
+            Vector2D[] array = new Vector2D[numOfClients+1];
+            Arrays.fill(array,new Vector2D(250 + cycleCounter,250 + cycleCounter));
+            pkg.prepSpeed = array;
+
+            if((cycleCounter-prepStartTime) >= ServerSidePlayer.PREP_TIME){
+                game.setGameState(GameState.PLAYING);
+            }
+        }
+
+
         pkg.CurvePoints = game.getMainBoard().getLastCurvePoints();
         pkg.currentRound = game.getCurrentRound();
+
 
 
         pkg.Scores = game.getScores();
 
 
-        //pkg.gameState = game.getGameState(); //TODO ezt viszza
-        pkg.gameState = GameState.PLAYING;
+        pkg.gameState = game.getGameState();
+        //pkg.gameState = GameState.PLAYING;
         cycleCounter++;
         sendToClient(pkg);
-
-        if (prevGameRound != pkg.currentRound){
-            /* at new round we have to clear the lines on the board */
-            game.getMainBoard().clearBoard();
-            boolean[] alive = new boolean[numOfClients+1];
-            Arrays.fill(alive,Boolean.TRUE);
-            game.getMainBoard().addCurvePoints(pkg.CurvePoints,alive);
-            game.getMainBoard().addCurvePoints(pkg.CurvePoints,alive); //TODO (B) ha lesz rendes korveg akkor ezt befejezni, es elrakni innen
-        }
 
         waitWithDraw = false;
 
