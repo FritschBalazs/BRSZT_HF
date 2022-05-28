@@ -30,7 +30,7 @@ public class Game {
     public static final int MIN_PLAYERS = 2;
     public static final int MAX_ROUNDS = 10;
     public static final int MIN_ROUNDS = 1;
-    public static final int SCORE_PER_SECOND = 10;
+    public static final int SCORE_PER_SECOND = 50;
     public static final int SYSTEM_TICK = ServerSidePlayer.SYSTEM_TICK;
     public static final double SCORE_PER_TICK = (double) SCORE_PER_SECOND / (double) SYSTEM_TICK;
 
@@ -286,7 +286,8 @@ public class Game {
     }
 
     private void initBoard() {
-        boolean[] playersAlive = {true, true, true, true};
+        boolean[] playersAlive = new boolean[playerNum];
+        Arrays.fill(playersAlive,true);
         Color[] initColors = new Color[Players.length];
         CurvePoint[] initPoints = new CurvePoint[Players.length];
         Vector2D[] initPositions = new Vector2D[Players.length];
@@ -373,10 +374,10 @@ public class Game {
 
     public void updatePositions(ControlState[] Controls) {
         System.out.println("CHECK length of the curves");
-        for (int i = 0; i < playerNum; i++) {
+        /*for (int i = 0; i < playerNum; i++) { TODO Debug print, need to be deleted later
             System.out.println("Player ID:" + i + "  Curve length: " + mainBoard.getCurves()[i].getCurveSize());
             System.out.println("******************************");
-        }
+        }*/
         // Get player states
         boolean[] playersAlive = new boolean[playerNum];
         for (int i = 0; i < playerNum; i++) {
@@ -409,6 +410,7 @@ public class Game {
 
         Curve[] Curves;
         Curves = mainBoard.getCurves();
+        //System.out.println("fasz: "+Curves[0].getCurveSize()); //TEST Dani
         CurvePoint currentPos;
         CurvePoint lastPos;
         // Store the last two points of the players

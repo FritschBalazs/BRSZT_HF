@@ -257,7 +257,7 @@ public class Server extends Client{
 
         // TODO (M/B) call game main function, to calculate everything
         /* test code, not final -------------------------------------------------  */
-        game.updatePositions(ControlStates);
+        game.evaluateStep(ControlStates);
         /* end of test code ---------------------------------------------------------- */
 
         PackageS2C pkg = new PackageS2C(numOfClients+1);
@@ -272,10 +272,10 @@ public class Server extends Client{
         cycleCounter++;
         sendToClient(pkg);
 
-        if (cycleCounter >= 2500){
+        /*if (cycleCounter >= 2500){
             gameTimer.stop();
         }
-        System.out.print("cycle count: " + cycleCounter + " ");
+        System.out.print("cycle count: " + cycleCounter + " ");*/
 
         waitWithDraw = false;
 
