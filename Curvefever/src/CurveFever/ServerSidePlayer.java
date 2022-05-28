@@ -7,8 +7,8 @@ import static java.lang.Math.toRadians;
 
 public class ServerSidePlayer extends Player{
 
-    public static final int SYSTEM_TICK = 10;  // In milliseconds
-    public static final int TURN_DEGREE_PER_SECOND = 30;   // Turns 30 degrees in one second
+    public static final int SYSTEM_TICK = 20;  // In milliseconds
+    public static final int TURN_DEGREE_PER_SECOND = 50;   // Turns 50 degrees in one second
     public static final double TURN_DEGREE_PER_TICK = TURN_DEGREE_PER_SECOND / SYSTEM_TICK;
 
     private Vector2D position;
@@ -76,9 +76,9 @@ public class ServerSidePlayer extends Player{
     public void move(){
         double angle;   // in degrees
         if (this.controlState == ControlState.LEFT)
-            angle = TURN_DEGREE_PER_TICK;
-        else if (this.controlState == ControlState.RIGHT)
             angle = -1 * TURN_DEGREE_PER_TICK;
+        else if (this.controlState == ControlState.RIGHT)
+            angle = TURN_DEGREE_PER_TICK;
         else angle = 0;
 
         rotateSpeed(angle);

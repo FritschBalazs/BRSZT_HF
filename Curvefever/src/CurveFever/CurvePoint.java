@@ -6,6 +6,7 @@ public class CurvePoint extends Vector2D implements java.io.Serializable{
     public CurvePoint(boolean isColored) {
         this.isColored = isColored;
     }
+    public CurvePoint(){}
     public CurvePoint(double x, double y, boolean isColored) {
         super(x,y);
         this.isColored = isColored;

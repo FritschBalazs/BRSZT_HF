@@ -26,10 +26,11 @@ public class Server extends Client{
     private Thread[] SPThreads;
     private PackageS2C currentPkg;
 
-    private ControlState[] ContorlStates;
+    private ControlState[] ControlStates;
 
-    private static final int timerInterval = 500;
+    private static final int timerInterval = ServerSidePlayer.SYSTEM_TICK;
     private int cycleCounter;
+    private boolean waitWithDraw = true;
 
 
     public Server(int numOfPlayers,int numOfRounds, String playerName) {
@@ -46,7 +47,7 @@ public class Server extends Client{
         this.GCThreads = new Thread[numOfClients];
         this.SPThreads = new Thread[numOfClients];
 
-        this.ContorlStates = new ControlState[numOfPlayers];
+        this.ControlStates = new ControlState[numOfPlayers];
 
 
         try {
@@ -68,6 +69,16 @@ public class Server extends Client{
 
     public int getPort() {
         return port;
+    }
+
+    /* used for signaling to menu class */
+    public boolean waitForDraw() {
+        return waitWithDraw;
+    }
+
+    /* used for signaling to menu class */
+    public void drawFinished(){
+        waitWithDraw = true;
     }
 
     public void acceptConnections()
@@ -104,7 +115,6 @@ public class Server extends Client{
         InitPackageS2C pkg = new InitPackageS2C(numOfClients+1);
         pkg.currentRound = 0;
         pkg.gameState = GameState.MENU; //TODO (M) ez igy ok Marci? aka.: mi legyen a gameState-el
-        pkg.CurvePoints = null;
         pkg.numOfRounds = this.numOfRounds;
 
 
@@ -127,17 +137,32 @@ public class Server extends Client{
 
         /* generate random colors for the players */
         //TODO (M/B) Marci random szingeneralojat illeszteni, ezt a borzalmat meg torolni
-        pkg.Colors[0] = new java.awt.Color(255,105,180);
-        pkg.Colors[1] = new java.awt.Color(124,255,255);
-        if (numOfClients+1 > 2) {
-            pkg.Colors[2] = new java.awt.Color(255,0,0);
-        }
-        if (numOfClients+1 > 3) {
-            pkg.Colors[3] = new java.awt.Color(0,255,0);
-        }
+        //pkg.Colors[0] = new java.awt.Color(255,105,180);
+        //pkg.Colors[1] = new java.awt.Color(124,255,255);
+        //if (numOfClients+1 > 2) {
+        //    pkg.Colors[2] = new java.awt.Color(255,0,0);
+        //}
+        //if (numOfClients+1 > 3) {
+        //   pkg.Colors[3] = new java.awt.Color(0,255,0);
+        //}
         //****** idaig kell majd torolni
 
 
+
+        ServerSidePlayer[] SSPlayers= new ServerSidePlayer[numOfClients+1];
+
+        /* add client players, and local player */
+        for (int idx = 0; idx < (numOfClients+1); idx++) {
+            SSPlayers[idx] = new ServerSidePlayer(pkg.playerNames[idx],idx);
+        }
+
+        game = new Game(numOfClients+1, pkg.numOfRounds, SSPlayers,pkg.Colors);
+        game.initGame();
+        //TODO (M) init game
+        //TODO (B) setup server. Nem tudom mire gondoltam pontosan
+
+        pkg.CurvePoints = game.getMainBoard().getLastCurvePoints();
+        pkg.Colors = game.getColors();
         /* send out init packages for all players */
         for (int i = 0; i < numOfClients; i++) {
             /* update package */
@@ -156,19 +181,6 @@ public class Server extends Client{
         }
 
 
-        ServerSidePlayer[] SSPlayers= new ServerSidePlayer[numOfClients+1];
-
-        /* add client players, and local player */
-        for (int idx = 0; idx < (numOfClients+1); idx++) {
-            SSPlayers[idx] = new ServerSidePlayer(pkg.playerNames[idx],idx);
-        }
-
-        game = new Game(numOfClients+1, pkg.numOfRounds, SSPlayers,pkg.Colors);
-        //TODO (M) init game
-        //TODO (B) setup server. Nem tudom mire gondoltam pontosan
-
-
-
         cycleCounter = 0;
         /*setup timer*/
         setUpTimer();
@@ -185,6 +197,7 @@ public class Server extends Client{
             public void actionPerformed(ActionEvent e) {
                 /* call server.run(), the main function */
                 runServer();
+
             }
         };
         gameTimer = new Timer(timerInterval,al);
@@ -232,10 +245,10 @@ public class Server extends Client{
         }
 
         /* get the local player's input */
-        ContorlStates[numOfClients] = player.getControlState();
+        ControlStates[numOfClients] = player.getControlState();
 
         //debug
-        System.out.println("Input client[0]:" + ContorlStates[0] + "   Input client[1]: " + ContorlStates[1]);
+        //System.out.println("Input client[0]:" + ControlStates[0] + "   Input client[1]: " + ControlStates[1]);
 
     }
 
@@ -243,19 +256,28 @@ public class Server extends Client{
         requestInputs();
 
         // TODO (M/B) call game main function, to calculate everything
-
         /* test code, not final -------------------------------------------------  */
-        game.addRandomPosForDebug(cycleCounter);
+        game.evaluateStep(ControlStates);
         /* end of test code ---------------------------------------------------------- */
 
         PackageS2C pkg = new PackageS2C(numOfClients+1);
-        pkg.CurvePoints = game.getNewCurvePoints();
+        pkg.CurvePoints = game.getMainBoard().getLastCurvePoints();
         pkg.currentRound = game.getCurrentRound();
-        pkg.Scores = game.getScores();
-        pkg.gameState = game.getGameState();
 
+
+        pkg.Scores = game.getScores();
+
+
+        pkg.gameState = game.getGameState();
         cycleCounter++;
         sendToClient(pkg);
+
+        /*if (cycleCounter >= 2500){
+            gameTimer.stop();
+        }
+        System.out.print("cycle count: " + cycleCounter + " ");*/
+
+        waitWithDraw = false;
 
     }
 
@@ -277,7 +299,7 @@ public class Server extends Client{
                 ObjOutStreams[clientId].flush();
 
                 /* wait for the client to reply */
-                ContorlStates[clientId] = (ControlState)ObjInStreams[clientId].readObject();
+                ControlStates[clientId] = (ControlState)ObjInStreams[clientId].readObject();
             } catch (IOException e) {
                 System.out.println("IOException from getControl runnable #" + clientId);
             } catch (ClassNotFoundException e) {

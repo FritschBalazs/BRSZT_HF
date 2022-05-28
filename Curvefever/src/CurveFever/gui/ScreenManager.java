@@ -45,6 +45,8 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
         menuScreen.playerNameTextField.addActionListener(this);
         menuScreen.IPTextField.addActionListener(this);
         menuScreen.numOfPlayersComboBox.addActionListener(this);
+        endGameScreen.backToMenuButton.addActionListener(this);
+        endGameScreen.playAgainButton.addActionListener(this);
 
 
         this.add(menuScreen, MENUSCREEN);
@@ -94,23 +96,32 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
         return controlState;
     }
 
-    public void update(boolean firstCall){
+    public EndGameScreen getEndGameScreen() {
+        return this.endGameScreen;
+    }
 
-        switch (programState) {  //note B2D: nem volt jo mert folyamatosan ujra kell renderelni, nem csak amikor valtozik a state
+    public void update(boolean firstCall){
+        switch (programState) {
             case IN_GAME:
                 gameScreen.render(firstCall);
-                layout.show(this, GAMESCREEN);
+                if(programState != prevProgramState) {
+                    layout.show(this, GAMESCREEN);
+                }
                 break;
             case MAIN_MENU:
-                layout.show(this, MENUSCREEN);
+                if(programState != prevProgramState) {
+                    layout.show(this, MENUSCREEN);
+                }
                 break;
             case END_OF_GAME:
-                layout.show(this, ENDGAMESCREEN);
+                endGameScreen.render();
+                if(programState != prevProgramState) {
+                    layout.show(this, ENDGAMESCREEN);
+                }
                 break;
             default:
                 break;
         }
-
         evaluateInput();
         prevProgramState = programState;
     }
@@ -157,7 +168,12 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
 
 
         } else if (e.getSource() == menuScreen.exitButton) {
-            System. exit(0);
+            //System. exit(0);
+            programState = ProgramState.END_OF_GAME;
+        } else if (e.getSource() == endGameScreen.backToMenuButton) {
+            programState = ProgramState.MAIN_MENU;
+        } else if (e.getSource() == endGameScreen.playAgainButton) {
+            programState = ProgramState.IN_GAME;
         }
     }
 
@@ -206,7 +222,5 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
             }
         }
     }
-
-
 }
 
