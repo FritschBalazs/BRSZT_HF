@@ -16,7 +16,7 @@ public class Curve {
         return Points.get(idx);
     }
 
-    public int getCurveSize() {
+    public int getNumOfCurves() {
         return Points.size();
     }
 

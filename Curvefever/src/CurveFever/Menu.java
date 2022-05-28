@@ -5,7 +5,6 @@ import CurveFever.gui.GameScreen;
 import CurveFever.gui.ScreenManager;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class Menu {
     private Client client;
@@ -16,6 +15,7 @@ public class Menu {
     private String playerName; //To give to Player constructor (player name can be entered in menu, in a textbox)
     //private int numOfPlayers;
     //private int numOfRounds;
+    private int prevRound;
     //TODO (B) ha nagyjabol kesz a menu osztaly akkor ezt purgalni (nem tudom kell-e majd ujrakezdesnel esetleg pl a numOfRounds)
 
     private ScreenManager sManager;
@@ -36,7 +36,6 @@ public class Menu {
     public String getPlayerName() {return playerName;}
     //public int getNumOfPlayers() {return numOfPlayers;}
     //public int getNumOfRounds() {return numOfRounds;}
-
 
     public void createGame(){
         //Start game in Server mode
@@ -90,6 +89,7 @@ public class Menu {
             }
 
         }
+/*
         //TESTCODE
         Board Testboard = new Board(4,5,new String[]{"Hanti","Dani", "Frici","valaki"},new Color[]{Color.PINK,Color.PINK,Color.PINK,Color.PINK});
         while (screenManager.getProgramState() == ProgramState.END_OF_GAME) {
@@ -112,7 +112,7 @@ public class Menu {
 
         }
         //ENDOFTESTCODE
-
+*/
         /* if this instance is a server, create the server, and start the game */
         if (screenManager.isServer() == true){
 
@@ -124,7 +124,6 @@ public class Menu {
 
             /* update window title */
             window.setTitle("Kurve Fívör(server, player: " + serverPlayerName + ")");
-            //TODO (D, low prio) megoldani hogy egyertelmu legyen ha valaki rakattintott valamire es a tobbiekre varunk
 
             /* create game screen and add it to screenManager */ //servernel lehetne a scrrenmanager-en belulre, kliensnel nehezebb
             GameScreen gameScr = new GameScreen(numOfPlayers);
@@ -138,21 +137,34 @@ public class Menu {
             initGuiData(boardToDisplay,screenManager.getGameScreen());
             screenManager.update(true);
 
+            /* set prevRound (end of round detection is based on it)*/
+            prevRound = boardToDisplay.getCurrentRound();
+
             /* eneter game loop */
             while (screenManager.getProgramState() == ProgramState.IN_GAME) {
-
-                /* update data in GUI classes */
-                updateGuiData(boardToDisplay,screenManager.getGameScreen());
-
 
                 /* get Control input for local player */
                 server.getPlayer().setControlState(screenManager.getControlState());
 
-                /* wait for timer thread to finish (server.runServer)*/
+                /* server main function is Server.runServer(), which is called by a timer */
+
+
+                /* wait for timer thread to finish */
                 while(server.waitForDraw() == true) {}
+
+
+                /* update data in GUI classes */
+                updateGuiData(boardToDisplay,screenManager.getGameScreen());
+
+                /* clear gui and board if needed */
+                if(server.getGame().getGameState() == GameState.PREP){
+                    /* in prep mode we have to clear the image every time (new round also starts with prep) */
+                    screenManager.getGameScreen().getGamePanel().resetBufferedImage();
+                }
 
                 screenManager.update(false);
                 server.drawFinished();
+
 
             }
         }
@@ -163,7 +175,6 @@ public class Menu {
             String playerName = screenManager.getPlayerName();
             String serverIp = screenManager.getServerIP();
             client = new Client(serverIp,playerName);
-            //TODO (B) localhost hardcodeot kiszedni
 
             /* wait for server to send init package,
              * containing other the other players' data
@@ -179,6 +190,9 @@ public class Menu {
 
             Board boardToDisplay = this.client.getBoard();
             initGuiData(boardToDisplay,screenManager.getGameScreen());
+
+            /* set prevRound (end of round detection is based on it)*/
+            prevRound = boardToDisplay.getCurrentRound();
 
             screenManager.update(true);
 
@@ -197,6 +211,16 @@ public class Menu {
                 /* receive game data containing data from the latest cycle */
                 PackageS2C message = client.receiveFromServer();
                 if (message != null )  {
+                    if(message.gameState == GameState.PREP){
+                        /* in prep mode we have to clear the image every time (new round also starts with prep) */
+                        screenManager.getGameScreen().getGamePanel().resetBufferedImage();
+                        if (prevRound != message.currentRound){
+                            /* at new round we have to clear the lines on the board */
+                            boardToDisplay.clearBoard();
+                        }
+                        prevRound = message.currentRound;
+                    }
+
                     this.client.board.receiveFromPackageS2C(message);
                 }
 
@@ -205,11 +229,11 @@ public class Menu {
 
                 /* draw */
                 screenManager.update(false);
-                //TEST
 
             }
-
             //TODO (M/B) kitalalni, hogy mi legyen ha vege egy jatekanak (osszes kornek)
+            //TODO (M low prio) lyukak
+            //TODO (low prio) jar generalas
         }
     }
 }
