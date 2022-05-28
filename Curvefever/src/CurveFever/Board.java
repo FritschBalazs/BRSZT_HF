@@ -1,11 +1,6 @@
 package CurveFever;
 
-import CurveFever.gui.InfoPanel;
-
-import java.awt.*;
 import java.awt.Color;
-import java.awt.geom.Line2D;
-import javax.swing.*;
 
 public class Board{
     private static final int gameWidth = 1280; //actual game board width
@@ -16,6 +11,7 @@ public class Board{
     private int roundNum;
     private int numOfPlayers;
     private String[] PlayerNames;
+    private GameState prevGameState;
 
     public Board(int numOfPlayers, int numOfRounds, String[] playerNames, Color[] colors) {
         this.numOfPlayers = numOfPlayers;
@@ -140,8 +136,50 @@ public class Board{
     public void receiveFromPackageS2C(PackageS2C pkg) {
         this.currentRound = pkg.currentRound;
         this.Scores = pkg.Scores.clone();
-        for (int i = 0; i < numOfPlayers; i = i +1) {
-            Curves[i].addPoint(pkg.CurvePoints[i]);
+
+
+        if (pkg.gameState == GameState.PREP){
+
+            /* in prep state we want to rotate around the starting position */
+            for (int i = 0; i < Scores.length; i++) {
+
+                CurvePoint indicatorPoint = new CurvePoint(pkg.prepSpeed.x,pkg.prepSpeed.y,true);
+
+
+                /* if the curves are empty, add first 2 elements element*/
+                if (Curves[i].getPoints().size() == 0) {
+                    Curves[i].addPoint(pkg.CurvePoints[i]);
+                    Curves[i].addPoint(indicatorPoint);
+                }
+                /* if not, just replace the last (1st) element */
+                else {
+                    /* set second point in array list, to the speed value, to rotate in 1 place */
+                    Curves[i].getPoints().set(1,indicatorPoint);
+                }
+            }
+
+            prevGameState = GameState.PREP;
+
+        }
+        /* in normal mode we just add, the newest points */
+        else if (pkg.gameState == GameState.PLAYING) {
+            for (int i = 0; i < Scores.length; i = i + 1) {
+                /* if this is the first call, delete the prep point */
+                if(prevGameState == GameState.PREP){
+                    Curves[i].getPoints().remove(1);    /* delete */
+                    Curves[i].addPoint(pkg.CurvePoints[i]);   /* add new point */
+                }
+                /* normal add */
+                else {
+                    Curves[i].addPoint(pkg.CurvePoints[i]);
+                }
+            }
+        }
+    }
+
+    public void clearBoard(){
+        for (int i = 0; i < numOfPlayers; i++) {
+            Curves[i].clearCurves();
         }
     }
 }

@@ -39,7 +39,7 @@ public class GameScreen extends JPanel {
         gamePanel.setBoardWidth(gamePanelWidth);
         gamePanel.setBoardHeight(gamePanelHeight);
         BufferedImage img = new BufferedImage(gamePanelWidth,gamePanelHeight,BufferedImage.TYPE_INT_RGB);
-        Graphics2D graphics = img.createGraphics();
+        Graphics2D graphics = img.createGraphics(); //TODO (B/D) ezt lehetne az uj clean fuggvennyel, ugy tisztabb
         graphics.setPaint(new Color(26, 72, 98)); //bacground
         graphics.fillRect(0, 0, img.getWidth(), img.getHeight());
         graphics.setColor(Color.magenta);

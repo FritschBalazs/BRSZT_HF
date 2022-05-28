@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
 import javax.swing.Timer;
 
 
@@ -31,6 +32,7 @@ public class Server extends Client{
     private static final int timerInterval = ServerSidePlayer.SYSTEM_TICK;
     private int cycleCounter;
     private boolean waitWithDraw = true;
+    private int prevGameRound;
 
 
     public Server(int numOfPlayers,int numOfRounds, String playerName) {
@@ -113,8 +115,7 @@ public class Server extends Client{
 
         /* Create init package */
         InitPackageS2C pkg = new InitPackageS2C(numOfClients+1);
-        pkg.currentRound = 0;
-        pkg.gameState = GameState.MENU; //TODO (M) ez igy ok Marci? aka.: mi legyen a gameState-el
+        pkg.gameState = GameState.MENU;
         pkg.numOfRounds = this.numOfRounds;
 
 
@@ -135,19 +136,6 @@ public class Server extends Client{
             pkg.playerNames[numOfClients] = this.player.getName();
         }
 
-        /* generate random colors for the players */
-        //TODO (M/B) Marci random szingeneralojat illeszteni, ezt a borzalmat meg torolni
-        //pkg.Colors[0] = new java.awt.Color(255,105,180);
-        //pkg.Colors[1] = new java.awt.Color(124,255,255);
-        //if (numOfClients+1 > 2) {
-        //    pkg.Colors[2] = new java.awt.Color(255,0,0);
-        //}
-        //if (numOfClients+1 > 3) {
-        //   pkg.Colors[3] = new java.awt.Color(0,255,0);
-        //}
-        //****** idaig kell majd torolni
-
-
 
         ServerSidePlayer[] SSPlayers= new ServerSidePlayer[numOfClients+1];
 
@@ -158,11 +146,13 @@ public class Server extends Client{
 
         game = new Game(numOfClients+1, pkg.numOfRounds, SSPlayers,pkg.Colors);
         game.initGame();
-        //TODO (M) init game
-        //TODO (B) setup server. Nem tudom mire gondoltam pontosan
+        prevGameRound = game.getCurrentRound();
+
+
 
         pkg.CurvePoints = game.getMainBoard().getLastCurvePoints();
         pkg.Colors = game.getColors();
+        pkg.currentRound = game.getCurrentRound();
         /* send out init packages for all players */
         for (int i = 0; i < numOfClients; i++) {
             /* update package */
@@ -268,14 +258,19 @@ public class Server extends Client{
         pkg.Scores = game.getScores();
 
 
-        pkg.gameState = game.getGameState();
+        //pkg.gameState = game.getGameState(); //TODO ezt viszza
+        pkg.gameState = GameState.PLAYING;
         cycleCounter++;
         sendToClient(pkg);
 
-        /*if (cycleCounter >= 2500){
-            gameTimer.stop();
+        if (prevGameRound != pkg.currentRound){
+            /* at new round we have to clear the lines on the board */
+            game.getMainBoard().clearBoard();
+            boolean[] alive = new boolean[numOfClients+1];
+            Arrays.fill(alive,Boolean.TRUE);
+            game.getMainBoard().addCurvePoints(pkg.CurvePoints,alive);
+            game.getMainBoard().addCurvePoints(pkg.CurvePoints,alive); //TODO (B) ha lesz rendes korveg akkor ezt befejezni, es elrakni innen
         }
-        System.out.print("cycle count: " + cycleCounter + " ");*/
 
         waitWithDraw = false;
 

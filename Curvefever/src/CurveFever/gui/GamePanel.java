@@ -8,7 +8,6 @@ import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 //the part where the curves are drawn
 public class GamePanel extends JPanel {
@@ -154,6 +153,17 @@ public class GamePanel extends JPanel {
         }
         //PrevPrevCurvePoints = PrevCurvePoints.clone();
         //PrevCurvePoints = CurvePoints.clone();
+    }
+
+    public void resetBufferedImage()
+    {
+        /*when starting a new game create a clean Panel */
+        Graphics2D graphics = boardImage.createGraphics();
+        graphics.setPaint(new Color(26, 72, 98));  //background
+        graphics.fillRect(0, 0, boardImage.getWidth(), boardImage.getHeight());
+        graphics.setColor(Color.magenta);
+        graphics.setStroke(new BasicStroke(3));
+        graphics.drawRect(0,0,boardImage.getWidth()-1, boardImage.getHeight()-1);
     }
 
     @Override

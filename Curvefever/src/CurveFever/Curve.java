@@ -16,7 +16,7 @@ public class Curve {
         return Points.get(idx);
     }
 
-    public int getCurveSize() {
+    public int getNumOfCurves() {
         return Points.size();
     }
 
@@ -33,5 +33,9 @@ public class Curve {
 
     public void addPoint(CurvePoint curvePoint) {
         Points.add(curvePoint);
+    }
+
+    public void clearCurves(){
+        Points.clear();
     }
 }

@@ -4,7 +4,6 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Random;
 
 import static java.lang.Math.*;
 
@@ -76,7 +75,7 @@ public class Game {
         else
             this.playerNum = 2;
 
-        this.currentRound = 0;
+        this.currentRound = 1;
         this.Players = Players.clone();
         //this.mainBoard = new Board(100, 100, playerNum);
         this.gameState = GameState.MENU;
@@ -436,18 +435,18 @@ public class Game {
         CurvePoint curveSegment2;
         for (int i = 0; i < playerNum; i++) {   // Iterate over players
             if (playersAlive[i] == true)
-                if (Curves[i].getCurveSize() > 4) {
+                if (Curves[i].getNumOfCurves() > 4) {
                     // Store last two points of the actual player curve
                     currentPos = Curves[i].getLastPoint();
-                    lastPos = Curves[i].getPoint(Curves[i].getCurveSize() - 2);
+                    lastPos = Curves[i].getPoint(Curves[i].getNumOfCurves() - 2);
 
                     // Iterate over all of the curves on the board
                     for (int j = 0; j < playerNum; j++) {
 
                         // Iterate over point pairs of the selected curve
-                        for (int k = 0; k < Curves[j].getCurveSize() - 2; k++) {
+                        for (int k = 0; k < Curves[j].getNumOfCurves() - 2; k++) {
                             // Avoid false detection of the last curve point (actual position)
-                            if (!((i == j) && (k >= Curves[j].getCurveSize() - 4))) {
+                            if (!((i == j) && (k >= Curves[j].getNumOfCurves() - 4))) {
                                 curveSegment1 = Curves[j].getPoint(k);
                                 curveSegment2 = Curves[j].getPoint(k + 1);
                                 // Check if points are not in a hole in the curve
@@ -489,40 +488,5 @@ public class Game {
     /* returns the newly calculated CurvePoints */
 
 }
-
-
-    //TODO (B low prio) ezt torolni ha mar nem szukseges teszteleshez
-    /*public void addRandomPosForDebug(int counter){*/
-        /* test code, not final -------------------------------------------------  */
-        //board.setCurrentRound(board.getCurrentRound()+1);
-        //System.out.println("Current round  = " + board.getCurrentRound());
-/*
-        int rangeMin = 0;
-        int rangeMax = 500;
-        float percentOfIsColored = 80;
-        percentOfIsColored = percentOfIsColored/100;
-        double tmpScores[] = new double[playerNum];
-
-        CurvePoint[] tmpPoints = new CurvePoint[playerNum];
-        for (int i = 0; i < playerNum; i = i + 1) {
-            Random x = new Random();
-            double randomx = rangeMin + (rangeMax - rangeMin) * x.nextDouble();
-            Random y = new Random();
-            double randomy = rangeMin + (rangeMax - rangeMin) * y.nextDouble();
-            Random help = new Random();
-            boolean isColoredWProbability = (help.nextFloat() < percentOfIsColored);
-            tmpPoints[i] = new CurvePoint(randomx, randomy, isColoredWProbability);
-            Players[i].setScore(counter*(i+1));
-            tmpScores[i] = Players[i].getScore();
-        }
-
-        mainBoard.setCurrentRound(counter);
-        this.currentRound = counter;
-        mainBoard.addCurvePoints(tmpPoints);
-        mainBoard.setScores(tmpScores);
-
-    }
-}*/
-
 
 
