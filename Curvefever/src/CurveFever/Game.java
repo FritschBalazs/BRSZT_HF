@@ -235,6 +235,15 @@ public class Game {
         return pos;
     }
 
+    private int countAlivePlayers(){
+        int count = 0;
+        for (int i = 0; i < playerNum; i++) {
+            if (Players[i].getIsAlive())
+                count++;
+        }
+        return count;
+    }
+
     /*
     ------------------------------------------------------------
     -------------- Initialization methods ----------------------
@@ -288,10 +297,10 @@ public class Game {
     private void initBoard() {
         boolean[] playersAlive = new boolean[playerNum];
         Arrays.fill(playersAlive,true);
-        Color[] initColors = new Color[Players.length];
-        CurvePoint[] initPoints = new CurvePoint[Players.length];
-        Vector2D[] initPositions = new Vector2D[Players.length];
-        for (int i = 0; i < Players.length; i++) {
+        Color[] initColors = new Color[playerNum];
+        CurvePoint[] initPoints = new CurvePoint[playerNum];
+        Vector2D[] initPositions = new Vector2D[playerNum];
+        for (int i = 0; i < playerNum; i++) {
             initColors[i] = Players[i].getPlayerColor();
             initPositions[i] = Players[i].getPosition();
             initPoints[i] = new CurvePoint(initPositions[i].getX(), initPositions[i].getY(), true);
@@ -454,7 +463,8 @@ public class Game {
         return collisionDetected;
     }
 
-    public void evaluateStep(ControlState[] Controls) {
+    public boolean evaluateStep(ControlState[] Controls) {
+        boolean endgame;
         double tmpScore[] = new double[playerNum];
         for (int i = 0; i < Players.length; i++) {
             if (Players[i].getIsAlive()) {
@@ -464,6 +474,12 @@ public class Game {
         }
         updatePositions(Controls);
         mainBoard.setScores(tmpScore);
+        endgame = (countAlivePlayers() == 1);
+        return endgame;
+    }
+
+    public void runGame(ControlState[] Controls) {
+
     }
 
     //public Curve[] getBoardCurves() {
