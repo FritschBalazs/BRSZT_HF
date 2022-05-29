@@ -23,7 +23,7 @@ public class Game {
     }
 
     private static final java.awt.Color[] PlayerColors = {
-            Color.RED, Color.ORANGE, Color.PINK, Color.GREEN, Color.YELLOW, Color.BLUE, Color.CYAN};
+            Color.RED, Color.ORANGE, Color.PINK, Color.GREEN, Color.YELLOW, Color.CYAN};
     private static final double R = 200.0;
     public static final int MAX_PLAYERS = 4;
     public static final int MIN_PLAYERS = 2;
@@ -491,8 +491,15 @@ public class Game {
                                 // Check if points are not in a hole in the curve
                                 if (curveSegment1.getIsColored() && curveSegment2.getIsColored())
                                     // Check intersection
-                                    if (doIntersect(currentPos, lastPos, curveSegment1, curveSegment2))
+                                    if (doIntersect(currentPos, lastPos, curveSegment1, curveSegment2)) {
                                         collisionDetected[i] = true;
+                                        // Debug prints
+                                        System.out.println("Player[" + i + "] collision detected, coordinates:");
+                                        System.out.println("currentPos -- x: " + currentPos.getX() + " y: " + currentPos.getY());
+                                        System.out.println("lastPos -- x: " + lastPos.getX() + " y: " + lastPos.getY());
+                                        System.out.println("Segment1 -- x: " + curveSegment1.getX() + " y: " + curveSegment1.getY());
+                                        System.out.println("Segment2 -- x: " + curveSegment2.getX() + " y: " + curveSegment2.getY());
+                                    }
                             }
                         }
                     }

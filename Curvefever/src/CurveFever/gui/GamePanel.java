@@ -180,6 +180,6 @@ public class GamePanel extends JPanel {
         Toolkit.getDefaultToolkit().sync(); // this smooths out animations on some systems
 
         long endTime = System.nanoTime();
-        System.out.println("Paint time: "+ (endTime-startTime)/1000000);
+        //System.out.println("Paint time: "+ (endTime-startTime)/1000000);  //Commented out for debugging
     }
 }
