@@ -33,6 +33,7 @@ public class Game {
     public static final int SYSTEM_TICK = ServerSidePlayer.SYSTEM_TICK;
     public static final double SCORE_PER_TICK = (double) SCORE_PER_SECOND / (double) SYSTEM_TICK;
     public static final double SPEED_UPSCALE = 10;
+    public static final double REWARD_SCORE = 100;
 
     private int playerNum;
     private ServerSidePlayer[] Players;
@@ -415,11 +416,15 @@ public class Game {
         boolean[] collisions = detectCollisions(playersAlive);
 
         // Set parameters according to collision event
-        for (int i = 0; i < Players.length; i++) {
+        for (int i = 0; i < playerNum; i++) {
             Players[i].setControlState(Controls[i]);
             if (collisions[i]) {
                 Players[i].setAlive(false);
                 System.out.println("Collision detected, Player ID: " + i);
+                for (int j = 0; j < playerNum; j++) {
+                    if (j != i)
+                        Players[j].updateScore(REWARD_SCORE);
+                }
             } else if (Players[i].getIsAlive()){
                 Players[i].move();
                 pos = Players[i].getPosition();

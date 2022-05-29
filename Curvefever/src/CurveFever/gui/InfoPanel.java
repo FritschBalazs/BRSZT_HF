@@ -96,7 +96,7 @@ public class InfoPanel extends JPanel {
         roundLabel.setText("Round "+currentRound+"/"+roundNum);
         sortScores();
         for (int i = 0; i < numOfPlayers; i = i + 1) {
-            ScoreLabels[i].setText(PlayerNames[i]+": "+ Scores[i]);
+            ScoreLabels[i].setText(PlayerNames[i]+": "+ (int)Scores[i]);
             ScoreLabels[i].setForeground(Colors[i]);
         }
     }
