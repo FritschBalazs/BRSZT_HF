@@ -34,6 +34,7 @@ public class Game {
     public static final double SCORE_PER_TICK = (double) SCORE_PER_SECOND / (double) SYSTEM_TICK;
     public static final double SPEED_UPSCALE = 10;
     public static final double REWARD_SCORE = 100;
+    public static final int INIT_POS_BORDER = 200;
 
     private int playerNum;
     private ServerSidePlayer[] Players;
@@ -215,14 +216,26 @@ public class Game {
         theta = random() * 2 * Math.PI;
         theta_temp = toDegrees(theta);
         System.out.println("theta_temp: " + theta_temp + ", player position: " + playerPosition);
-        switch (playerPosition) {
+        /*switch (playerPosition) {
             case BOTTOM_LEFT -> theta = adjustDegree(theta_temp, circlePart.UPPER_RIGHT);
             case TOP_LEFT -> theta = adjustDegree(theta_temp, circlePart.LOWER_RIGHT);
             case TOP_RIGHT -> theta = adjustDegree(theta_temp, circlePart.LOWER_LEFT);
             case BOTTOM_RIGHT -> theta = adjustDegree(theta_temp, circlePart.UPPER_LEFT);
-        }
+        }*/
         xTemp = r * cos(toRadians(theta));
         yTemp = r * sin(toRadians(theta));
+
+        // Adjust starting positions if they are too close to the border
+        if (xTemp < INIT_POS_BORDER && xTemp > 0)
+            xTemp = INIT_POS_BORDER;
+        else if (xTemp > -INIT_POS_BORDER && xTemp < 0)
+            xTemp = -INIT_POS_BORDER;
+
+        if (yTemp < INIT_POS_BORDER && yTemp > 0)
+            yTemp = INIT_POS_BORDER;
+        else if (yTemp > -INIT_POS_BORDER && yTemp < 0)
+            yTemp = -INIT_POS_BORDER;
+
         System.out.println("xtemp: " + xTemp + ", ytemp: " + yTemp);
         switch (playerPosition) {
             case BOTTOM_LEFT -> {
