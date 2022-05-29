@@ -16,7 +16,7 @@ public class ServerSidePlayer extends Player{
     private Vector2D speed;
     private Color playerColor;
     private boolean isAlive;
-    private int score;
+    private double score;
 
     public ServerSidePlayer(String name, int pId) {
         super(name,pId);

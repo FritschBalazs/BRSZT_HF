@@ -78,7 +78,12 @@ public class Board{
     public Curve[] getCurves() {return Curves.clone();}
 
     public double[] getScores() {
-        return Scores.clone();
+        //return Scores.clone();
+        double[] tempScores = new double[numOfPlayers];
+        for (int i = 0; i < numOfPlayers; i++) {
+            tempScores[i] = Math.floor(Scores[i]);
+        }
+        return tempScores;
     }
 
     public int getCurrentRound() {

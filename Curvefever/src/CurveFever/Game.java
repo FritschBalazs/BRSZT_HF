@@ -29,7 +29,7 @@ public class Game {
     public static final int MIN_PLAYERS = 2;
     public static final int MAX_ROUNDS = 10;
     public static final int MIN_ROUNDS = 1;
-    public static final int SCORE_PER_SECOND = 50;
+    public static final int SCORE_PER_SECOND = 5;
     public static final int SYSTEM_TICK = ServerSidePlayer.SYSTEM_TICK;
     public static final double SCORE_PER_TICK = (double) SCORE_PER_SECOND / (double) SYSTEM_TICK;
     public static final double SPEED_UPSCALE = 10;
@@ -442,18 +442,20 @@ public class Game {
         Vector2D playerPos = new Vector2D();
         // Check if out of board boundaries
         for (int i = 0; i < playerNum; i++) {
-            playerPos.setCoordinates(Players[i].getPosition().getX(), Players[i].getPosition().getY());
+            if (playersAlive[i] == true) {
+                playerPos.setCoordinates(Players[i].getPosition().getX(), Players[i].getPosition().getY());
 
-            if ((playerPos.x > mainBoard.getGameWidthWidth()) || (playerPos.x < 0)
-            || (playerPos.y > mainBoard.getGameHeightHeight()) || (playerPos.y < 0))
-                collisionDetected[i] = true;
+                if ((playerPos.x > mainBoard.getGameWidthWidth()) || (playerPos.x < 0)
+                        || (playerPos.y > mainBoard.getGameHeightHeight()) || (playerPos.y < 0))
+                    collisionDetected[i] = true;
+            }
         }
 
         // Variables to store the point pairs in the Curves
         CurvePoint curveSegment1;
         CurvePoint curveSegment2;
         for (int i = 0; i < playerNum; i++) {   // Iterate over players
-            if (playersAlive[i] == true)
+            if (playersAlive[i] == true && !collisionDetected[i])
                 if (Curves[i].getCurveSize() > 4) {
                     // Store last two points of the actual player curve
                     currentPos = Curves[i].getLastPoint();
@@ -486,7 +488,7 @@ public class Game {
         double tmpScore[] = new double[playerNum];
         for (int i = 0; i < Players.length; i++) {
             if (Players[i].getIsAlive()) {
-                Players[i].updateScore(SCORE_PER_TICK); //TODO (M) Marci azt mondtuk, hogy ez pozicio fuggo is nem? -B
+                Players[i].updateScore(SCORE_PER_TICK);
                 tmpScore[i] = Players[i].getScore();
             }
         }
