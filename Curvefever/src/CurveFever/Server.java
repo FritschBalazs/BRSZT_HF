@@ -256,7 +256,7 @@ public class Server extends Client{
 
 
 
-        if (false){ //TODO B ezt vissza
+        if (endRound){
             /* increment the round number */
             game.incrCurrRound();
 
@@ -270,10 +270,11 @@ public class Server extends Client{
             /* prepare game for the next round */
             else{
                 game.getMainBoard().clearBoard();
-
                 game.initBoard();
+                game.setGameState(GameState.PREP);
+                game.setAllPlayersAlive();
 
-                //TODO (B) ha lesz rendes korveg akkor ezt befejezni, es elrakni innen
+
                 prepStartTime = cycleCounter;
                 //TODO (M) generate new random starting positions
             }
@@ -283,18 +284,25 @@ public class Server extends Client{
 
         if(game.getGameState() == GameState.PREP){
 
-            // dummy prepSpeed //TODO (M/B) cahnge dummy prep speed
+            // dummy prepSpeed //TODO (M/B) change dummy prep speed to the real one
             Vector2D[] array = new Vector2D[numOfClients+1];
             Arrays.fill(array,new Vector2D(250 + cycleCounter,250 + cycleCounter));
             pkg.prepSpeed = array;
 
             if((cycleCounter-prepStartTime) >= ServerSidePlayer.PREP_TIME){
                 game.setGameState(GameState.PLAYING);
+                game.getMainBoard().deleteLastCurvePoints();
             }
+
+            /* last one will be the prepSpeed so we need the one before that */
+            pkg.CurvePoints = game.getMainBoard().getLastLastCurvePoints();
+        }
+        else if (game.getGameState() == GameState.PLAYING){
+            pkg.CurvePoints = game.getMainBoard().getLastCurvePoints();
         }
 
 
-        pkg.CurvePoints = game.getMainBoard().getLastCurvePoints();
+
         pkg.currentRound = game.getCurrentRound();
 
 

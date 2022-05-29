@@ -51,6 +51,12 @@ public class Curve {
         Points.set(index,curvePoint);
     }
 
+    public void deleteLastPoint(){
+        if (Points.size() >= 1) {
+            Points.remove(Points.size() - 1);
+        }
+    }
+
     public void clearCurves(){
         Points.clear();
     }

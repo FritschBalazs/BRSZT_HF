@@ -16,6 +16,7 @@ public class Menu {
     //private int numOfPlayers;
     //private int numOfRounds;
     private int prevRound;
+    private GameState prevGameState;
     //TODO (B) ha nagyjabol kesz a menu osztaly akkor ezt purgalni (nem tudom kell-e majd ujrakezdesnel esetleg pl a numOfRounds)
 
     private ScreenManager sManager;
@@ -160,14 +161,21 @@ public class Menu {
                     initGuiData(boardToDisplay,gameScr);
                 }
                 /* clear gui and board if needed */
-                if(server.getGame().getGameState() == GameState.PREP){
+                if(server.getGame().getGameState() == GameState.PREP || prevGameState == GameState.PREP){
                     /* in prep mode we have to clear the image every time (new round also starts with prep) */
                     screenManager.getGameScreen().getGamePanel().resetBufferedImage();
                 }
 
-                screenManager.update(true);
-                server.drawFinished();
+                if (server.getGame().getGameState() == GameState.PREP|| prevGameState == GameState.PREP){
+                    screenManager.update(true);
+                }
+                else
+                {
+                    screenManager.update(false);
+                }
 
+                server.drawFinished();
+                prevGameState = server.getGame().getGameState();
 
             }
         }
@@ -214,12 +222,13 @@ public class Menu {
                 /* receive game data containing data from the latest cycle */
                 PackageS2C message = client.receiveFromServer();
                 if (message != null )  {
-                    if(message.gameState == GameState.PREP){
+                    if(message.gameState == GameState.PREP || prevGameState == GameState.PREP) {
 
                         /* in prep mode we have to clear the image every time (new round also starts with prep) */
                         screenManager.getGameScreen().getGamePanel().resetBufferedImage();
+                    }
 
-
+                    if (message.gameState == GameState.PREP){
                         if (prevRound != message.currentRound){
                             /* at new round we have to clear the lines on the board */
                             boardToDisplay.clearBoard();
@@ -234,10 +243,21 @@ public class Menu {
                 }
 
                 /* actualize data stored in gui classes */
-                updateGuiData(boardToDisplay,screenManager.getGameScreen());
+                if (message.gameState == GameState.PREP || prevGameState == GameState.PREP){
+                    initGuiData(boardToDisplay,gameScr);
+                    /* draw */
+                    screenManager.update(true);
+                }
+                else {
+                    updateGuiData(boardToDisplay,gameScr);
+                    /* draw */
+                    screenManager.update(false);
+                }
 
-                /* draw */
-                screenManager.update(false);
+                prevGameState = message.gameState;
+
+
+
 
             }
             //TODO (M/B) kitalalni, hogy mi legyen ha vege egy jatekanak (osszes kornek)

@@ -17,7 +17,7 @@ public class Board{
         this.numOfPlayers = numOfPlayers;
         this.Curves = new Curve[numOfPlayers];
         this.Scores = new double[numOfPlayers];
-        this.currentRound = 0;
+        this.currentRound = 1;
         this.roundNum = numOfRounds;
         this.PlayerNames = playerNames.clone();
         this.Scores = new double[numOfPlayers];
@@ -129,6 +129,13 @@ public class Board{
         }
     }
 
+    public void deleteLastCurvePoints(){
+        for (int i = 0; i < numOfPlayers; i++) {
+            if (Curves[i].getPoints().size() >= 1)
+                Curves[i].deleteLastPoint();
+        }
+    }
+
     public void addCurvePoint(CurvePoint newPosition, int idx) {
         Curves[idx].addPoint(newPosition);
     }
@@ -156,7 +163,7 @@ public class Board{
 
                 /* if the curves are empty, or they have 1 element, add first 2 elements element*/ //note: in the first round they will have 1 element, but when starting the 2nd round they will have nonve
                 if (Curves[i].getPoints().size() == 0 || Curves[i].getPoints().size() == 1) {
-                    Curves[i].getPoints().clear();
+                    Curves[i].deleteLastPoint();
 
                     /* add starting pos, and perpSpeed */
                     Curves[i].addPoint(pkg.CurvePoints[i]);
@@ -165,7 +172,7 @@ public class Board{
                 /* if not, just replace the last (1st) element */
                 else {
                     /* set second point in array list, to the speed value, to rotate in 1 place */
-                    Curves[i].getPoints().set(1,indicatorPoint);
+                    Curves[i].setAPoint(1,indicatorPoint);
                 }
             }
 
@@ -177,7 +184,7 @@ public class Board{
             for (int i = 0; i < Scores.length; i = i + 1) {
                 /* if this is the first call, delete the prep point */
                 if(prevGameState == GameState.PREP){
-                    Curves[i].getPoints().remove(1);    /* delete */
+                    Curves[i].deleteLastPoint();   /* delete */
                     Curves[i].addPoint(pkg.CurvePoints[i]);   /* add new point */
                 }
                 /* normal add */

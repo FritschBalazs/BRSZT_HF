@@ -48,7 +48,7 @@ public class Game {
     public Game(ServerSidePlayer[] Players) {
         this.roundNum = 3;
         this.playerNum = 3;
-        this.currentRound = 0;
+        this.currentRound = 1;
         Color[] Colors = new Color[playerNum];
 
         Arrays.fill(Colors, Color.BLACK);
@@ -129,6 +129,7 @@ public class Game {
 
     public void incrCurrRound() {
         this.currentRound = this.currentRound + 1;
+        this.mainBoard.setCurrentRound(mainBoard.getCurrentRound()+1);
     }
 
     public void setAllPlayersAlive(){
