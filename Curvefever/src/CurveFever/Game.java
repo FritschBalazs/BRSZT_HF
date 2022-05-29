@@ -32,6 +32,7 @@ public class Game {
     public static final int SCORE_PER_SECOND = 50;
     public static final int SYSTEM_TICK = ServerSidePlayer.SYSTEM_TICK;
     public static final double SCORE_PER_TICK = (double) SCORE_PER_SECOND / (double) SYSTEM_TICK;
+    public static final double SPEED_UPSCALE = 10;
 
     private int playerNum;
     private ServerSidePlayer[] Players;
@@ -266,7 +267,7 @@ public class Game {
     ------------------------------------------------------------
     */
 
-    private void initPositions() {
+    public void initPositions() {
         ArrayList<Vector2D> StartingPositions = new ArrayList<>(this.playerNum);
         switch (this.playerNum) {
             case 2: {
@@ -398,8 +399,8 @@ public class Game {
     */
 
     public void updatePositions(ControlState[] Controls) {
-        System.out.println("CHECK length of the curves");
-        /*for (int i = 0; i < playerNum; i++) { TODO Debug print, need to be deleted later
+        /*System.out.println("CHECK length of the curves");
+        for (int i = 0; i < playerNum; i++) { TODO Debug print, need to be deleted later
             System.out.println("Player ID:" + i + "  Curve length: " + mainBoard.getCurves()[i].getCurveSize());
             System.out.println("******************************");
         }*/
@@ -435,35 +436,34 @@ public class Game {
 
         Curve[] Curves;
         Curves = mainBoard.getCurves();
-        //System.out.println("fasz: "+Curves[0].getCurveSize()); //TEST Dani
         CurvePoint currentPos;
         CurvePoint lastPos;
         // Store the last two points of the players
         /*for (int i = 0; i < playerNum; i++) {
             currentPos[i] = Curves[i].getLastPoint();
             lastPos[i] = Curves[i].getPoint(Curves[i].getCurveSize() - 2);
-            // Check if out of board boundaries - TODO Debug célból kommentezve, később fog kelleni - Marci
-            /*if ((currentPos[i].getX() > mainBoard.getGameWidthWidth()) || (currentPos[i].getX() < 0)
+            // Check if out of board boundaries
+            if ((currentPos[i].getX() > mainBoard.getGameWidthWidth()) || (currentPos[i].getX() < 0)
             || (currentPos[i].getY() > mainBoard.getGameHeightHeight()) || (currentPos[i].getY() < 0))
-                collisionDetected[i] = true;*/
-        //}
+                collisionDetected[i] = true;
+        }*/
         // Variables to store the point pairs in the Curves
         CurvePoint curveSegment1;
         CurvePoint curveSegment2;
         for (int i = 0; i < playerNum; i++) {   // Iterate over players
             if (playersAlive[i] == true)
-                if (Curves[i].getNumOfCurves() > 4) {
+                if (Curves[i].getCurveSize() > 4) {
                     // Store last two points of the actual player curve
                     currentPos = Curves[i].getLastPoint();
-                    lastPos = Curves[i].getPoint(Curves[i].getNumOfCurves() - 2);
+                    lastPos = Curves[i].getPoint(Curves[i].getCurveSize() - 2);
 
                     // Iterate over all of the curves on the board
                     for (int j = 0; j < playerNum; j++) {
 
                         // Iterate over point pairs of the selected curve
-                        for (int k = 0; k < Curves[j].getNumOfCurves() - 2; k++) {
+                        for (int k = 0; k < Curves[j].getCurveSize() - 2; k++) {
                             // Avoid false detection of the last curve point (actual position)
-                            if (!((i == j) && (k >= Curves[j].getNumOfCurves() - 4))) {
+                            if (!((i == j) && (k >= Curves[j].getCurveSize() - 4))) {
                                 curveSegment1 = Curves[j].getPoint(k);
                                 curveSegment2 = Curves[j].getPoint(k + 1);
                                 // Check if points are not in a hole in the curve
@@ -497,7 +497,7 @@ public class Game {
     public boolean runGame(ControlState[] Controls, int debugCycleCount) {
 
         //ez csak teszteleshez kellet, majd alakitsd at ahogy szeretned
-        if (gameState == GameState.PLAYING){
+        /*if (gameState == GameState.PLAYING){
             if (evaluateStep(Controls) == true) {
                 return true;
             }
@@ -526,13 +526,52 @@ public class Game {
                             mainBoard.getCurves()[i].setAPoint(1,singleCP);
                         }
                 }
-            }
+            }*/
 
             //end of testcode
 
+            // Run game state machine
+            switch (this.gameState) {
+                //
+                case PREP -> {
+                    // Set speed attributes of the players according to the input controls
+                    double angle;
+                    for (int i = 0; i < playerNum; i++) {
+                        Players[i].setControlState(Controls[i]);
+                        if (Controls[i] == ControlState.LEFT)
+                            angle = -1 * ServerSidePlayer.TURN_DEGREE_PER_TICK;
+                        else if (Controls[i] == ControlState.RIGHT)
+                            angle = ServerSidePlayer.TURN_DEGREE_PER_TICK;
+                        else angle = 0;
+                        Players[i].rotateSpeed(angle);
+                    }
 
-        }
+                    // Store visual speed in the board per player
+                    CurvePoint[] tempSpeed = new CurvePoint[playerNum];
+                    for (int i = 0; i < playerNum; i++) {
+                        tempSpeed[i] = new CurvePoint();
+                        tempSpeed[i].setCoordinates(Players[i].getSpeed().getX() * SPEED_UPSCALE + Players[i].getPosition().getX(),
+                                Players[i].getSpeed().getY() * SPEED_UPSCALE + Players[i].getPosition().getY());
+                        tempSpeed[i].setIsColored(true);
 
+                        // Add new speed to the board if first cycle
+                        if (mainBoard.getCurves()[i].getPoints().size() == 1)
+                            mainBoard.getCurves()[i].addPoint(tempSpeed[i]);
+                        else if (mainBoard.getCurves()[i].getPoints().size() == 2) {
+                            mainBoard.getCurves()[i].setAPoint(1,tempSpeed[i]);
+                        }
+                    }
+                    return false;
+
+                }
+                case PLAYING -> {
+                    if (evaluateStep(Controls))
+                        return true;
+                }
+                case MENU -> {
+                    return false;
+                }
+            }
         return false;
     }
 

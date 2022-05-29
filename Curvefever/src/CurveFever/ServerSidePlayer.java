@@ -8,7 +8,7 @@ import static java.lang.Math.toRadians;
 public class ServerSidePlayer extends Player{
 
     public static final int SYSTEM_TICK = 20;  // In milliseconds
-    public static final int PREP_TIME = 100;   // IN SYSTEM ticks
+    public static final int PREP_TIME = 200;   // IN SYSTEM ticks
     public static final int TURN_DEGREE_PER_SECOND = 50;   // Turns 50 degrees in one second
     public static final double TURN_DEGREE_PER_TICK = TURN_DEGREE_PER_SECOND / SYSTEM_TICK;
 
@@ -68,7 +68,7 @@ public class ServerSidePlayer extends Player{
         return score;
     }
 
-    private void rotateSpeed(double angle){
+    public void rotateSpeed(double angle){
         double xTemp = this.speed.getX() * cos(toRadians(angle)) - this.speed.getY() * sin(toRadians(angle));
         double yTemp = this.speed.getX() * sin(toRadians(angle)) + this.speed.getY() * cos(toRadians(angle));
         speed.setCoordinates(xTemp, yTemp);

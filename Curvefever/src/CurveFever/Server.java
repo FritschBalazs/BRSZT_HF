@@ -1,5 +1,6 @@
 package CurveFever;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -8,11 +9,12 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
-import javax.swing.Timer;
+import java.util.Vector;
 
 
-public class Server extends Client{
+public class Server extends Client {
 
+    private static final int timerInterval = ServerSidePlayer.SYSTEM_TICK;
     private Game game;
     private Timer gameTimer;
     private int numOfClients;   //NOT the number of players!!!!!!!!
@@ -20,23 +22,20 @@ public class Server extends Client{
     private ServerSocket ss;
     private Socket[] Sockets;
     private ObjectOutputStream[] ObjOutStreams;
-    private ObjectInputStream[]  ObjInStreams;
+    private ObjectInputStream[] ObjInStreams;
     private GetControl[] GCRunnables;
     private SendPoints[] SPRunnables;
     private Thread[] GCThreads;
     private Thread[] SPThreads;
     private PackageS2C currentPkg;
-
     private ControlState[] ControlStates;
-
-    private static final int timerInterval = ServerSidePlayer.SYSTEM_TICK;
     private int cycleCounter;
     private boolean waitWithDraw = true;
     private int prevGameRound;
     private int prepStartTime;
 
 
-    public Server(int numOfPlayers,int numOfRounds, String playerName) {
+    public Server(int numOfPlayers, int numOfRounds, String playerName) {
         super("", playerName);
 
 
@@ -61,13 +60,13 @@ public class Server extends Client{
         System.out.println("----- Server created -----");
     }
 
+    public Game getGame() {
+        return game;
+    }
+
     //not sure if this is needed, or correct
     public void setGame(Game game) {
         this.game = game;
-    }
-
-    public Game getGame() {
-        return game;
     }
 
     public int getPort() {
@@ -80,15 +79,14 @@ public class Server extends Client{
     }
 
     /* used for signaling to menu class */
-    public void drawFinished(){
+    public void drawFinished() {
         waitWithDraw = true;
     }
 
-    public void acceptConnections()
-    {
+    public void acceptConnections() {
         int numOfPlayer = 0;
 
-        System.out.println("Waiting for connections.... (1/"+(numOfClients+1)+")");
+        System.out.println("Waiting for connections.... (1/" + (numOfClients + 1) + ")");
         try {
             while (numOfPlayer < numOfClients) {
                 /* accept new connection */
@@ -103,7 +101,7 @@ public class Server extends Client{
 
                 /* increment player number */
                 numOfPlayer++;
-                System.out.println("New player connected. "  + (numOfPlayer+1)+ "/" + (numOfClients+1)) ;
+                System.out.println("New player connected. " + (numOfPlayer + 1) + "/" + (numOfClients + 1));
             }
             System.out.println("All " + (numOfClients + 1) + " players connected");
         } catch (IOException ex) {
@@ -112,10 +110,10 @@ public class Server extends Client{
 
     }
 
-    public void setupGame(){
+    public void setupGame() {
 
         /* Create init package */
-        InitPackageS2C pkg = new InitPackageS2C(numOfClients+1);
+        InitPackageS2C pkg = new InitPackageS2C(numOfClients + 1);
         pkg.gameState = GameState.MENU;
         pkg.numOfRounds = this.numOfRounds;
 
@@ -128,9 +126,9 @@ public class Server extends Client{
                 ObjOutStreams[i].flush();
 
                 /* wait for response */
-                pkg.playerNames[i] =  ObjInStreams[i].readUTF();
+                pkg.playerNames[i] = ObjInStreams[i].readUTF();
             } catch (IOException e) {
-               System.out.println("IOException from setupGame, while requesting names");
+                System.out.println("IOException from setupGame, while requesting names");
             }
 
             /* add the local player's name */
@@ -138,17 +136,16 @@ public class Server extends Client{
         }
 
 
-        ServerSidePlayer[] SSPlayers= new ServerSidePlayer[numOfClients+1];
+        ServerSidePlayer[] SSPlayers = new ServerSidePlayer[numOfClients + 1];
 
         /* add client players, and local player */
-        for (int idx = 0; idx < (numOfClients+1); idx++) {
-            SSPlayers[idx] = new ServerSidePlayer(pkg.playerNames[idx],idx);
+        for (int idx = 0; idx < (numOfClients + 1); idx++) {
+            SSPlayers[idx] = new ServerSidePlayer(pkg.playerNames[idx], idx);
         }
 
-        game = new Game(numOfClients+1, pkg.numOfRounds, SSPlayers,pkg.Colors);
+        game = new Game(numOfClients + 1, pkg.numOfRounds, SSPlayers, pkg.Colors);
         game.initGame();
         prevGameRound = game.getCurrentRound();
-
 
 
         pkg.CurvePoints = game.getMainBoard().getLastCurvePoints();
@@ -194,10 +191,8 @@ public class Server extends Client{
 
             }
         };
-        gameTimer = new Timer(timerInterval,al);
+        gameTimer = new Timer(timerInterval, al);
     }
-
-
 
 
     public void sendToClient(PackageS2C pkg) {
@@ -207,7 +202,7 @@ public class Server extends Client{
 
         /* create and start data sending threads */
         for (int idx = 0; idx < numOfClients; idx++) {
-            SPThreads[idx] = new Thread(SPRunnables [idx]);
+            SPThreads[idx] = new Thread(SPRunnables[idx]);
             SPThreads[idx].start();
         }
 
@@ -216,7 +211,7 @@ public class Server extends Client{
             try {
                 SPThreads[idx].join();
             } catch (InterruptedException e) {
-                System.out.println("InterruptedException when waiting for SPThread #"+idx+" to die");
+                System.out.println("InterruptedException when waiting for SPThread #" + idx + " to die");
             }
         }
 
@@ -234,7 +229,7 @@ public class Server extends Client{
             try {
                 GCThreads[idx].join();
             } catch (InterruptedException e) {
-                System.out.println("InterruptedException from GCThread #"+idx);
+                System.out.println("InterruptedException from GCThread #" + idx);
             }
         }
 
@@ -252,24 +247,24 @@ public class Server extends Client{
 
         boolean endRound;
 
-        endRound = game.runGame(ControlStates,cycleCounter);
+        endRound = game.runGame(ControlStates, cycleCounter);   // TODO (B/M) remove cycleCounter
 
 
-
-        if (endRound){
+        if (endRound) {
             /* increment the round number */
             game.incrCurrRound();
 
             /* end of game, stop the counter */
-            if (game.getMainBoard().getCurrentRound() == game.getRoundNum()){
+            if (game.getMainBoard().getCurrentRound() == game.getRoundNum()) {
                 gameTimer.stop();
                 game.setGameState(GameState.MENU);
                 //TODO (B) ujrakezdes
             }
 
             /* prepare game for the next round */
-            else{
+            else {
                 game.getMainBoard().clearBoard();
+                game.initPositions();
                 game.initBoard();
                 game.setGameState(GameState.PREP);
                 game.setAllPlayersAlive();
@@ -280,31 +275,34 @@ public class Server extends Client{
             }
         }
 
-        PackageS2C pkg = new PackageS2C(numOfClients+1);
+        PackageS2C pkg = new PackageS2C(numOfClients + 1);
 
-        if(game.getGameState() == GameState.PREP){
+        if (game.getGameState() == GameState.PREP) {
 
             // dummy prepSpeed //TODO (M/B) change dummy prep speed to the real one
-            Vector2D[] array = new Vector2D[numOfClients+1];
-            Arrays.fill(array,new Vector2D(250 + cycleCounter,250 + cycleCounter));
-            pkg.prepSpeed = array;
+            /*Vector2D[] array = new Vector2D[numOfClients + 1];
+            Arrays.fill(array, new Vector2D(250 + cycleCounter, 250 + cycleCounter));
+            pkg.prepSpeed = array;*/
+            Vector2D[] prepSpeeds = new Vector2D[game.getPlayerNum()];
+            for (int i = 0; i < game.getPlayerNum(); i++) {
+                prepSpeeds[i] = new Vector2D(game.getMainBoard().getCurves()[i].getLastPoint().getX(),
+                        game.getMainBoard().getCurves()[i].getLastPoint().getY());
+            }
+            pkg.prepSpeed = prepSpeeds;
 
-            if((cycleCounter-prepStartTime) >= ServerSidePlayer.PREP_TIME){
+            if ((cycleCounter - prepStartTime) >= ServerSidePlayer.PREP_TIME) {
                 game.setGameState(GameState.PLAYING);
                 game.getMainBoard().deleteLastCurvePoints();
             }
 
             /* last one will be the prepSpeed so we need the one before that */
             pkg.CurvePoints = game.getMainBoard().getLastLastCurvePoints();
-        }
-        else if (game.getGameState() == GameState.PLAYING){
+        } else if (game.getGameState() == GameState.PLAYING) {
             pkg.CurvePoints = game.getMainBoard().getLastCurvePoints();
         }
 
 
-
         pkg.currentRound = game.getCurrentRound();
-
 
 
         pkg.Scores = game.getScores();
@@ -324,11 +322,12 @@ public class Server extends Client{
 
         private final int clientId;
 
-        public GetControl(int clientId){
+        public GetControl(int clientId) {
 
             this.clientId = clientId;
             System.out.println("GetControl runnable for client #" + clientId + "created");
         }
+
         public void run() {
 
             try {
@@ -337,7 +336,7 @@ public class Server extends Client{
                 ObjOutStreams[clientId].flush();
 
                 /* wait for the client to reply */
-                ControlStates[clientId] = (ControlState)ObjInStreams[clientId].readObject();
+                ControlStates[clientId] = (ControlState) ObjInStreams[clientId].readObject();
             } catch (IOException e) {
                 System.out.println("IOException from getControl runnable #" + clientId);
             } catch (ClassNotFoundException e) {
