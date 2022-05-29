@@ -438,15 +438,17 @@ public class Game {
         Curves = mainBoard.getCurves();
         CurvePoint currentPos;
         CurvePoint lastPos;
-        // Store the last two points of the players
-        /*for (int i = 0; i < playerNum; i++) {
-            currentPos[i] = Curves[i].getLastPoint();
-            lastPos[i] = Curves[i].getPoint(Curves[i].getCurveSize() - 2);
-            // Check if out of board boundaries
-            if ((currentPos[i].getX() > mainBoard.getGameWidthWidth()) || (currentPos[i].getX() < 0)
-            || (currentPos[i].getY() > mainBoard.getGameHeightHeight()) || (currentPos[i].getY() < 0))
+
+        Vector2D playerPos = new Vector2D();
+        // Check if out of board boundaries
+        for (int i = 0; i < playerNum; i++) {
+            playerPos.setCoordinates(Players[i].getPosition().getX(), Players[i].getPosition().getY());
+
+            if ((playerPos.x > mainBoard.getGameWidthWidth()) || (playerPos.x < 0)
+            || (playerPos.y > mainBoard.getGameHeightHeight()) || (playerPos.y < 0))
                 collisionDetected[i] = true;
-        }*/
+        }
+
         // Variables to store the point pairs in the Curves
         CurvePoint curveSegment1;
         CurvePoint curveSegment2;
