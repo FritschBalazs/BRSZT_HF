@@ -149,63 +149,6 @@ public class Game {
     ------------------------------------------------------------
     */
 
-    private double adjustDegree(double deg, circlePart cp) {
-        double angle = 0;   // Temporary
-        switch (cp) {
-            case UPPER_RIGHT -> {
-                if (deg >= 90 && deg <= 180)
-                    angle = deg - 90;
-                else if (deg >= 180 && deg <= 270)
-                    angle = deg - 180;
-                else if (deg >= 270 && deg <= 360)
-                    angle = deg - 270;
-                else
-                    angle = deg;
-
-                return angle;
-            }
-            case LOWER_RIGHT -> {
-                if (deg >= 0 && deg <= 90)
-                    angle = deg + 270;
-                else if (deg >= 90 && deg <= 180)
-                    angle = deg + 180;
-                else if (deg >= 180 && deg <= 270)
-                    angle = deg + 90;
-                else
-                    angle = deg;
-
-                return angle;
-            }
-            case LOWER_LEFT -> {
-                if (deg >= 0 && deg <= 90)
-                    angle = deg + 180;
-                else if (deg >= 90 && deg <= 180)
-                    angle = deg + 90;
-                else if (deg >= 270 && deg <= 360)
-                    angle = deg - 90;
-                else
-                    angle = deg;
-
-                return angle;
-            }
-            case UPPER_LEFT -> {
-                if (deg >= 0 && deg <= 90)
-                    angle = deg + 90;
-                else if (deg >= 180 && deg <= 270)
-                    angle = deg - 90;
-                else if (deg >= 270 && deg <= 360)
-                    angle = deg - 180;
-                else
-                    angle = deg;
-
-                return angle;
-            }
-            default -> {
-                return angle;
-            }
-        }
-    }
-
     public Vector2D generateRandomPosition(playerPositions playerPosition) {
         double theta, theta_temp;
         double r;
@@ -216,12 +159,6 @@ public class Game {
         theta = random() * 2 * Math.PI;
         theta_temp = toDegrees(theta);
         System.out.println("theta_temp: " + theta_temp + ", player position: " + playerPosition);
-        /*switch (playerPosition) {
-            case BOTTOM_LEFT -> theta = adjustDegree(theta_temp, circlePart.UPPER_RIGHT);
-            case TOP_LEFT -> theta = adjustDegree(theta_temp, circlePart.LOWER_RIGHT);
-            case TOP_RIGHT -> theta = adjustDegree(theta_temp, circlePart.LOWER_LEFT);
-            case BOTTOM_RIGHT -> theta = adjustDegree(theta_temp, circlePart.UPPER_LEFT);
-        }*/
         xTemp = r * cos(toRadians(theta));
         yTemp = r * sin(toRadians(theta));
 
