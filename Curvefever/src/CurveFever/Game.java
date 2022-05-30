@@ -8,6 +8,21 @@ import java.util.Collections;
 import static java.lang.Math.*;
 
 public class Game {
+    public class InitVector{
+        public Vector2D pos;
+        public Vector2D speed;
+
+        public InitVector(Vector2D pos, Vector2D speed){
+            this.pos = new Vector2D(pos.getX(), pos.getY());
+            this.speed = new Vector2D(speed.getX(), speed.getY());
+        }
+
+        public void setValues(Vector2D pos, Vector2D speed) {
+            this.pos.setCoordinates(pos.getX(), pos.getY());
+            this.speed.setCoordinates(speed.getX(), speed.getY());
+        }
+    }
+
     private enum circlePart {
         UPPER_RIGHT,
         LOWER_RIGHT,
@@ -219,33 +234,68 @@ public class Game {
     */
 
     public void initPositions() {
-        ArrayList<Vector2D> StartingPositions = new ArrayList<>(this.playerNum);
+        ArrayList<InitVector> StartingPositions = new ArrayList<>(this.playerNum);
+        Vector2D tempPos = new Vector2D();
+        Vector2D tempSpeed = new Vector2D();
+        InitVector tempInit = new InitVector(tempPos,tempSpeed);
         switch (this.playerNum) {
             case 2: {
-                StartingPositions.add(0, generateRandomPosition(playerPositions.TOP_LEFT));
-                StartingPositions.add(1, generateRandomPosition(playerPositions.BOTTOM_RIGHT));
+                tempPos = generateRandomPosition(playerPositions.TOP_LEFT);
+                tempSpeed.setCoordinates(2, 2);
+                tempInit.setValues(tempPos, tempSpeed);
+                StartingPositions.add(0, new InitVector(tempPos, tempSpeed));
+
+                tempPos = generateRandomPosition(playerPositions.BOTTOM_RIGHT);
+                tempSpeed.setCoordinates(-2,-2);
+                tempInit.setValues(tempPos, tempSpeed);
+                StartingPositions.add(1, new InitVector(tempPos, tempSpeed));
             }
             break;
             case 3: {
-                StartingPositions.add(0, generateRandomPosition(playerPositions.TOP_LEFT));
-                StartingPositions.add(1, generateRandomPosition(playerPositions.TOP_RIGHT));
-                StartingPositions.add(2, generateRandomPosition(playerPositions.BOTTOM_LEFT));
+                tempPos = generateRandomPosition(playerPositions.TOP_LEFT);
+                tempSpeed.setCoordinates(2, 2);
+                tempInit.setValues(tempPos, tempSpeed);
+                StartingPositions.add(0, tempInit);
+
+                tempPos = generateRandomPosition(playerPositions.BOTTOM_RIGHT);
+                tempSpeed.setCoordinates(-2,-2);
+                tempInit.setValues(tempPos, tempSpeed);
+                StartingPositions.add(1, tempInit);
+
+                tempPos = generateRandomPosition(playerPositions.BOTTOM_LEFT);
+                tempSpeed.setCoordinates(-2,2);
+                tempInit.setValues(tempPos, tempSpeed);
+                StartingPositions.add(2, tempInit);
             }
             break;
             case 4: {
-                StartingPositions.add(0, generateRandomPosition(playerPositions.TOP_LEFT));
-                StartingPositions.add(1, generateRandomPosition(playerPositions.TOP_RIGHT));
-                StartingPositions.add(2, generateRandomPosition(playerPositions.BOTTOM_LEFT));
-                StartingPositions.add(3, generateRandomPosition(playerPositions.BOTTOM_RIGHT));
+                tempPos = generateRandomPosition(playerPositions.TOP_LEFT);
+                tempSpeed.setCoordinates(2, 2);
+                tempInit.setValues(tempPos, tempSpeed);
+                StartingPositions.add(0, tempInit);
+
+                tempPos = generateRandomPosition(playerPositions.BOTTOM_RIGHT);
+                tempSpeed.setCoordinates(-2,-2);
+                tempInit.setValues(tempPos, tempSpeed);
+                StartingPositions.add(1, tempInit);
+
+                tempPos = generateRandomPosition(playerPositions.BOTTOM_LEFT);
+                tempSpeed.setCoordinates(-2,2);
+                tempInit.setValues(tempPos, tempSpeed);
+                StartingPositions.add(2, tempInit);
+
+                tempPos = generateRandomPosition(playerPositions.TOP_RIGHT);
+                tempSpeed.setCoordinates(2,-2);
+                tempInit.setValues(tempPos, tempSpeed);
+                StartingPositions.add(3, tempInit);
             }
             break;
         }
         // Randomize starting positions between players
         Collections.shuffle(StartingPositions);
         for (int i = 0; i < Players.length; i++) {
-            Players[i].setPosition(StartingPositions.get(i));
-            Vector2D speed = new Vector2D(-2, -2);
-            Players[i].setSpeed(speed);
+            Players[i].setPosition(StartingPositions.get(i).pos);
+            Players[i].setSpeed(StartingPositions.get(i).speed);
         }
     }
 
@@ -280,7 +330,7 @@ public class Game {
     public void initGame() {
         initPositions();
         for (int i = 0; i < Players.length; i++) {
-            System.out.println("Players[" + i + "] : x: " + Players[i].getPosition().getX() + "; y: " + Players[i].getPosition().getY());
+            //System.out.println("Players[" + i + "] : x: " + Players[i].getPosition().getX() + "; y: " + Players[i].getPosition().getY());
         }
         initColors();
         initBoard();
@@ -350,18 +400,13 @@ public class Game {
     */
 
     public void updatePositions(ControlState[] Controls) {
-        /*System.out.println("CHECK length of the curves");
-        for (int i = 0; i < playerNum; i++) { TODO Debug print, need to be deleted later
-            System.out.println("Player ID:" + i + "  Curve length: " + mainBoard.getCurves()[i].getCurveSize());
-            System.out.println("******************************");
-        }*/
         // Get player states
         boolean[] playersAlive = new boolean[playerNum];
         for (int i = 0; i < playerNum; i++) {
             playersAlive[i] = Players[i].getIsAlive();
         }
         Vector2D pos = new Vector2D(0,0);
-        CurvePoint newPosition;/*new CurvePoint[playerNum];*/
+        CurvePoint newPosition;
         // Check collisions of alive players
         boolean[] collisions = detectCollisions(playersAlive);
 

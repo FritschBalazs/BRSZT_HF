@@ -247,7 +247,7 @@ public class Server extends Client {
 
         boolean endRound;
 
-        endRound = game.runGame(ControlStates, cycleCounter);   // TODO (B/M) remove cycleCounter
+        endRound = game.runGame(ControlStates, cycleCounter);   // TODO (B/M) remove cycleCounter - nem kell, végül random lyukakhoz kelleni fog
 
 
         if (endRound) {
@@ -271,18 +271,13 @@ public class Server extends Client {
 
 
                 prepStartTime = cycleCounter;
-                //TODO (M) generate new random starting positions
             }
         }
 
         PackageS2C pkg = new PackageS2C(numOfClients + 1);
 
         if (game.getGameState() == GameState.PREP) {
-
-            // dummy prepSpeed //TODO (M/B) change dummy prep speed to the real one
-            /*Vector2D[] array = new Vector2D[numOfClients + 1];
-            Arrays.fill(array, new Vector2D(250 + cycleCounter, 250 + cycleCounter));
-            pkg.prepSpeed = array;*/
+            // Set prep speeds from the game board
             Vector2D[] prepSpeeds = new Vector2D[game.getPlayerNum()];
             for (int i = 0; i < game.getPlayerNum(); i++) {
                 prepSpeeds[i] = new Vector2D(game.getMainBoard().getCurves()[i].getLastPoint().getX(),
