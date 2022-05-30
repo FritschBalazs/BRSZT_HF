@@ -493,11 +493,12 @@ public class Game {
     public boolean evaluateStep(ControlState[] Controls) {
         boolean endgame;
         double tmpScore[] = new double[playerNum];
-        for (int i = 0; i < Players.length; i++) {
+        Arrays.fill(tmpScore, 0.0);
+        for (int i = 0; i < playerNum; i++) {
             if (Players[i].getIsAlive()) {
                 Players[i].updateScore(SCORE_PER_TICK);
-                tmpScore[i] = Players[i].getScore();
             }
+            tmpScore[i] = Players[i].getScore();
         }
         updatePositions(Controls);
         mainBoard.setScores(tmpScore);
