@@ -255,39 +255,39 @@ public class Game {
                 tempPos = generateRandomPosition(playerPositions.TOP_LEFT);
                 tempSpeed.setCoordinates(2, 2);
                 tempInit.setValues(tempPos, tempSpeed);
-                StartingPositions.add(0, tempInit);
+                StartingPositions.add(0, new InitVector(tempPos, tempSpeed));
 
                 tempPos = generateRandomPosition(playerPositions.BOTTOM_RIGHT);
                 tempSpeed.setCoordinates(-2,-2);
                 tempInit.setValues(tempPos, tempSpeed);
-                StartingPositions.add(1, tempInit);
+                StartingPositions.add(1, new InitVector(tempPos, tempSpeed));
 
                 tempPos = generateRandomPosition(playerPositions.BOTTOM_LEFT);
-                tempSpeed.setCoordinates(-2,2);
+                tempSpeed.setCoordinates(2,-2);
                 tempInit.setValues(tempPos, tempSpeed);
-                StartingPositions.add(2, tempInit);
+                StartingPositions.add(2, new InitVector(tempPos, tempSpeed));
             }
             break;
             case 4: {
                 tempPos = generateRandomPosition(playerPositions.TOP_LEFT);
                 tempSpeed.setCoordinates(2, 2);
                 tempInit.setValues(tempPos, tempSpeed);
-                StartingPositions.add(0, tempInit);
+                StartingPositions.add(0, new InitVector(tempPos, tempSpeed));
 
                 tempPos = generateRandomPosition(playerPositions.BOTTOM_RIGHT);
                 tempSpeed.setCoordinates(-2,-2);
                 tempInit.setValues(tempPos, tempSpeed);
-                StartingPositions.add(1, tempInit);
+                StartingPositions.add(1, new InitVector(tempPos, tempSpeed));
 
                 tempPos = generateRandomPosition(playerPositions.BOTTOM_LEFT);
-                tempSpeed.setCoordinates(-2,2);
-                tempInit.setValues(tempPos, tempSpeed);
-                StartingPositions.add(2, tempInit);
-
-                tempPos = generateRandomPosition(playerPositions.TOP_RIGHT);
                 tempSpeed.setCoordinates(2,-2);
                 tempInit.setValues(tempPos, tempSpeed);
-                StartingPositions.add(3, tempInit);
+                StartingPositions.add(2, new InitVector(tempPos, tempSpeed));
+
+                tempPos = generateRandomPosition(playerPositions.TOP_RIGHT);
+                tempSpeed.setCoordinates(-2,2);
+                tempInit.setValues(tempPos, tempSpeed);
+                StartingPositions.add(3, new InitVector(tempPos, tempSpeed));
             }
             break;
         }
