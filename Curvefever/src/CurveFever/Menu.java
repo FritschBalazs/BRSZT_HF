@@ -172,8 +172,9 @@ public class Menu {
                                 EndGameScreen endGameScreen = new EndGameScreen();
                                 sManager.setEndGameScreen(endGameScreen);
 
-                                initEndGameScreenData(boardToDisplay, endGameScreen); //TODO (B) ezt majd cleanelni
+                                initEndGameScreenData(boardToDisplay, endGameScreen); //TODO (B) itt le kell majd torolni a curve-oket ujrakazdeshez
                                 sManager.setProgramState(ProgramState.END_OF_GAME);
+                                server.sendEndOfGameToClients();
                             }
 
                             if (server.getGame().getGameState() == GameState.PREP || prevGameState == GameState.PREP) {
@@ -225,7 +226,16 @@ public class Menu {
                             client.getPlayer().setControlState(sManager.getControlState());
 
                             /* wait for server to request data, and then send it */
-                            client.sendToServer(); //TODO add end screen kilepes
+                            client.sendToServer();
+                            if(false ){
+                                EndGameScreen endGameScreen = new EndGameScreen();
+                                sManager.setEndGameScreen(endGameScreen);
+
+                                initEndGameScreenData(boardToDisplay, endGameScreen); //TODO (B) itt le kell majd torolni a curve-oket ujrakazdeshez
+                                sManager.setProgramState(ProgramState.END_OF_GAME);
+
+                                break;
+                            }
 
                             /* receive game data containing data from the latest cycle */
                             PackageS2C message = client.receiveFromServer();

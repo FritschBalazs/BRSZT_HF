@@ -194,6 +194,19 @@ public class Server extends Client {
         gameTimer = new Timer(timerInterval, al);
     }
 
+    public void sendEndOfGameToClients() {
+        /* send out a request */
+        for (int clientId = 0; clientId < numOfClients; clientId++) {
+            try {
+                ObjOutStreams[clientId].writeUTF("Game over");
+                ObjOutStreams[clientId].flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
 
     public void sendToClient(PackageS2C pkg) {
 
