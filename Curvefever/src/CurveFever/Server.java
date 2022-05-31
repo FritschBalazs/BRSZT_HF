@@ -217,6 +217,19 @@ public class Server extends Client {
 
     }
 
+    public void sendEndOfGameToClients() {
+        /* send out a request */
+        for (int clientId = 0; clientId < numOfClients; clientId++) {
+            try {
+                ObjOutStreams[clientId].writeUTF("Game over");
+                ObjOutStreams[clientId].flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
     public void requestInputs() {
         /* Create and start threads, to get input of clients */
         for (int idx = 0; idx < numOfClients; idx++) {
