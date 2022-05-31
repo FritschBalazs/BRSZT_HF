@@ -90,18 +90,7 @@ public class Menu {
     }
 
     private void serverInit(){
-        /* create server */
-        int numOfPlayers = sManager.getNumOfPlayers();
-        int numOfRounds = sManager.getNumOfRounds();
-        String serverPlayerName = sManager.getPlayerName();
-        this.server = new Server(numOfPlayers, numOfRounds, serverPlayerName);
 
-        /* update window title */
-        window.setTitle("Kurve Fívör(server, player: " + serverPlayerName + ")");
-
-        /* create game screen and add it to sManager */ //servernel lehetne a scrrenmanager-en belulre, kliensnel nehezebb
-        gameScr = new GameScreen(numOfPlayers);
-        sManager.setGameScreen(gameScr);
 
     }
 
@@ -128,14 +117,27 @@ public class Menu {
                     if (sManager.isServer() == true) {
 
                         if(initNeeded){
-                            serverInit();
+                            //serverInit();
+
+                            /* create server */
+                            int numOfPlayers = sManager.getNumOfPlayers();
+                            int numOfRounds = sManager.getNumOfRounds();
+                            String serverPlayerName = sManager.getPlayerName();
+                            this.server = new Server(numOfPlayers, numOfRounds, serverPlayerName);
+
+                            /* update window title */
+                            window.setTitle("Kurve Fívör(server, player: " + serverPlayerName + ")");
+
+                            /* create game screen and add it to sManager */ //servernel lehetne a scrrenmanager-en belulre, kliensnel nehezebb
+                            gameScr = new GameScreen(numOfPlayers);
+                            sManager.setGameScreen(gameScr);
 
                             /* setup connections and configure game */
                             this.server.acceptConnections();
                             this.server.setupGame();
 
                             boardToDisplay = this.server.getGame().getMainBoard();
-                            initGuiData(boardToDisplay, sManager.getGameScreen());
+                            initGuiData(boardToDisplay, sManager.getGameScreen()); // B diff 1
                             sManager.update(true);
 
                             /* set prevRound (end of round detection is based on it)*/
@@ -152,13 +154,12 @@ public class Menu {
                             /* server main function is Server.runServer(), which is called by a timer */
 
                             /* wait for timer thread to finish */
-                            while (server.waitForDraw() == true) {
-                            }
+                            while (server.waitForDraw() == true) {}
 
                             /* update data in GUI classes */
                             updateGuiData(boardToDisplay, sManager.getGameScreen());
                             if (server.getGame().getGameState() == GameState.PREP) {
-                                initGuiData(boardToDisplay, gameScr);
+                                initGuiData(boardToDisplay, sManager.getGameScreen());
                             }
                             /* clear gui and board if needed */
                             if (server.getGame().getGameState() == GameState.PREP || prevGameState == GameState.PREP) {
@@ -261,11 +262,11 @@ public class Menu {
 
                             /* actualize data stored in gui classes */
                             if (message.gameState == GameState.PREP || prevGameState == GameState.PREP) {
-                                initGuiData(boardToDisplay, gameScr);
+                                initGuiData(boardToDisplay, sManager.getGameScreen());
                                 /* draw */
                                 sManager.update(true);
                             } else {
-                                updateGuiData(boardToDisplay, gameScr);
+                                updateGuiData(boardToDisplay, sManager.getGameScreen());
                                 /* draw */
                                 sManager.update(false);
                             }
