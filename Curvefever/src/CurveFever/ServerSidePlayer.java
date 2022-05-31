@@ -7,8 +7,8 @@ import static java.lang.Math.toRadians;
 
 public class ServerSidePlayer extends Player{
 
-    public static final int SYSTEM_TICK = 25;  // In milliseconds
-    public static final int TURN_DEGREE_PER_SECOND = 60;   // Turns 30 degrees in one second
+    public static final int SYSTEM_TICK = 20;  // In milliseconds
+    public static final int TURN_DEGREE_PER_SECOND = 80;   // Turns 30 degrees in one second
     public static final int PREP_TIME = 200;   // IN SYSTEM ticks
     public static final double TURN_DEGREE_PER_TICK = TURN_DEGREE_PER_SECOND / SYSTEM_TICK;
 
@@ -17,6 +17,7 @@ public class ServerSidePlayer extends Player{
     private Color playerColor;
     private boolean isAlive;
     private double score;
+    public int cycle;
 
     public ServerSidePlayer(String name, int pId) {
         super(name,pId);
@@ -26,6 +27,7 @@ public class ServerSidePlayer extends Player{
         this.playerColor = Color.RED;
         this.isAlive = true;
         this.score = 0;
+        this.cycle = 300;
     }
 
     public void setPosition(Vector2D pos) {
