@@ -227,6 +227,26 @@ public class Game {
         return count;
     }
 
+    boolean[] setHoles(int currentCycle) {
+        boolean[] temp = new boolean[playerNum];
+        CurvePoint tempPoint = new CurvePoint();
+        for (int i = 0; i < playerNum; i++) {
+            temp[i] = mainBoard.getCurves()[i].getLastPoint().getIsColored();
+            if (currentCycle >= Players[i].cycle) {
+                // skip
+                if (temp[i]) {
+                    Players[i].cycle += 5;
+                    temp[i] = false;
+                }
+                else {
+                    Players[i].cycle += 80 + 10 * Math.random();
+                    temp[i] = true;
+                }
+            }
+        }
+        return temp;
+    }
+
     /*
     ------------------------------------------------------------
     -------------- Initialization methods ----------------------
@@ -399,7 +419,7 @@ public class Game {
     ------------------------------------------------------------
     */
 
-    public void updatePositions(ControlState[] Controls) {
+    public void updatePositions(ControlState[] Controls, int currentCycle) {
         // Get player states
         boolean[] playersAlive = new boolean[playerNum];
         for (int i = 0; i < playerNum; i++) {
@@ -409,7 +429,7 @@ public class Game {
         CurvePoint newPosition;
         // Check collisions of alive players
         boolean[] collisions = detectCollisions(playersAlive);
-
+        boolean[] isColored = setHoles(currentCycle);
         // Set parameters according to collision event
         for (int i = 0; i < playerNum; i++) {
             Players[i].setControlState(Controls[i]);
@@ -423,7 +443,7 @@ public class Game {
             } else if (Players[i].getIsAlive()){
                 Players[i].move();
                 pos = Players[i].getPosition();
-                newPosition = new CurvePoint(pos.getX(), pos.getY(), true);
+                newPosition = new CurvePoint(pos.getX(), pos.getY(), isColored[i]);
                 mainBoard.addCurvePoint(newPosition, i);
             }
         }
@@ -490,7 +510,7 @@ public class Game {
         return collisionDetected;
     }
 
-    public boolean evaluateStep(ControlState[] Controls) {
+    public boolean evaluateStep(ControlState[] Controls, int currentCycle) {
         boolean endgame;
         double tmpScore[] = new double[playerNum];
         Arrays.fill(tmpScore, 0.0);
@@ -500,13 +520,13 @@ public class Game {
             }
             tmpScore[i] = Players[i].getScore();
         }
-        updatePositions(Controls);
+        updatePositions(Controls, currentCycle);
         mainBoard.setScores(tmpScore);
         endgame = (countAlivePlayers() == 1);
         return endgame;
     }
 
-    public boolean runGame(ControlState[] Controls, int debugCycleCount) {
+    public boolean runGame(ControlState[] Controls, int currentCycle) {
             // Run game state machine
             switch (this.gameState) {
                 // Set starting speed before game starts
@@ -543,7 +563,7 @@ public class Game {
                 }
 
                 case PLAYING -> {
-                    if (evaluateStep(Controls))
+                    if (evaluateStep(Controls, currentCycle))
                         return true;
                 }
 
