@@ -65,12 +65,22 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
         this.gameScreen = gameScreen;
         this.add(gameScreen,GAMESCREEN);
     }
+
+    public void setEndGameScreen(EndGameScreen endGameScreen) {
+        this.endGameScreen = endGameScreen;
+        this.add(endGameScreen,ENDGAMESCREEN);
+    }
+
     public GameScreen getGameScreen(){
         return this.gameScreen;
     }
 
     public ProgramState getProgramState() {
         return programState;
+    }
+
+    public void setProgramState(ProgramState programState) {
+        this.programState = programState;
     }
 
     public boolean isServer() {

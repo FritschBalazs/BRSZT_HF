@@ -258,6 +258,7 @@ public class Server extends Client {
             if (game.getMainBoard().getCurrentRound() == game.getRoundNum()) {
                 gameTimer.stop();
                 game.setGameState(GameState.MENU);
+
                 //TODO (B) ujrakezdes
             }
 
