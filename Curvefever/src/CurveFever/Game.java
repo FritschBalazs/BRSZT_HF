@@ -22,14 +22,6 @@ public class Game {
             this.speed.setCoordinates(speed.getX(), speed.getY());
         }
     }
-
-    private enum circlePart {
-        UPPER_RIGHT,
-        LOWER_RIGHT,
-        LOWER_LEFT,
-        UPPER_LEFT
-    }
-
     private enum playerPositions {
         BOTTOM_LEFT,
         TOP_LEFT,
@@ -59,9 +51,9 @@ public class Game {
     private GameState gameState;
 
     /*
-    ------------------------------------------------------------
-    --------- Constructors, getters, setters -------------------
-    ------------------------------------------------------------
+    ----------------------------------------------------------------------
+    -------------- Constructors, getters, setters ------------------------
+    ----------------------------------------------------------------------
     */
     public Game(ServerSidePlayer[] Players) {
         this.roundNum = 3;
@@ -156,12 +148,10 @@ public class Game {
         }
     }
 
-
-
     /*
-    ------------------------------------------------------------
-    ------------ Math for game logic and init ------------------
-    ------------------------------------------------------------
+    ----------------------------------------------------------------------
+    ----------------- Math for game logic and init -----------------------
+    ----------------------------------------------------------------------
     */
 
     public Vector2D generateRandomPosition(playerPositions playerPosition) {
@@ -169,11 +159,11 @@ public class Game {
         double r;
         double xTemp, yTemp;
         double x = 0, y = 0;
-
+        // Generate random values
         r = R * Math.sqrt(random()) + 50;    // https://stackoverflow.com/questions/5837572/generate-a-random-point-within-a-circle-uniformly
         theta = random() * 2 * Math.PI;
         theta_temp = toDegrees(theta);
-        System.out.println("theta_temp: " + theta_temp + ", player position: " + playerPosition);
+        //System.out.println("theta_temp: " + theta_temp + ", player position: " + playerPosition);
         xTemp = r * cos(toRadians(theta));
         yTemp = r * sin(toRadians(theta));
 
@@ -212,9 +202,9 @@ public class Game {
             }
         }
         Vector2D pos = new Vector2D(x, y);
-        System.out.println("theta: " + theta + ", r: " + r);
+        /*System.out.println("theta: " + theta + ", r: " + r);
         System.out.println("x: " + x + " y: " + y);
-        System.out.println("--------------------------------------");
+        System.out.println("--------------------------------------");*/
         return pos;
     }
 
@@ -229,7 +219,6 @@ public class Game {
 
     boolean[] setHoles(int currentCycle) {
         boolean[] temp = new boolean[playerNum];
-        CurvePoint tempPoint = new CurvePoint();
         for (int i = 0; i < playerNum; i++) {
             temp[i] = mainBoard.getCurves()[i].getLastPoint().getIsColored();
             if (currentCycle >= Players[i].cycle) {
@@ -248,9 +237,9 @@ public class Game {
     }
 
     /*
-    ------------------------------------------------------------
-    -------------- Initialization methods ----------------------
-    ------------------------------------------------------------
+    ----------------------------------------------------------------------
+    ------------------- Initialization methods ---------------------------
+    ----------------------------------------------------------------------
     */
 
     public void initPositions() {
@@ -414,9 +403,9 @@ public class Game {
 
 
     /*
-    ------------------------------------------------------------
-    -------------- Methods for game running --------------------
-    ------------------------------------------------------------
+    ----------------------------------------------------------------------
+    ------------------- Methods for game running -------------------------
+    ----------------------------------------------------------------------
     */
 
     public void updatePositions(ControlState[] Controls, int currentCycle) {
@@ -495,12 +484,6 @@ public class Game {
                                     // Check intersection
                                     if (doIntersect(currentPos, lastPos, curveSegment1, curveSegment2)) {
                                         collisionDetected[i] = true;
-                                        // Debug prints
-                                        System.out.println("Player[" + i + "] collision detected, coordinates:");
-                                        System.out.println("currentPos -- x: " + currentPos.getX() + " y: " + currentPos.getY());
-                                        System.out.println("lastPos -- x: " + lastPos.getX() + " y: " + lastPos.getY());
-                                        System.out.println("Segment1 -- x: " + curveSegment1.getX() + " y: " + curveSegment1.getY());
-                                        System.out.println("Segment2 -- x: " + curveSegment2.getX() + " y: " + curveSegment2.getY());
                                     }
                             }
                         }
