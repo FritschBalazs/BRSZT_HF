@@ -49,6 +49,7 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
         endGameScreen.playAgainButton.addActionListener(this);
 
 
+
         this.add(menuScreen, MENUSCREEN);
         this.add(gameScreen, GAMESCREEN);
         this.add(endGameScreen, ENDGAMESCREEN);
@@ -153,6 +154,7 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
             //noinspection ConstantConditions
             numOfPlayers = ((Integer) menuScreen.numOfPlayersComboBox.getSelectedItem());
             numOfRounds = Integer.parseInt(menuScreen.numOfRoundsTextField.getText());
+            menuScreen.waitingTextLabel.setVisible(true);
             programState = ProgramState.IN_GAME;
 
         } else if (e.getSource() == menuScreen.joinGameButton) {
@@ -164,15 +166,16 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
                 controlOption = ControlOption.ARROW;
             }
             else controlOption = ControlOption.A_D;
+            menuScreen.waitingTextLabel.setVisible(true);
             programState = ProgramState.IN_GAME;
 
 
         } else if (e.getSource() == menuScreen.exitButton) {
-            //System. exit(0);
-            programState = ProgramState.END_OF_GAME;
+            System. exit(0);
         } else if (e.getSource() == endGameScreen.backToMenuButton) {
             programState = ProgramState.MAIN_MENU;
         } else if (e.getSource() == endGameScreen.playAgainButton) {
+            endGameScreen.waitingTextLabel.setVisible(true);
             programState = ProgramState.IN_GAME;
         }
     }
@@ -222,5 +225,7 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
             }
         }
     }
+
+
 }
 

@@ -50,7 +50,7 @@ public class GameScreen extends JPanel {
 
 
         infoPanel = new InfoPanel();
-        infoPanel.setPreferredSize(new Dimension(infoPanelWidth,infoPanelHeight));
+        //infoPanel.setPreferredSize(new Dimension(infoPanelWidth,infoPanelHeight));
 
         footer = new JLabel();
         footer.setPreferredSize(new Dimension(gamePanelWidth+infoPanelWidth,15));

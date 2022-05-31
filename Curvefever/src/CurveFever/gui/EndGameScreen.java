@@ -10,7 +10,7 @@ public class EndGameScreen extends JPanel {
     private static final int height = 720;
     private static final Color BACKROUNDCOLOR = new Color(26, 72, 98);
     private static final Color BUTTONCOLOR1 = new Color(228, 113, 250);
-    private static final Color SIDEPANELCOLOR = new Color(72, 47, 155);
+    private static final Color SIDEPANELCOLOR = new Color(84, 88, 255, 255);
     private static final Color BUTTONCOLOR2 = new Color(3, 252, 217);
     private static final Color BUTTONCOLOR3 = new Color(252, 186, 83, 255);
     private String[] PlayerNames;
@@ -19,6 +19,7 @@ public class EndGameScreen extends JPanel {
     private int numOfPlayers;
     JButton backToMenuButton;
     JButton playAgainButton;
+    JLabel waitingTextLabel;
     private JLabel[] ScoreLabels;
 
     public EndGameScreen() {
@@ -73,11 +74,16 @@ public class EndGameScreen extends JPanel {
         playAgainButton.setPreferredSize(new Dimension(300, 70));
         playAgainButton.setFont(new Font("Lato", Font.BOLD, 15));
         playAgainButton.setForeground(BACKROUNDCOLOR);
-        playAgainButton.setBackground(BUTTONCOLOR3);
+        playAgainButton.setBackground(BUTTONCOLOR1);
         playAgainButton.setFocusable(false);
         playAgainButton.setText("Play again");
 
-        //Adding components to sidepanel
+        waitingTextLabel = new JLabel(); //szépíteni
+        waitingTextLabel.setFont(new Font("Lato", Font.BOLD, 20));
+        waitingTextLabel.setText("Waiting other players...");
+        waitingTextLabel.setVisible(false);
+
+        //Adding components to side panel
         constraints.gridx = 0;
         constraints.gridy = 1;
         constraints.insets = new Insets(25, 20, 25, 20);
@@ -86,6 +92,11 @@ public class EndGameScreen extends JPanel {
         constraints.gridx = 0;
         constraints.gridy = 2;
         sidePanel.add(playAgainButton, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 3;
+        constraints.insets = new Insets(50, 20, 25, 20);
+        sidePanel.add(waitingTextLabel, constraints);
 
         //Adding center panel and side panel to screen
         add(centerPanel, BorderLayout.CENTER);
@@ -140,7 +151,7 @@ public class EndGameScreen extends JPanel {
     public void render(){
         sortScores();
         for (int i = 0; i < numOfPlayers; i = i + 1) {
-            ScoreLabels[i].setText(i+". "+PlayerNames[i]+": "+ Scores[i]);
+            ScoreLabels[i].setText(i+1+". "+PlayerNames[i]+": "+ Scores[i]);
             ScoreLabels[i].setForeground(Colors[i]);
         }
     }

@@ -5,6 +5,7 @@ import CurveFever.gui.GameScreen;
 import CurveFever.gui.ScreenManager;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class Menu {
     private Client client;
@@ -91,30 +92,7 @@ public class Menu {
             }
 
         }
-/*
-        //TESTCODE
-        Board Testboard = new Board(4,5,new String[]{"Hanti","Dani", "Frici","valaki"},new Color[]{Color.PINK,Color.PINK,Color.PINK,Color.PINK});
-        while (screenManager.getProgramState() == ProgramState.END_OF_GAME) {
-            initEndGameScrenData(Testboard,screenManager.getEndGameScreen());
-            screenManager.update(true);
-            try {
-                Thread.sleep(5);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
 
-        }
-        while (screenManager.getProgramState() == ProgramState.MAIN_MENU) {
-            screenManager.update(true);
-            try {
-                Thread.sleep(5);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-        }
-        //ENDOFTESTCODE
-*/
         /* if this instance is a server, create the server, and start the game */
         if (screenManager.isServer() == true){
 
