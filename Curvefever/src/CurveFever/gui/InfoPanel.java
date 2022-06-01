@@ -59,7 +59,7 @@ public class InfoPanel extends JPanel {
     public double[] getScores() {return Scores;}
 
     public void setScores(double[] scores) {
-        Scores = scores;}
+        Scores = scores.clone();}
 
     public void setRoundNum(int roundNum) {
         this.roundNum = roundNum;
@@ -105,7 +105,7 @@ public class InfoPanel extends JPanel {
         roundLabel.setText("Round "+currentRound+"/"+roundNum);
         sortScores();
         for (int i = 0; i < numOfPlayers; i = i + 1) {
-            ScoreLabels[i].setText(i+1+". "+PlayerNames[i]+": "+ Scores[i]);
+            ScoreLabels[i].setText(i+1+". "+PlayerNames[i]+": "+ (int)Math.floor(Scores[i]));
             ScoreLabels[i].setForeground(Colors[i]);
         }
     }
