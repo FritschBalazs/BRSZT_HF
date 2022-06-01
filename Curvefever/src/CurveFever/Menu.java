@@ -182,30 +182,28 @@ public class Menu {
 
                 }
 
-                while(sManager.getProgramState() == ProgramState.END_OF_GAME){//TODO ezt torolni
+                while(sManager.getProgramState() == ProgramState.END_OF_GAME){
 
                     sManager.update((false));
                     if(sManager.getProgramState() == ProgramState.MAIN_MENU){
 
                         server.closeAllConnections();
                         sManager.deleteGameScreen();
-                        break; //TODO (D) ugyanaz mint kliensnel
+                        sManager.getEndGameScreen().getWaitingTextLabel().setVisible(false);
+                        sManager.getMenuScreen().getWaitingTextLabel().setVisible(false);
+                        window.setTitle("Kurve Fívör");
+                        break;
                     }
                     if(sManager.getProgramState() == ProgramState.IN_GAME){
                         server.waitForReplayMsgs();
                         //endOfEndScreen = true;
                         System.out.println("Replaying match");
                         server.closeAllConnections();
-                        sManager.deleteGameScreen();
+
 
                     }
 
-                    /*
-                    try {
-                        Thread.sleep(10);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }*/
+
                 }
 
             }
@@ -239,7 +237,6 @@ public class Menu {
 
                 sManager.update(true);
 
-                //TODO (B/M) itt meg kene oldani hogy a player egyhelyben forogjon
 
                 /* enter game loop */
                 while (sManager.getProgramState() == ProgramState.IN_GAME) {
@@ -296,11 +293,14 @@ public class Menu {
                     }
                 }
 
-                while(sManager.getProgramState() == ProgramState.END_OF_GAME){//TODO ezt torolni
+                while(sManager.getProgramState() == ProgramState.END_OF_GAME){
 
                     sManager.update((false));
                     if(sManager.getProgramState() == ProgramState.MAIN_MENU) {
                         client.closeSocket();
+                        sManager.getEndGameScreen().getWaitingTextLabel().setVisible(false);
+                        sManager.getMenuScreen().getWaitingTextLabel().setVisible(false);
+                        window.setTitle("Kurve Fívör");
                         break; //TODO (D) waiting for other players felirat látszik amikor visszalep a menube
                     }
 
@@ -312,14 +312,7 @@ public class Menu {
 
                     }
 
-                        /*try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }*/
                 }
-                //TODO (M/B) kitalalni, hogy mi legyen ha vege egy jatekanak (osszes kornek)
-                //TODO (M low prio) lyukak
                 //TODO (low prio) jar generalas
             }
         }
