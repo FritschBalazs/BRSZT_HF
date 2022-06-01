@@ -257,18 +257,19 @@ public class Server extends Client {
             /* end of game, stop the counter */
             if (game.getMainBoard().getCurrentRound() == game.getRoundNum()) {
                 gameTimer.stop();
+                game.updatePlayerScores();
                 game.setGameState(GameState.MENU);
                 //TODO (B) ujrakezdes
             }
 
             /* prepare game for the next round */
             else {
+                game.updatePlayerScores();
                 game.getMainBoard().clearBoard();
                 game.initPositions();
                 game.initBoard();
                 game.setGameState(GameState.PREP);
                 game.setAllPlayersAlive();
-
 
                 prepStartTime = cycleCounter;
             }

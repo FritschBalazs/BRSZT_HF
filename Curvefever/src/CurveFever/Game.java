@@ -50,10 +50,13 @@ public class Game {
     private Board mainBoard;
     private GameState gameState;
 
+    private double[] roundScores;
+    private int[] deadIndexes;
+
     /*
-    ----------------------------------------------------------------------
-    -------------- Constructors, getters, setters ------------------------
-    ----------------------------------------------------------------------
+    ---------------------------------------------------------------------------
+    ------------------- Constructors, getters, setters ------------------------
+    ---------------------------------------------------------------------------
     */
     public Game(ServerSidePlayer[] Players) {
         this.roundNum = 3;
@@ -89,6 +92,11 @@ public class Game {
         this.Players = Players.clone();
         //this.mainBoard = new Board(100, 100, playerNum);
         this.gameState = GameState.MENU;
+
+        this.roundScores = new double[this.playerNum];
+        this.deadIndexes = new int[this.playerNum];
+        Arrays.fill(roundScores, 0);
+        Arrays.fill(deadIndexes, -1);
 
         String[] playerNames = new String[this.playerNum];
         for (int i = 0; i < this.playerNum; i++) {
@@ -217,7 +225,7 @@ public class Game {
         return count;
     }
 
-    boolean[] setHoles(int currentCycle) {
+    public boolean[] setHoles(int currentCycle) {
         boolean[] temp = new boolean[playerNum];
         for (int i = 0; i < playerNum; i++) {
             temp[i] = mainBoard.getCurves()[i].getLastPoint().getIsColored();
@@ -234,6 +242,33 @@ public class Game {
             }
         }
         return temp;
+    }
+
+    // Use function on temporary arrays
+    public void updatePlayerScores(){
+        // Store alive player as "last dead"
+        for (int i = 0; i < playerNum; i++) {
+            if (Players[i].getIsAlive())
+                deadIndexes[playerNum-1] = i;
+        }
+        double[] tempScores = roundScores.clone();
+        Arrays.sort(tempScores);
+        double max = tempScores[playerNum-1];
+        double tempDouble = 0.0;
+        // Iterate over players to search for the corresponding score
+        /*for (int i = 0; i < playerNum; i++) {
+            for (int j = 0; j < playerNum; j++) {
+                if (Players[i].getScore() == tempScores[j]) {
+                    tempDouble = 0.3 * max / Math.pow(2, (playerNum - 1 - j));
+                    Players[i].updateScore(floor(tempDouble));
+                }
+            }
+        }*/
+
+        for (int i = 0; i < playerNum; i++) {
+            tempDouble = 0.3 * max / pow(2, (playerNum-1-i));
+            Players[deadIndexes[i]].updateScore(tempDouble);
+        }
     }
 
     /*
@@ -425,10 +460,7 @@ public class Game {
             if (collisions[i]) {
                 Players[i].setAlive(false);
                 System.out.println("Collision detected, Player ID: " + i);
-                for (int j = 0; j < playerNum; j++) {
-                    if (j != i)
-                        Players[j].updateScore(REWARD_SCORE);
-                }
+                this.deadIndexes[this.playerNum-countAlivePlayers()-1] = i;
             } else if (Players[i].getIsAlive()){
                 Players[i].move();
                 pos = Players[i].getPosition();
@@ -500,6 +532,7 @@ public class Game {
         for (int i = 0; i < playerNum; i++) {
             if (Players[i].getIsAlive()) {
                 Players[i].updateScore(SCORE_PER_TICK);
+                this.roundScores[i] += SCORE_PER_TICK;
             }
             tmpScore[i] = Players[i].getScore();
         }
