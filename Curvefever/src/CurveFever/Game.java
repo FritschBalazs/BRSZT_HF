@@ -256,19 +256,17 @@ public class Game {
         double max = tempScores[playerNum-1];
         double tempDouble = 0.0;
         // Iterate over players to search for the corresponding score
-        /*for (int i = 0; i < playerNum; i++) {
-            for (int j = 0; j < playerNum; j++) {
-                if (Players[i].getScore() == tempScores[j]) {
-                    tempDouble = 0.3 * max / Math.pow(2, (playerNum - 1 - j));
-                    Players[i].updateScore(floor(tempDouble));
-                }
-            }
-        }*/
-
         for (int i = 0; i < playerNum; i++) {
             tempDouble = 0.3 * max / pow(2, (playerNum-1-i));
-            Players[deadIndexes[i]].updateScore(tempDouble);
+            Players[deadIndexes[i]].updateScore(floor(tempDouble));
         }
+
+        // Set scores on the game board to display correctly
+        double[] scoresToBoard = new double[playerNum];
+        for (int i = 0; i < playerNum; i++) {
+            scoresToBoard[i] = Players[i].getScore();
+        }
+        mainBoard.setScores(scoresToBoard);
     }
 
     /*
