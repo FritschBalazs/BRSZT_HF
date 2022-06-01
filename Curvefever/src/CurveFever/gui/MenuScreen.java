@@ -140,7 +140,7 @@ public class MenuScreen extends JPanel {
         numOfRoundsTextField = new JTextField();
         numOfRoundsTextField.setPreferredSize(new Dimension(35, 30));
         numOfRoundsTextField.setFont(new Font("Lato", Font.PLAIN, 15));
-        numOfRoundsTextField.setText("5");
+        numOfRoundsTextField.setText("2"); //TODO (D) ezt is vissza
         numOfRoundsTextField.setToolTipText("Number of rounds");
         numOfRoundsTextField.setHorizontalAlignment(JTextField.CENTER);
         numOfRoundsTextField.setSelectedTextColor(Color.MAGENTA);

@@ -146,6 +146,24 @@ public class Client{
         return null;
     }
 
+    public void sendReplayRequest(){
+        try {
+            objOStream.writeUTF("I want a rematch");
+            objOStream.flush();
+            System.out.println("Rematch Requested");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void waitForReplayMsg(){
+        try {
+            objIStream.readUTF();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     private void establishConnection() {

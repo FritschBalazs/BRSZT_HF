@@ -173,14 +173,27 @@ public class Menu {
                     prevGameState = server.getGame().getGameState();
 
                 }
-                while(sManager.getProgramState() == ProgramState.END_OF_GAME){//TODO ezt torolni
-                    //varunk
+                boolean endOfEndScreen = false;
+                while(sManager.getProgramState() == ProgramState.END_OF_GAME && !endOfEndScreen){//TODO ezt torolni
+
                     sManager.update((false));
+                    if(sManager.getProgramState() == ProgramState.MAIN_MENU){
+                        endOfEndScreen = true;
+                        break; //TODO (D) ugyanaz mint kliensnel
+                    }
+                    if(sManager.getProgramState() == ProgramState.IN_GAME){
+                        server.waitForReplayMsgs();
+                        endOfEndScreen = true;
+                        System.out.println("Replaying match");
+
+                    }
+
+                    /*
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(10);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
-                    }
+                    }*/
                 }
 
             }
@@ -274,11 +287,22 @@ public class Menu {
                     while(sManager.getProgramState() == ProgramState.END_OF_GAME){//TODO ezt torolni
                         //varunk
                         sManager.update((false));
-                        try {
+                        if(sManager.getProgramState() == ProgramState.MAIN_MENU) {
+                            break; //TODO (D) waiting for other players felirat látszik amikor visszalep a menube
+                        }
+
+                        if (sManager.getProgramState() == ProgramState.IN_GAME) {
+                            client.sendReplayRequest();
+                            client.waitForReplayMsg();
+                            System.out.println("Rematch accepted");
+
+                        }
+
+                        /*try {
                             Thread.sleep(1000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
-                        }
+                        }*/
                     }
 
 
