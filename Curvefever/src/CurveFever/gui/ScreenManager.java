@@ -66,6 +66,11 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
         this.add(gameScreen,GAMESCREEN);
     }
 
+    public void deleteGameScreen() {
+        this.gameScreen = null;
+
+    }
+
     public void setEndGameScreen(EndGameScreen endGameScreen) {
         this.endGameScreen = endGameScreen;
         this.add(endGameScreen,ENDGAMESCREEN);
@@ -119,20 +124,22 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
             case IN_GAME:
                 gameScreen.render(firstCall);
                 layout.show(this, GAMESCREEN);
-                if(programState != prevProgramState) {
-                    layout.show(this, GAMESCREEN);
-                }
+                //if(programState != prevProgramState) {
+                //    layout.show(this, GAMESCREEN);
+                //}
                 break;
             case MAIN_MENU:
-                if(programState != prevProgramState) {
-                    layout.show(this, MENUSCREEN);
-                }
+                layout.show(this, MENUSCREEN);
+                //if(programState != prevProgramState) {
+                //    layout.show(this, MENUSCREEN);
+                //}
                 break;
             case END_OF_GAME:
                 endGameScreen.render();
-                if(programState != prevProgramState) {
-                    layout.show(this, ENDGAMESCREEN);
-                }
+                layout.show(this, ENDGAMESCREEN);
+                //if(programState != prevProgramState) {
+                //    layout.show(this, ENDGAMESCREEN);
+                //}
                 break;
             default:
                 break;

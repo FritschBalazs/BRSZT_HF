@@ -388,6 +388,7 @@ public class Server extends Client {
         sendToClient(pkg);
 
         waitWithDraw = false;
+        System.out.println("runServer set waitForDraw");
 
     }
 

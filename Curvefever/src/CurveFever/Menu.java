@@ -10,7 +10,7 @@ public class Menu {
     private Client client;
     private Server server; //only one Server or one Client will be used
     //private ProgramState programState;
-    private ControlOption controlOptions;
+    //private ControlOption controlOptions;
     private String serverIp; //To give to Server or Client constructor
     private String playerName; //To give to Player constructor (player name can be entered in menu, in a textbox)
     //private int numOfPlayers;
@@ -24,7 +24,7 @@ public class Menu {
     public Menu(){}
 
     //public void setProgramState(ProgramState programState) {this.programState = programState;}
-    public void setControlOptions(ControlOption controlOptions) {this.controlOptions = controlOptions;}
+    //public void setControlOptions(ControlOption controlOptions) {this.controlOptions = controlOptions;}
     public void setServerIp(String serverIp) {this.serverIp = serverIp;}
     public void setPlayerName(String playerName) {this.playerName = playerName;}
     //public void setNumOfPlayers(int numOfPlayers) {this.numOfPlayers = numOfPlayers;}
@@ -32,13 +32,13 @@ public class Menu {
     public Client getClient() {return client;}
     public Server getServer() {return server;}
     //public ProgramState getProgramStateState() {return programState;}
-    public ControlOption getControlOptions() {return controlOptions;}
+    //public ControlOption getControlOptions() {return controlOptions;}
     public String getServerIp() {return serverIp;}
     public String getPlayerName() {return playerName;}
     //public int getNumOfPlayers() {return numOfPlayers;}
     //public int getNumOfRounds() {return numOfRounds;}
 
-    private GameScreen gameScr;
+    //private GameScreen gameScr;
 
     public void createGame(){
         //Start game in Server mode
@@ -112,7 +112,7 @@ public class Menu {
                 window.setTitle("Kurve Fívör(server, player: " + serverPlayerName + ")");
 
                 /* create game screen and add it to sManager */ //servernel lehetne a scrrenmanager-en belulre, kliensnel nehezebb
-                gameScr = new GameScreen(numOfPlayers);
+                GameScreen gameScr = new GameScreen(numOfPlayers);
                 sManager.setGameScreen(gameScr);
 
                 /* setup connections and configure game */
@@ -136,11 +136,19 @@ public class Menu {
 
 
                     /* wait for timer thread to finish */
-                    while(server.waitForDraw() == true) {}
+                    while(server.waitForDraw()) {
+                        try {
+                            Thread.sleep(1);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
 
 
                     /* update data in GUI classes */
-                    updateGuiData(boardToDisplay,sManager.getGameScreen());
+                    updateGuiData(boardToDisplay,gameScr);
+                    System.out.println("Update called from menu");
                     if (server.getGame().getGameState() == GameState.PREP) {
                         initGuiData(boardToDisplay,gameScr);
                     }
@@ -173,19 +181,22 @@ public class Menu {
                     prevGameState = server.getGame().getGameState();
 
                 }
-                boolean endOfEndScreen = false;
-                while(sManager.getProgramState() == ProgramState.END_OF_GAME && !endOfEndScreen){//TODO ezt torolni
+
+                while(sManager.getProgramState() == ProgramState.END_OF_GAME){//TODO ezt torolni
 
                     sManager.update((false));
                     if(sManager.getProgramState() == ProgramState.MAIN_MENU){
-                        endOfEndScreen = true;
+
+                        server.closeAllConnections();
+                        sManager.deleteGameScreen();
                         break; //TODO (D) ugyanaz mint kliensnel
                     }
                     if(sManager.getProgramState() == ProgramState.IN_GAME){
                         server.waitForReplayMsgs();
-                        endOfEndScreen = true;
+                        //endOfEndScreen = true;
                         System.out.println("Replaying match");
                         server.closeAllConnections();
+                        sManager.deleteGameScreen();
 
                     }
 
@@ -289,6 +300,7 @@ public class Menu {
 
                     sManager.update((false));
                     if(sManager.getProgramState() == ProgramState.MAIN_MENU) {
+                        client.closeSocket();
                         break; //TODO (D) waiting for other players felirat látszik amikor visszalep a menube
                     }
 
