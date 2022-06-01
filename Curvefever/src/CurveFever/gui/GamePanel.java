@@ -178,6 +178,6 @@ public class GamePanel extends JPanel {
 
         long endTime = System.nanoTime();
         //System.out.println("Paint time: "+ (endTime-startTime)/1000000);  //Commented out for debugging
-        System.out.println("GamePanel paintCompontnet CurvePoints[0] x:" +CurvePoints[0].getX()+ " y: " + CurvePoints[0].getY());
+        //System.out.println("GamePanel paintCompontnet CurvePoints[0] x:" +CurvePoints[0].getX()+ " y: " + CurvePoints[0].getY());
     }
 }

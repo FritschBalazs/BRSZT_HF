@@ -166,7 +166,7 @@ public class EndGameScreen extends JPanel {
     public void render(){
         sortScores();
         for (int i = 0; i < numOfPlayers; i = i + 1) {
-            ScoreLabels[i].setText(i+1+". "+PlayerNamesToDraw[i]+": "+ ScoresToDraw[i]);
+            ScoreLabels[i].setText(i+1+". "+PlayerNamesToDraw[i]+": "+ (int)Math.floor(ScoresToDraw[i]));
             ScoreLabels[i].setForeground(ColorsToDraw[i]);
         }
     }
