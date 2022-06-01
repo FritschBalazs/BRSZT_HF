@@ -68,7 +68,10 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
 
     public void setEndGameScreen(EndGameScreen endGameScreen) {
         this.endGameScreen = endGameScreen;
+        this.endGameScreen.backToMenuButton.addActionListener(this);
+        this.endGameScreen.playAgainButton.addActionListener(this);
         this.add(endGameScreen,ENDGAMESCREEN);
+
     }
 
     public GameScreen getGameScreen(){

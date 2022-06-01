@@ -19,7 +19,6 @@ public class GamePanel extends JPanel {
     private CurvePoint[] PrevCurvePoints;
     private CurvePoint[] CurvePoints;
     private Color[] Colors;
-    private boolean initHappened = false;
     private int numOfPlayers;
     private BufferedImage boardImage;
     public Path2D.Double[] Paths;
@@ -36,9 +35,7 @@ public class GamePanel extends JPanel {
         this.boardImage = boardImage;
     }
 
-    public void setInitHappened(boolean initHappened) {
-        this.initHappened = initHappened;
-    }
+
 
     public void setPaths(Path2D.Double[] paths) {
         Paths = paths.clone();

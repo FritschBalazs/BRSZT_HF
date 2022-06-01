@@ -125,13 +125,7 @@ public class GameScreen extends JPanel {
             gamePanel.setColors(this.Colors);
             gamePanel.setNumOfPlayers(this.numOfPlayers);
             gamePanel.setPrevCurvePoints(this.PrevCurvePoints);
-            gamePanel.setPrevPrevCurvePoints(this.PrevCurvePoints); //TODO (D) ezt a prev-prev dolgot irtsuk ki mert nagyon zavaro
             gamePanel.setCurvePoints(this.CurvePoints);
-            gamePanel.setInitHappened(true);
-
-
-            gamePanel.Paths[0].moveTo(CurvePoints[0].getX(),CurvePoints[0].getY()); //TODO (D) ezt nem kene kitorolni? csak lassit szerintem
-            gamePanel.Paths[1].moveTo(CurvePoints[1].getX(),CurvePoints[1].getY());
         }
         infoPanel.setScores(this.Scores);
         infoPanel.setCurrentRound(this.currentRound);
