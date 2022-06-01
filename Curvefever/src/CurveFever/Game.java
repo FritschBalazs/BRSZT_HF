@@ -514,6 +514,11 @@ public class Game {
                                     // Check intersection
                                     if (doIntersect(currentPos, lastPos, curveSegment1, curveSegment2)) {
                                         collisionDetected[i] = true;
+                                        System.out.println("Player[" + i + "] collision detected, coordinates:");
+                                        System.out.println("currentPos -- x: " + currentPos.getX() + " y: " + currentPos.getY());
+                                        System.out.println("lastPos -- x: " + lastPos.getX() + " y: " + lastPos.getY());
+                                        System.out.println("Segment1 -- x: " + curveSegment1.getX() + " y: " + curveSegment1.getY());
+                                        System.out.println("Segment2 -- x: " + curveSegment2.getX() + " y: " + curveSegment2.getY());
                                     }
                             }
                         }
