@@ -81,7 +81,7 @@ public class Board{
         //return Scores.clone();
         double[] tempScores = new double[numOfPlayers];
         for (int i = 0; i < numOfPlayers; i++) {
-            tempScores[i] = Math.floor(Scores[i]);
+            tempScores[i] = Scores[i];
         }
         return tempScores;
     }
