@@ -110,6 +110,25 @@ public class Server extends Client {
 
     }
 
+    public void closeAllConnections(){
+        for (int i = 0; i < numOfClients; i++) {
+            try {
+                Sockets[i].close();
+                ObjOutStreams[i].close();
+                ObjInStreams[i].close();
+
+            } catch (IOException e) {
+                System.out.println("IOexception, when trying to close socket #" + i);
+            }
+
+        }
+        try {
+            ss.close();
+        } catch (IOException e) {
+            System.out.println("IOexception, when trying to close server socket ");
+        }
+    }
+
     public void setupGame() {
 
         /* Create init package */
@@ -217,6 +236,65 @@ public class Server extends Client {
 
     }
 
+    public void sendEndOfGameToClients() {
+        /* send out a request */
+        for (int clientId = 0; clientId < numOfClients; clientId++) {
+            try {
+                ObjOutStreams[clientId].writeUTF("Game over");
+                ObjOutStreams[clientId].flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    public void waitForReplayMsgs() {
+        WaitForStringFromClientRunnable[] runnables= new WaitForStringFromClientRunnable[numOfClients];
+        Thread[] threads = new Thread[numOfClients];
+        for (int i = 0; i < numOfClients; i++) {
+            runnables[i] = new WaitForStringFromClientRunnable(i);
+
+            threads[i] = new Thread(runnables[i]);
+            threads[i].start();
+        }
+
+        for (int i = 0; i < numOfClients; i++) {
+            try {
+                threads[i].join();
+            } catch (InterruptedException e) {
+                System.out.println("InterruptedException from while waiting for Replay message #" + i);
+            }
+        }
+
+        for (int clientId = 0; clientId < numOfClients; clientId++) {
+            try {
+                ObjOutStreams[clientId].writeUTF("Replay ok, start again!");
+                ObjOutStreams[clientId].flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    private class  WaitForStringFromClientRunnable implements Runnable {
+
+        private int clientId;
+
+        public WaitForStringFromClientRunnable(int i) {
+            this.clientId = i;
+        }
+
+        public void run(){
+            try {
+                ObjInStreams[clientId].readUTF();
+            } catch (IOException e) {
+                System.out.println("IOException in waitForStringFromClient");
+            }
+        }
+    }
+
     public void requestInputs() {
         /* Create and start threads, to get input of clients */
         for (int idx = 0; idx < numOfClients; idx++) {
@@ -259,6 +337,7 @@ public class Server extends Client {
                 gameTimer.stop();
                 game.updatePlayerScores();
                 game.setGameState(GameState.MENU);
+
                 //TODO (B) ujrakezdes
             }
 
@@ -310,6 +389,7 @@ public class Server extends Client {
         sendToClient(pkg);
 
         waitWithDraw = false;
+        System.out.println("runServer set waitForDraw");
 
     }
 

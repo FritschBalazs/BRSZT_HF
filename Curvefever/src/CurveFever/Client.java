@@ -86,8 +86,10 @@ public class Client{
         }
     }
 
-    public void sendToServer() {
+    public boolean sendToServer() {
 
+        String requestMessage = "";
+        boolean retval = true;
         /* if the connection got closed, or it has never been started */
         if (socket == null || socket.isClosed() ) {
             establishConnection();
@@ -95,19 +97,29 @@ public class Client{
 
         /* wait for server to request input */
         try {
-            objIStream.readUTF();
+            requestMessage = objIStream.readUTF();
         } catch (IOException e) {
             System.out.println("IOException when waiting for server to request input");
         }
 
-        /* send controlState to server */
-        try {
-            objOStream.writeObject(player.getControlState());
-            objOStream.flush();
-        } catch (IOException e) {
-            System.out.println("IOexception while trying to send");
+        if (requestMessage.equals("Provide control input pls") )
+        {
+            /* send controlState to server */
+            try {
+                objOStream.writeObject(player.getControlState());
+                objOStream.flush();
+            } catch (IOException e) {
+                System.out.println("IOexception while trying to send");
+            }
+            System.out.println("Contorl state sent to server.");
+
+            retval = true;
         }
-        System.out.println("Contorl state sent to server.");
+        else if (requestMessage.equals("Game over")) {
+            retval = false;
+        }
+
+        return retval;
 
     }
 
@@ -134,6 +146,39 @@ public class Client{
         return null;
     }
 
+    public void sendReplayRequest(){
+        try {
+            objOStream.writeUTF("I want a rematch");
+            objOStream.flush();
+            System.out.println("Rematch Requested");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void waitForReplayMsg(){
+        try {
+            objIStream.readUTF();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void closeSocket(){
+        try {
+            socket.close();
+            objIStream.close();
+            objOStream.close();
+
+            objIStream = null;
+            objOStream = null;
+
+        } catch (IOException e) {
+            System.out.println("IOException when trying to close socket");
+        }
+
+    }
 
 
     private void establishConnection() {

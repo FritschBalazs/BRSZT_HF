@@ -65,12 +65,29 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
         this.gameScreen = gameScreen;
         this.add(gameScreen,GAMESCREEN);
     }
+
+    public void deleteGameScreen() { //TODO (B) ezt torolni
+        this.gameScreen = null;
+
+    }
+
+    public void setEndGameScreen(EndGameScreen endGameScreen) {
+        this.endGameScreen = endGameScreen;
+        this.endGameScreen.backToMenuButton.addActionListener(this);
+        this.endGameScreen.playAgainButton.addActionListener(this);
+        this.add(endGameScreen,ENDGAMESCREEN);
+    }
+
     public GameScreen getGameScreen(){
         return this.gameScreen;
     }
 
     public ProgramState getProgramState() {
         return programState;
+    }
+
+    public void setProgramState(ProgramState programState) {
+        this.programState = programState;
     }
 
     public boolean isServer() {
@@ -105,20 +122,23 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
         switch (programState) {
             case IN_GAME:
                 gameScreen.render(firstCall);
-                if(programState != prevProgramState) {
-                    layout.show(this, GAMESCREEN);
-                }
+                layout.show(this, GAMESCREEN);
+                //if(programState != prevProgramState) { //TODO (B/D) ha lesz switch manu akkor ezt lehet optimalizalni
+                //    layout.show(this, GAMESCREEN);
+                //}
                 break;
             case MAIN_MENU:
-                if(programState != prevProgramState) {
-                    layout.show(this, MENUSCREEN);
-                }
+                layout.show(this, MENUSCREEN);
+                //if(programState != prevProgramState) {
+                //    layout.show(this, MENUSCREEN);
+                //}
                 break;
             case END_OF_GAME:
                 endGameScreen.render();
-                if(programState != prevProgramState) {
-                    layout.show(this, ENDGAMESCREEN);
-                }
+                layout.show(this, ENDGAMESCREEN);
+                //if(programState != prevProgramState) {
+                //    layout.show(this, ENDGAMESCREEN);
+                //}
                 break;
             default:
                 break;

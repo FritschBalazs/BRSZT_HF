@@ -19,7 +19,6 @@ public class GamePanel extends JPanel {
     private CurvePoint[] PrevCurvePoints;
     private CurvePoint[] CurvePoints;
     private Color[] Colors;
-    private boolean initHappened = false;
     private int numOfPlayers;
     private BufferedImage boardImage;
     public Path2D.Double[] Paths;
@@ -36,9 +35,7 @@ public class GamePanel extends JPanel {
         this.boardImage = boardImage;
     }
 
-    public void setInitHappened(boolean initHappened) {
-        this.initHappened = initHappened;
-    }
+
 
     public void setPaths(Path2D.Double[] paths) {
         Paths = paths.clone();
@@ -181,5 +178,6 @@ public class GamePanel extends JPanel {
 
         long endTime = System.nanoTime();
         //System.out.println("Paint time: "+ (endTime-startTime)/1000000);  //Commented out for debugging
+        System.out.println("GamePanel paintCompontnet CurvePoints[0] x:" +CurvePoints[0].getX()+ " y: " + CurvePoints[0].getY());
     }
 }

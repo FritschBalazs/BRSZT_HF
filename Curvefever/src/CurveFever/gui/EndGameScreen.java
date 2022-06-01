@@ -14,8 +14,11 @@ public class EndGameScreen extends JPanel {
     private static final Color BUTTONCOLOR2 = new Color(3, 252, 217);
     private static final Color BUTTONCOLOR3 = new Color(252, 186, 83, 255);
     private String[] PlayerNames;
+    private String[] PlayerNamesToDraw;
     private Color[] Colors;
+    private Color[] ColorsToDraw;
     private double[] Scores;
+    private double[] ScoresToDraw;
     private int numOfPlayers;
     JButton backToMenuButton;
     JButton playAgainButton;
@@ -131,18 +134,30 @@ public class EndGameScreen extends JPanel {
     public void setScores(double[] scores) {
         Scores = scores;
     }
+
+    public JLabel getWaitingTextLabel() {
+        return waitingTextLabel;
+    }
+
     public void sortScores () {
         double tempScore;
         String tempName;
-        for (int i = 0; i < Scores.length; i++) {
-            for (int j = i + 1; j < Scores.length; j++) {
-                if (Scores[i] < Scores[j]) {
-                    tempScore = Scores[i];
-                    tempName = PlayerNames[i];
-                    Scores[i] = Scores[j];
-                    Scores[j] = tempScore;
-                    PlayerNames[i] = PlayerNames[j];
-                    PlayerNames[j] = tempName;
+        Color tempColor;
+        ScoresToDraw = Scores.clone();
+        PlayerNamesToDraw = PlayerNames.clone();
+        ColorsToDraw = Colors.clone();
+        for (int i = 0; i < numOfPlayers; i++) {
+            for (int j = i + 1; j < numOfPlayers; j++) {
+                if (ScoresToDraw[i] < ScoresToDraw[j]) {
+                    tempScore = ScoresToDraw[i];
+                    tempName = PlayerNamesToDraw[i];
+                    tempColor = ColorsToDraw[i];
+                    ScoresToDraw[i] = ScoresToDraw[j];
+                    ScoresToDraw[j] = tempScore;
+                    PlayerNamesToDraw[i] = PlayerNamesToDraw[j];
+                    PlayerNamesToDraw[j] = tempName;
+                    ColorsToDraw[i] = ColorsToDraw[j];
+                    ColorsToDraw[j] = tempColor;
                 }
             }
         }
@@ -151,8 +166,8 @@ public class EndGameScreen extends JPanel {
     public void render(){
         sortScores();
         for (int i = 0; i < numOfPlayers; i = i + 1) {
-            ScoreLabels[i].setText(i+1+". "+PlayerNames[i]+": "+ Scores[i]);
-            ScoreLabels[i].setForeground(Colors[i]);
+            ScoreLabels[i].setText(i+1+". "+PlayerNamesToDraw[i]+": "+ ScoresToDraw[i]);
+            ScoreLabels[i].setForeground(ColorsToDraw[i]);
         }
     }
 }
