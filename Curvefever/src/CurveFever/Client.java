@@ -165,6 +165,21 @@ public class Client{
         }
     }
 
+    public void closeSocket(){
+        try {
+            socket.close();
+            objIStream.close();
+            objOStream.close();
+
+            objIStream = null;
+            objOStream = null;
+
+        } catch (IOException e) {
+            System.out.println("IOException when trying to close socket");
+        }
+
+    }
+
 
     private void establishConnection() {
 

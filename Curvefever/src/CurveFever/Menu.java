@@ -185,6 +185,7 @@ public class Menu {
                         server.waitForReplayMsgs();
                         endOfEndScreen = true;
                         System.out.println("Replaying match");
+                        server.closeAllConnections();
 
                     }
 
@@ -282,31 +283,28 @@ public class Menu {
                         initEndGameScreenData(boardToDisplay,endGameScreen); //TODO (B) ezt majd cleanelni
                         sManager.setProgramState(ProgramState.END_OF_GAME);
                     }
+                }
 
+                while(sManager.getProgramState() == ProgramState.END_OF_GAME){//TODO ezt torolni
 
-                    while(sManager.getProgramState() == ProgramState.END_OF_GAME){//TODO ezt torolni
-                        //varunk
-                        sManager.update((false));
-                        if(sManager.getProgramState() == ProgramState.MAIN_MENU) {
-                            break; //TODO (D) waiting for other players felirat látszik amikor visszalep a menube
-                        }
+                    sManager.update((false));
+                    if(sManager.getProgramState() == ProgramState.MAIN_MENU) {
+                        break; //TODO (D) waiting for other players felirat látszik amikor visszalep a menube
+                    }
 
-                        if (sManager.getProgramState() == ProgramState.IN_GAME) {
-                            client.sendReplayRequest();
-                            client.waitForReplayMsg();
-                            System.out.println("Rematch accepted");
+                    if (sManager.getProgramState() == ProgramState.IN_GAME) {
+                        client.sendReplayRequest();
+                        client.waitForReplayMsg();
+                        System.out.println("Rematch accepted");
+                        client.closeSocket();
 
-                        }
+                    }
 
                         /*try {
                             Thread.sleep(1000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }*/
-                    }
-
-
-
                 }
                 //TODO (M/B) kitalalni, hogy mi legyen ha vege egy jatekanak (osszes kornek)
                 //TODO (M low prio) lyukak

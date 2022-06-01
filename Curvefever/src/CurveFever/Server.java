@@ -110,6 +110,25 @@ public class Server extends Client {
 
     }
 
+    public void closeAllConnections(){
+        for (int i = 0; i < numOfClients; i++) {
+            try {
+                Sockets[i].close();
+                ObjOutStreams[i].close();
+                ObjInStreams[i].close();
+
+            } catch (IOException e) {
+                System.out.println("IOexception, when trying to close socket #" + i);
+            }
+
+        }
+        try {
+            ss.close();
+        } catch (IOException e) {
+            System.out.println("IOexception, when trying to close server socket ");
+        }
+    }
+
     public void setupGame() {
 
         /* Create init package */

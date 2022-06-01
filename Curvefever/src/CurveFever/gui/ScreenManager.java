@@ -118,6 +118,7 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
         switch (programState) {
             case IN_GAME:
                 gameScreen.render(firstCall);
+                layout.show(this, GAMESCREEN);
                 if(programState != prevProgramState) {
                     layout.show(this, GAMESCREEN);
                 }
