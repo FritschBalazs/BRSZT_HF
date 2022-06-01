@@ -66,17 +66,16 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
         this.add(gameScreen,GAMESCREEN);
     }
 
-    public void deleteGameScreen() {
+    public void deleteGameScreen() { //TODO (B) ezt torolni
         this.gameScreen = null;
 
     }
 
     public void setEndGameScreen(EndGameScreen endGameScreen) {
         this.endGameScreen = endGameScreen;
-        this.add(endGameScreen,ENDGAMESCREEN);
         this.endGameScreen.backToMenuButton.addActionListener(this);
         this.endGameScreen.playAgainButton.addActionListener(this);
-
+        this.add(endGameScreen,ENDGAMESCREEN);
     }
 
     public GameScreen getGameScreen(){
@@ -124,7 +123,7 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
             case IN_GAME:
                 gameScreen.render(firstCall);
                 layout.show(this, GAMESCREEN);
-                //if(programState != prevProgramState) {
+                //if(programState != prevProgramState) { //TODO (B/D) ha lesz switch manu akkor ezt lehet optimalizalni
                 //    layout.show(this, GAMESCREEN);
                 //}
                 break;

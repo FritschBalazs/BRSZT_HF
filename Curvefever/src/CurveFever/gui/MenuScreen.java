@@ -30,6 +30,9 @@ public class MenuScreen extends JPanel {
     JComboBox numOfPlayersComboBox;
     JLabel waitingTextLabel;
 
+    public JLabel getWaitingTextLabel() {
+        return waitingTextLabel;
+    }
 
     public MenuScreen() {
         //Basic settings for screen
