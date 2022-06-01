@@ -255,7 +255,7 @@ public class Server extends Client {
             game.incrCurrRound();
 
             /* end of game, stop the counter */
-            if (game.getMainBoard().getCurrentRound() == game.getRoundNum()) {
+            if (game.getMainBoard().getCurrentRound() > game.getRoundNum()) {
                 gameTimer.stop();
                 game.updatePlayerScores();
                 game.setGameState(GameState.MENU);
