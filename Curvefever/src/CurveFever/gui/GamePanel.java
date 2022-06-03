@@ -86,7 +86,7 @@ public class GamePanel extends JPanel {
         return PrevCurvePoints.clone();
     }
 
-    /*old method, can be deleted with last cleanup */ //TODO (B/D low prio) majd a vegen ezt kitakaritani
+    /*old method, can be deleted with last cleanup */ //TODO (D) majd a vegen ezt kitakaritani
     public void drawCurves(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setStroke(new BasicStroke(3));

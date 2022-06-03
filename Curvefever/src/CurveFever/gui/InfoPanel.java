@@ -22,9 +22,7 @@ public class InfoPanel extends JPanel {
     private static final Color BUTTONCOLOR1 = new Color(84, 88, 255, 255);
 
     private int numOfPlayers;
-    public InfoPanel(int width, int height) { //TODO (D) pls ne legyen ket konsturktor mert csunyan megzavart -B
-        this.setPreferredSize(new Dimension(width,height));
-    }
+
     public InfoPanel() {
         this.numOfPlayers = 4;
         this.PlayerNames = new String[numOfPlayers];

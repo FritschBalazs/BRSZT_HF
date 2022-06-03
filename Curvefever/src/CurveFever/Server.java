@@ -8,8 +8,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Arrays;
-import java.util.Vector;
 
 
 public class Server extends Client {
@@ -17,7 +15,7 @@ public class Server extends Client {
     private static final int timerInterval = ServerSidePlayer.SYSTEM_TICK;
     private Game game;
     private Timer gameTimer;
-    private int numOfClients;   //NOT the number of players!!!!!!!!
+    private int numOfClients;   /* NOT the number of players!!!!!!!! */
     private int numOfRounds;
     private ServerSocket ss;
     private Socket[] Sockets;
@@ -64,7 +62,6 @@ public class Server extends Client {
         return game;
     }
 
-    //not sure if this is needed, or correct
     public void setGame(Game game) {
         this.game = game;
     }
@@ -83,6 +80,9 @@ public class Server extends Client {
         waitWithDraw = true;
     }
 
+    /* this functions waits for the specified number of clients to join.
+    * It stores the socket and IO streams for each client.
+    * It also creates the runnable objects */
     public void acceptConnections() {
         int numOfPlayer = 0;
 
@@ -110,6 +110,7 @@ public class Server extends Client {
 
     }
 
+    /* closes all sockets and IO streams with the clients */
     public void closeAllConnections(){
         for (int i = 0; i < numOfClients; i++) {
             try {
@@ -129,6 +130,9 @@ public class Server extends Client {
         }
     }
 
+    /* sets up the game for all clients. This includes collecting all player names
+    *  randomly assigning  colors, and the first starting position for each player
+    *  Note: the server is a "special client", so it also accommodates a player */
     public void setupGame() {
 
         /* Create init package */
@@ -154,7 +158,7 @@ public class Server extends Client {
             pkg.playerNames[numOfClients] = this.player.getName();
         }
 
-
+        /* create the players that the server uses for calculations*/
         ServerSidePlayer[] SSPlayers = new ServerSidePlayer[numOfClients + 1];
 
         /* add client players, and local player */
@@ -162,14 +166,16 @@ public class Server extends Client {
             SSPlayers[idx] = new ServerSidePlayer(pkg.playerNames[idx], idx);
         }
 
+        /* create the game instance. For reference tha game Class contains the game logic */
         game = new Game(numOfClients + 1, pkg.numOfRounds, SSPlayers, pkg.Colors);
         game.initGame();
         prevGameRound = game.getCurrentRound();
 
-
+        /* get init data from the game */
         pkg.CurvePoints = game.getMainBoard().getLastCurvePoints();
         pkg.Colors = game.getColors();
         pkg.currentRound = game.getCurrentRound();
+
         /* send out init packages for all players */
         for (int i = 0; i < numOfClients; i++) {
             /* update package */
@@ -187,19 +193,21 @@ public class Server extends Client {
             }
         }
 
-
+        /* set up cycle counter. The game is tick based */
         cycleCounter = 0;
+
+        /* the first round will start with prep */
         game.setGameState(GameState.PREP);
         prepStartTime = cycleCounter;
 
-        /*setup timer*/
+        /*set up the main game timer*/
         setUpTimer();
 
         /* start timer */
         gameTimer.start();
     }
 
-
+    /* configures the gametimer */
     public void setUpTimer() {
 
         ActionListener al = new ActionListener() {
@@ -213,10 +221,10 @@ public class Server extends Client {
         gameTimer = new Timer(timerInterval, al);
     }
 
-
+    /* This function starts the threads that send the newly calculated game data to clients */
     public void sendToClient(PackageS2C pkg) {
 
-        /* save data to a member variable, so all runnables can acces it */
+        /* save data to a member variable, so all runnables can access it */
         currentPkg = pkg;
 
         /* create and start data sending threads */
@@ -236,20 +244,24 @@ public class Server extends Client {
 
     }
 
+   /* this function sends out the end of game message for all clients */
     public void sendEndOfGameToClients() {
+
         /* send out a request */
         for (int clientId = 0; clientId < numOfClients; clientId++) {
             try {
                 ObjOutStreams[clientId].writeUTF("Game over");
                 ObjOutStreams[clientId].flush();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("IOException when trying to send end of game message to client: #" + clientId);
             }
         }
 
     }
 
+    /* this function waits for the clients to indicate that they want a rematch */
     public void waitForReplayMsgs() {
+
         WaitForStringFromClientRunnable[] runnables= new WaitForStringFromClientRunnable[numOfClients];
         Thread[] threads = new Thread[numOfClients];
         for (int i = 0; i < numOfClients; i++) {
@@ -277,7 +289,7 @@ public class Server extends Client {
         }
     }
 
-
+    /* runnable object for waiting for rematch messages */
     private class  WaitForStringFromClientRunnable implements Runnable {
 
         private int clientId;
@@ -295,6 +307,7 @@ public class Server extends Client {
         }
     }
 
+    /* This function starts the threads that request control input data from clients */
     public void requestInputs() {
         /* Create and start threads, to get input of clients */
         for (int idx = 0; idx < numOfClients; idx++) {
@@ -313,20 +326,17 @@ public class Server extends Client {
 
         /* get the local player's input */
         ControlStates[numOfClients] = player.getControlState();
-
-        //debug
-        //System.out.println("Input client[0]:" + ControlStates[0] + "   Input client[1]: " + ControlStates[1]);
-
     }
 
+    /* server main function. This function controls the playing aspect of the game.
+    * This is called cyclically by the timer. */
     public void runServer() {
         /* request control inputs from all clients */
         requestInputs();
 
+        //TODO Balazs itt folytasd a cleanup-ot
         boolean endRound;
-
-        endRound = game.runGame(ControlStates, cycleCounter);   // TODO (B/M) remove cycleCounter - nem kell, végül random lyukakhoz kelleni fog
-
+        endRound = game.runGame(ControlStates, cycleCounter);
 
         if (endRound) {
             /* increment the round number */
@@ -337,8 +347,6 @@ public class Server extends Client {
                 gameTimer.stop();
                 game.updatePlayerScores();
                 game.setGameState(GameState.MENU);
-
-                //TODO (B) ujrakezdes
             }
 
             /* prepare game for the next round */
