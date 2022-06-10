@@ -199,13 +199,8 @@ public class Menu {
                         //endOfEndScreen = true;
                         System.out.println("Replaying match");
                         server.closeAllConnections();
-
-
                     }
-
-
                 }
-
             }
 
 
@@ -311,7 +306,6 @@ public class Menu {
                         client.closeSocket();
 
                     }
-
                 }
                 //TODO (low prio) jar generalas
             }

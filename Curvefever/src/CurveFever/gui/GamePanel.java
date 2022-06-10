@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 
 //the part where the curves are drawn
 public class GamePanel extends JPanel {
-    private static final Color BUTTONCOLOR2 = new Color(3, 252, 217);
+    private static final Color CYAN = new Color(3, 252, 217);
     private int boardWidth;
     private int boardHeight;
     /*private Curve[] Curves; //majd lehet torolni es eleg lesz a points is*/
@@ -159,7 +159,7 @@ public class GamePanel extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        setBackground(BUTTONCOLOR2);
+        setBackground(CYAN);
         updateBoardImage();
         g.drawImage(boardImage,(this.getSize().width/2)-(boardWidth/2), (this.getSize().height/2)-(boardHeight/2),this);
         Toolkit.getDefaultToolkit().sync(); // this smooths out animations on some systems
