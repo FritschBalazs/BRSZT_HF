@@ -8,11 +8,10 @@ import static javax.swing.SwingConstants.CENTER;
 public class EndGameScreen extends JPanel {
     private static final int width = 1280;
     private static final int height = 720;
-    private static final Color BACKROUNDCOLOR = new Color(26, 72, 98);
-    private static final Color BUTTONCOLOR1 = new Color(228, 113, 250);
-    private static final Color SIDEPANELCOLOR = new Color(84, 88, 255, 255);
-    private static final Color BUTTONCOLOR2 = new Color(3, 252, 217);
-    private static final Color BUTTONCOLOR3 = new Color(252, 186, 83, 255);
+    private static final Color DARKBLUE = new Color(26, 72, 98);
+    private static final Color PINK = new Color(228, 113, 250);
+    private static final Color BLUE = new Color(84, 88, 255, 255);
+    private static final Color CYAN = new Color(3, 252, 217);
     private String[] PlayerNames;
     private String[] PlayerNamesToDraw;
     private Color[] Colors;
@@ -23,7 +22,7 @@ public class EndGameScreen extends JPanel {
     JButton backToMenuButton;
     JButton playAgainButton;
     JLabel waitingTextLabel;
-    private JLabel[] ScoreLabels;
+    private final JLabel[] ScoreLabels;
 
     public EndGameScreen() {
         this.numOfPlayers = 4;
@@ -32,11 +31,11 @@ public class EndGameScreen extends JPanel {
         this.Scores = new double[numOfPlayers];
         this.ScoreLabels = new JLabel[numOfPlayers];
         setPreferredSize(new Dimension(width,height));
-        //setBackground(BACKROUNDCOLOR);
         setLayout(new BorderLayout());
+
         //Creating and setting up center panel
         JPanel centerPanel = new JPanel();
-        centerPanel.setBackground(BACKROUNDCOLOR);
+        centerPanel.setBackground(DARKBLUE);
         centerPanel.setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
         JLabel endGameLogo = new JLabel();
@@ -58,26 +57,24 @@ public class EndGameScreen extends JPanel {
             PlayerNames[i] = "";
         }
 
-
         //Creating and setting up sidepanel
         JPanel sidePanel = new JPanel();
-        sidePanel.setBackground(SIDEPANELCOLOR);
+        sidePanel.setBackground(BLUE);
         sidePanel.setLayout(new GridBagLayout());
-
 
         backToMenuButton = new JButton();
         backToMenuButton.setPreferredSize(new Dimension(300, 70));
         backToMenuButton.setFont(new Font("Lato", Font.BOLD, 15));
-        backToMenuButton.setForeground(BACKROUNDCOLOR);
-        backToMenuButton.setBackground(BUTTONCOLOR2);
+        backToMenuButton.setForeground(DARKBLUE);
+        backToMenuButton.setBackground(CYAN);
         backToMenuButton.setFocusable(false);
         backToMenuButton.setText("Back to Menu");
 
         playAgainButton = new JButton();
         playAgainButton.setPreferredSize(new Dimension(300, 70));
         playAgainButton.setFont(new Font("Lato", Font.BOLD, 15));
-        playAgainButton.setForeground(BACKROUNDCOLOR);
-        playAgainButton.setBackground(BUTTONCOLOR1);
+        playAgainButton.setForeground(DARKBLUE);
+        playAgainButton.setBackground(PINK);
         playAgainButton.setFocusable(false);
         playAgainButton.setText("Play again");
 

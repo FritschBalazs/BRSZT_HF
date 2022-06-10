@@ -5,12 +5,12 @@ import java.awt.Color;
 public class Board{
     private static final int gameWidth = 1280; //actual game board width
     private static final int gameHeight = 720; //actual game board height
-    private Curve[] Curves;
+    private final Curve[] Curves;
     private double[] Scores;
     private int currentRound;
-    private int roundNum;
-    private int numOfPlayers;
-    private String[] PlayerNames;
+    private final int roundNum;
+    private final int numOfPlayers;
+    private final String[] PlayerNames;
     private GameState prevGameState;
 
     public Board(int numOfPlayers, int numOfRounds, String[] playerNames, Color[] colors) {
@@ -44,7 +44,7 @@ public class Board{
 
     }
 
-    public void setCurves(Curve[] curves) {Curves = curves.clone();}
+    /*public void setCurves(Curve[] curves) {Curves = curves.clone();}*/
 
     public void setScores(double[] P) {
         Scores = P.clone();
@@ -55,13 +55,13 @@ public class Board{
         currentRound = numOfRound;
     }
 
-    public void setRoundNum(int numOfRounds) {
+    /*public void setRoundNum(int numOfRounds) {
         this.roundNum = numOfRounds;
-    }
+    }*/
 
-    public void setPlayerNames(String[] names) {
+    /*public void setPlayerNames(String[] names) {
         this.PlayerNames = names.clone();
-    }
+    }*/
 
     public int getGameWidthWidth() {
         return gameWidth;
@@ -80,9 +80,7 @@ public class Board{
     public double[] getScores() {
         //return Scores.clone();
         double[] tempScores = new double[numOfPlayers];
-        for (int i = 0; i < numOfPlayers; i++) {
-            tempScores[i] = Scores[i];
-        }
+        System.arraycopy(Scores, 0, tempScores, 0, numOfPlayers);
         return tempScores;
     }
 
@@ -145,13 +143,13 @@ public class Board{
         Curves[idx].addPoint(newPosition);
     }
 
-    public void receiveFromPackageS2C(double[] scores, int currentRound, CurvePoint[] positions) {
+    /*public void receiveFromPackageS2C(double[] scores, int currentRound, CurvePoint[] positions) {
         this.currentRound = currentRound;
         for (int i = 0; i < numOfPlayers; i = i +1) {
             Scores[i] = scores[i];
             Curves[i].addPoint(positions[i]);
         }
-    }
+    }*/
 
     public void receiveFromPackageS2C(PackageS2C pkg) {
         this.currentRound = pkg.currentRound;

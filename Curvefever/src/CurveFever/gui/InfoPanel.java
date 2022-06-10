@@ -3,8 +3,6 @@ package CurveFever.gui;
 import javax.swing.*;
 import java.awt.*;
 
-import static java.util.Arrays.sort;
-import static java.util.Collections.reverseOrder;
 
 public class InfoPanel extends JPanel {
     private double[] Scores;
@@ -15,16 +13,11 @@ public class InfoPanel extends JPanel {
     private int currentRound;
     private Color[] Colors;
     private Color[] ColorsToDraw;
-    private JLabel[] ScoreLabels;
-    private JLabel roundLabel;
-    private static final Color BACKGROUND = new Color(128, 164, 252);
-    private static final Color BUTTONCOLOR2 = new Color(3, 252, 217);
-    private static final Color BUTTONCOLOR1 = new Color(84, 88, 255, 255);
-
+    private final JLabel[] ScoreLabels;
+    private final JLabel roundLabel;
+    private static final Color PURPLE = new Color(84, 88, 255, 255);
     private int numOfPlayers;
-    public InfoPanel(int width, int height) { //TODO (D) pls ne legyen ket konsturktor mert csunyan megzavart -B
-        this.setPreferredSize(new Dimension(width,height));
-    }
+
     public InfoPanel() {
         this.numOfPlayers = 4;
         this.PlayerNames = new String[numOfPlayers];
@@ -56,7 +49,7 @@ public class InfoPanel extends JPanel {
             PlayerNames[i] = " ";
         }
     }
-    public double[] getScores() {return Scores;}
+    /*public double[] getScores() {return Scores;}*/
 
     public void setScores(double[] scores) {
         Scores = scores.clone();}
@@ -80,9 +73,9 @@ public class InfoPanel extends JPanel {
     public void setColors(Color[] colors) {
         Colors = colors;
     }
-    public String[] getPlayerNames() {
+    /*public String[] getPlayerNames() {
         return PlayerNames;
-    }
+    }*/
 
     public void sortScores () {
         double tempScore;
@@ -119,7 +112,7 @@ public class InfoPanel extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        setBackground(BUTTONCOLOR1);
+        setBackground(PURPLE);
         drawScore();
         Toolkit.getDefaultToolkit().sync(); // this smooths out animations on some systems
     }

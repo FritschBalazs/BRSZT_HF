@@ -8,11 +8,11 @@ import static javax.swing.SwingConstants.*;
 public class MenuScreen extends JPanel {
     private static final int width = 1280;
     private static final int height = 720;
-    private static final Color BACKROUNDCOLOR = new Color(26, 72, 98);
-    private static final Color BUTTONCOLOR1 = new Color(228, 113, 250);
-    private static final Color BUTTONCOLOR2 = new Color(3, 252, 217);
-    private static final Color BUTTONCOLOR3 = new Color(252, 186, 83, 255);
-    private  int numOfPlayers;
+    private static final Color DARKBLUE = new Color(26, 72, 98);
+    private static final Color PINK = new Color(228, 113, 250);
+    private static final Color CYAN = new Color(3, 252, 217);
+    private static final Color ORANGE = new Color(252, 186, 83, 255);
+    private final int numOfPlayers;
 
     JPanel centerPanel; //holds the buttons
     JPanel settingsPanel; //holds the settings
@@ -42,13 +42,13 @@ public class MenuScreen extends JPanel {
 
         //Creating and setting up center panel
         centerPanel = new JPanel();
-        centerPanel.setBackground(BACKROUNDCOLOR);
+        centerPanel.setBackground(DARKBLUE);
         centerPanel.setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
 
         //Creating and setting up settings panel
         settingsPanel = new JPanel();
-        settingsPanel.setBackground(BUTTONCOLOR2);
+        settingsPanel.setBackground(CYAN);
         settingsPanel.setLayout(new GridBagLayout());
 
         //Creating and setting components for center panel
@@ -58,31 +58,31 @@ public class MenuScreen extends JPanel {
         createGameButton = new JButton();
         createGameButton.setPreferredSize(new Dimension(300, 70));
         createGameButton.setFont(new Font("Lato", Font.BOLD, 15));
-        createGameButton.setForeground(BACKROUNDCOLOR);
-        createGameButton.setBackground(BUTTONCOLOR2);
+        createGameButton.setForeground(DARKBLUE);
+        createGameButton.setBackground(CYAN);
         createGameButton.setFocusable(false);
         createGameButton.setText("Create Game");
 
         joinGameButton = new JButton();
         joinGameButton.setPreferredSize(new Dimension(300, 70));
         joinGameButton.setFont(new Font("Lato", Font.BOLD, 15));
-        joinGameButton.setForeground(BACKROUNDCOLOR);
-        joinGameButton.setBackground(BUTTONCOLOR1);
+        joinGameButton.setForeground(DARKBLUE);
+        joinGameButton.setBackground(PINK);
         joinGameButton.setFocusable(false);
         joinGameButton.setText("Join Game");
 
         exitButton = new JButton();
         exitButton.setPreferredSize(new Dimension(300, 70));
         exitButton.setFont(new Font("Lato", Font.BOLD, 15));
-        exitButton.setForeground(BACKROUNDCOLOR);
-        exitButton.setBackground(BUTTONCOLOR3);
+        exitButton.setForeground(DARKBLUE);
+        exitButton.setBackground(ORANGE);
         exitButton.setFocusable(false);
         exitButton.setText("Exit");
 
         //Creating and setting components for settings panel
         JLabel settingsTextLabel = new JLabel();
         settingsTextLabel.setFont(new Font("Lato", Font.BOLD, 50));
-        settingsTextLabel.setBackground(BUTTONCOLOR2);
+        settingsTextLabel.setBackground(CYAN);
         settingsTextLabel.setText("Settings");
 
         playerNameTextField = new JTextField();
@@ -104,20 +104,20 @@ public class MenuScreen extends JPanel {
         JPanel radioButtonPanel = new JPanel();
         radioButtonPanel.setLayout(new GridBagLayout());
         radioButtonPanel.setPreferredSize(new Dimension(250,40));
-        radioButtonPanel.setBackground(BUTTONCOLOR2);
+        radioButtonPanel.setBackground(CYAN);
         JLabel radioButtonTextLabel = new JLabel();
         radioButtonTextLabel.setFont(new Font("Lato", Font.PLAIN, 20));
-        radioButtonTextLabel.setBackground(BUTTONCOLOR2);
+        radioButtonTextLabel.setBackground(CYAN);
         radioButtonTextLabel.setText("Control: ");
         arrowsButton = new JRadioButton();
         arrowsButton.setFont(new Font("Lato", Font.PLAIN, 15));
-        arrowsButton.setBackground(BUTTONCOLOR2);
+        arrowsButton.setBackground(CYAN);
         arrowsButton.setText("Arrows");
         arrowsButton.setFocusable(false);
         arrowsButton.setSelected(true); //This will be selected by default
         ADbutton = new JRadioButton();
         ADbutton.setFont(new Font("Lato", Font.PLAIN, 15));
-        ADbutton.setBackground(BUTTONCOLOR2);
+        ADbutton.setBackground(CYAN);
         ADbutton.setText("A/D");
         ADbutton.setFocusable(false);
         radioButtonGroup = new ButtonGroup();
@@ -133,7 +133,7 @@ public class MenuScreen extends JPanel {
         numOfPlayersPanel.setLayout(new GridBagLayout());
         JLabel numOfPlayersTextLabel = new JLabel(); //szépíteni
         numOfPlayersTextLabel.setFont(new Font("Lato", Font.PLAIN, 20));
-        numOfPlayersTextLabel.setBackground(BUTTONCOLOR2);
+        numOfPlayersTextLabel.setBackground(CYAN);
         numOfPlayersTextLabel.setOpaque(true);
         numOfPlayersTextLabel.setText("Number of players: ");
         numOfPlayersPanel.add(numOfPlayersTextLabel);
@@ -143,16 +143,16 @@ public class MenuScreen extends JPanel {
         numOfRoundsTextField = new JTextField();
         numOfRoundsTextField.setPreferredSize(new Dimension(35, 30));
         numOfRoundsTextField.setFont(new Font("Lato", Font.PLAIN, 15));
-        numOfRoundsTextField.setText("2"); //TODO (D) ezt is vissza
+        numOfRoundsTextField.setText("5");
         numOfRoundsTextField.setToolTipText("Number of rounds");
         numOfRoundsTextField.setHorizontalAlignment(JTextField.CENTER);
         numOfRoundsTextField.setSelectedTextColor(Color.MAGENTA);
         JPanel numOfRoundsPanel = new JPanel();
         numOfRoundsPanel.setLayout(new GridBagLayout());
-        numOfRoundsPanel.setBackground(BUTTONCOLOR2);
+        numOfRoundsPanel.setBackground(CYAN);
         JLabel numOfRoundsTextLabel = new JLabel(); //szépíteni
         numOfRoundsTextLabel.setFont(new Font("Lato", Font.PLAIN, 20));
-        numOfRoundsTextLabel.setBackground(BUTTONCOLOR2);
+        numOfRoundsTextLabel.setBackground(CYAN);
         numOfRoundsTextLabel.setOpaque(true);
         numOfRoundsTextLabel.setText("Number of rounds: ");
         numOfRoundsPanel.add(numOfRoundsTextLabel);
@@ -162,8 +162,6 @@ public class MenuScreen extends JPanel {
         waitingTextLabel.setFont(new Font("Lato", Font.BOLD, 20));
         waitingTextLabel.setText("Waiting other players to join...");
         waitingTextLabel.setVisible(false);
-
-
 
         //Adding logo and buttons to center panel
         constraints.gridx = 0;
@@ -215,7 +213,6 @@ public class MenuScreen extends JPanel {
         constraints.gridy = 6;
         constraints.insets = new Insets(50, 20, 25, 20);
         settingsPanel.add(waitingTextLabel,constraints);
-
 
         //Adding center panel and settings panel to screen
         add(centerPanel, BorderLayout.CENTER);

@@ -1,12 +1,11 @@
 package CurveFever.gui;
 
-import CurveFever.Curve;
+/*import CurveFever.Curve;*/
 import CurveFever.CurvePoint;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Line2D;
-import java.awt.geom.Path2D;
+/*import java.awt.geom.Path2D;*/
 import java.awt.image.BufferedImage;
 
 //the part where the curves are drawn
@@ -14,22 +13,16 @@ public class GamePanel extends JPanel {
     private static final Color BUTTONCOLOR2 = new Color(3, 252, 217);
     private int boardWidth;
     private int boardHeight;
-    private Curve[] Curves; //majd lehet torolni es eleg lesz a points is
+    /*private Curve[] Curves; //majd lehet torolni es eleg lesz a points is*/
     private CurvePoint[] PrevPrevCurvePoints;
     private CurvePoint[] PrevCurvePoints;
     private CurvePoint[] CurvePoints;
     private Color[] Colors;
     private int numOfPlayers;
     private BufferedImage boardImage;
-    public Path2D.Double[] Paths;
+    /*public Path2D.Double[] Paths;*/
 
-    public GamePanel() {
-        Paths = new Path2D.Double[2];
-        Paths[0] = new Path2D.Double();
-        Paths[0].moveTo(500,500);
-        Paths[1] = new Path2D.Double();
-        Paths[1].moveTo(300,300);
-    }
+    public GamePanel() {}
 
     public void setBoardImage(BufferedImage boardImage) {
         this.boardImage = boardImage;
@@ -37,18 +30,18 @@ public class GamePanel extends JPanel {
 
 
 
-    public void setPaths(Path2D.Double[] paths) {
+    /*public void setPaths(Path2D.Double[] paths) {
         Paths = paths.clone();
-    }
-    public void addToPaths(){
+    }*/
+    /*public void addToPaths(){
         for(int i = 0; i<numOfPlayers; i++){
             //Paths[i].lineTo(CurvePoints[i].getX(),CurvePoints[i].getY());
             //Paths[i].quadTo(PrevCurvePoints[i].getX(),PrevCurvePoints[i].getY(),CurvePoints[i].getX(),CurvePoints[i].getY());
             Paths[i].curveTo(PrevPrevCurvePoints[i].getX(), PrevPrevCurvePoints[i].getY(),PrevCurvePoints[i].getX(), PrevCurvePoints[i].getY(),CurvePoints[i].getX(),CurvePoints[i].getY());
         }
-    }
+    }*/
 
-    public void setCurves(Curve[] curves) {Curves = curves.clone();}
+    /*public void setCurves(Curve[] curves) {Curves = curves.clone();}*/
 
     public void setBoardWidth(int boardWidth) {
         this.boardWidth = boardWidth;
@@ -74,20 +67,20 @@ public class GamePanel extends JPanel {
         PrevCurvePoints = prevCurvePoints.clone();
     }
 
-    public void setPrevPrevCurvePoints(CurvePoint[] prevPrevCurvePoints) {
+    /*public void setPrevPrevCurvePoints(CurvePoint[] prevPrevCurvePoints) {
         PrevPrevCurvePoints = prevPrevCurvePoints;
-    }
+    }*/
 
-    public CurvePoint[] getCurvePoints() {
+    /*public CurvePoint[] getCurvePoints() {
         return CurvePoints.clone();
-    }
+    }*/
 
-    public CurvePoint[] getPrevCurvePoints() {
+    /*public CurvePoint[] getPrevCurvePoints() {
         return PrevCurvePoints.clone();
-    }
+    }*/
 
     /*old method, can be deleted with last cleanup */ //TODO (B/D low prio) majd a vegen ezt kitakaritani
-    public void drawCurves(Graphics g) {
+    /*public void drawCurves(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setStroke(new BasicStroke(3));
         for (Curve curve : Curves) {
@@ -98,8 +91,8 @@ public class GamePanel extends JPanel {
                 }
             }
         }
-    }
-    public void drawCurves2(Graphics g) { //old method With paths (redraws everything)
+    }*/
+    /*public void drawCurves2(Graphics g) { //old method With paths (redraws everything)
         Graphics2D g2d = (Graphics2D) g;
         g2d.setStroke(new BasicStroke(3));
         g2d.setRenderingHint(
@@ -112,7 +105,7 @@ public class GamePanel extends JPanel {
         }
         PrevPrevCurvePoints = PrevCurvePoints.clone();
         PrevCurvePoints = CurvePoints.clone();
-    }
+    }*/
 
     private void updateBoardImage() {
 
@@ -130,7 +123,7 @@ public class GamePanel extends JPanel {
         }
         PrevCurvePoints = CurvePoints.clone();
     }
-    private void updateBoardImage2() { //with paths+buffered image
+    /*private void updateBoardImage2() { //with paths+buffered image
 
         Graphics2D g = (Graphics2D)boardImage.createGraphics();
         g.setRenderingHint(
@@ -150,7 +143,7 @@ public class GamePanel extends JPanel {
         }
         //PrevPrevCurvePoints = PrevCurvePoints.clone();
         //PrevCurvePoints = CurvePoints.clone();
-    }
+    }*/
 
     public void resetBufferedImage()
     {
@@ -165,19 +158,10 @@ public class GamePanel extends JPanel {
 
     @Override
     public void paintComponent(Graphics g) {
-        long startTime = System.nanoTime();
         super.paintComponent(g);
         setBackground(BUTTONCOLOR2);
         updateBoardImage();
-        //updateBoardImage2();
         g.drawImage(boardImage,(this.getSize().width/2)-(boardWidth/2), (this.getSize().height/2)-(boardHeight/2),this);
-        //drawCurves2(g);
-
-
         Toolkit.getDefaultToolkit().sync(); // this smooths out animations on some systems
-
-        long endTime = System.nanoTime();
-        //System.out.println("Paint time: "+ (endTime-startTime)/1000000);  //Commented out for debugging
-        //System.out.println("GamePanel paintCompontnet CurvePoints[0] x:" +CurvePoints[0].getX()+ " y: " + CurvePoints[0].getY());
     }
 }

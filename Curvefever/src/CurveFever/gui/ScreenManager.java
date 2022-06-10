@@ -15,12 +15,12 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
     final static String MENUSCREEN = "menuScreen";
     final static String GAMESCREEN = "gameScreen";
     final static String ENDGAMESCREEN = "endGameScreen";
-    private MenuScreen menuScreen;
+    private final MenuScreen menuScreen;
     private GameScreen gameScreen;
     private EndGameScreen endGameScreen;
     private ProgramState programState;
     private ProgramState prevProgramState;
-    private CardLayout layout = new CardLayout();
+    private final CardLayout layout = new CardLayout();
     private String playerName;
     private String serverIP;
     private boolean isServer;
@@ -47,8 +47,6 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
         menuScreen.numOfPlayersComboBox.addActionListener(this);
         endGameScreen.backToMenuButton.addActionListener(this);
         endGameScreen.playAgainButton.addActionListener(this);
-
-
 
         this.add(menuScreen, MENUSCREEN);
         this.add(gameScreen, GAMESCREEN);
@@ -120,28 +118,27 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
 
     public void update(boolean firstCall){
         switch (programState) {
-            case IN_GAME:
+            case IN_GAME -> {
                 gameScreen.render(firstCall);
                 layout.show(this, GAMESCREEN);
-                //if(programState != prevProgramState) { //TODO (B/D) ha lesz switch manu akkor ezt lehet optimalizalni
-                //    layout.show(this, GAMESCREEN);
-                //}
-                break;
-            case MAIN_MENU:
-                layout.show(this, MENUSCREEN);
-                //if(programState != prevProgramState) {
-                //    layout.show(this, MENUSCREEN);
-                //}
-                break;
-            case END_OF_GAME:
+            }
+            //if(programState != prevProgramState) { //TODO (B/D) ha lesz switch manu akkor ezt lehet optimalizalni
+            //    layout.show(this, GAMESCREEN);
+            //}
+            case MAIN_MENU -> layout.show(this, MENUSCREEN);
+
+            //if(programState != prevProgramState) {
+            //    layout.show(this, MENUSCREEN);
+            //}
+            case END_OF_GAME -> {
                 endGameScreen.render();
                 layout.show(this, ENDGAMESCREEN);
-                //if(programState != prevProgramState) {
-                //    layout.show(this, ENDGAMESCREEN);
-                //}
-                break;
-            default:
-                break;
+            }
+            //if(programState != prevProgramState) {
+            //    layout.show(this, ENDGAMESCREEN);
+            //}
+            default -> {
+            }
         }
         evaluateInput();
         prevProgramState = programState;
@@ -200,7 +197,6 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
         }
     }
 
-
     @Override
     public void keyTyped(KeyEvent e) {}
     @Override
@@ -245,7 +241,5 @@ public class ScreenManager extends JPanel implements ActionListener, KeyListener
             }
         }
     }
-
-
 }
 
