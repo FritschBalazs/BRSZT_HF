@@ -8,45 +8,15 @@ import javax.swing.*;
 
 public class Menu {
     private Client client;
-    private Server server; //only one Server or one Client will be used
-    //private ProgramState programState;
-    //private ControlOption controlOptions;
-    private String serverIp; //To give to Server or Client constructor
-    private String playerName; //To give to Player constructor (player name can be entered in menu, in a textbox)
-    //private int numOfPlayers;
-    //private int numOfRounds;
+    private Server server; /* only one Server or one Client will be used */
     private int prevRound;
     private GameState prevGameState;
-    //TODO (B) ha nagyjabol kesz a menu osztaly akkor ezt purgalni (nem tudom kell-e majd ujrakezdesnel esetleg pl a numOfRounds)
-
     private ScreenManager sManager;
 
-    public Menu(){}
+    public Menu(){
 
-    //public void setProgramState(ProgramState programState) {this.programState = programState;}
-    //public void setControlOptions(ControlOption controlOptions) {this.controlOptions = controlOptions;}
-    public void setServerIp(String serverIp) {this.serverIp = serverIp;}
-    public void setPlayerName(String playerName) {this.playerName = playerName;}
-    //public void setNumOfPlayers(int numOfPlayers) {this.numOfPlayers = numOfPlayers;}
-    //public void setNumOfRounds(int numOfRounds) {this.numOfRounds = numOfRounds;}
-    public Client getClient() {return client;}
-    public Server getServer() {return server;}
-    //public ProgramState getProgramStateState() {return programState;}
-    //public ControlOption getControlOptions() {return controlOptions;}
-    public String getServerIp() {return serverIp;}
-    public String getPlayerName() {return playerName;}
-    //public int getNumOfPlayers() {return numOfPlayers;}
-    //public int getNumOfRounds() {return numOfRounds;}
-
-    //private GameScreen gameScr;
-
-    public void createGame(){
-        //Start game in Server mode
     }
 
-    public void joinGame(){
-        //Start game in Client mode
-    }
 
     public void updateGuiData(Board boardToDisplay, GameScreen gameScreen) {
         gameScreen.setCurvePoints(boardToDisplay.getLastCurvePoints());
@@ -78,17 +48,17 @@ public class Menu {
 
         window.add(sManager);
         window.pack();
-        window.setLocationRelativeTo(null); //locating window in the middle of the screen
-        window.setIconImage(new ImageIcon("src/curvefeverlogo.jpg").getImage()); //adding logo to window
+        window.setLocationRelativeTo(null);  /* locating window in the middle of the screen */
+        window.setIconImage(new ImageIcon("src/curvefeverlogo.jpg").getImage()); /* adding logo to window */
         window.setVisible(true);
 
-        EndGameScreen endGameScreen = new EndGameScreen();
+        EndGameScreen endGameScreen = new EndGameScreen(); /* add gamescreen to ScreenManager */
         sManager.setEndGameScreen(endGameScreen);
 
-
+        /* main loop. Only the exit button will exit it */
         while(true){
 
-            /* wait for the player to start click create game or joing game */
+            /* wait for the player to click create game or joing game */
             while (sManager.getProgramState() == ProgramState.MAIN_MENU) {
                 sManager.update(true);
                 try {
@@ -100,7 +70,7 @@ public class Menu {
             }
 
             /* if this instance is a server, create the server, and start the game */
-            if (sManager.isServer() == true){
+            if (sManager.isServer()){
 
                 /* create server */
                 int numOfPlayers = sManager.getNumOfPlayers();
@@ -111,7 +81,7 @@ public class Menu {
                 /* update window title */
                 window.setTitle("Kurve Fívör(server, player: " + serverPlayerName + ")");
 
-                /* create game screen and add it to sManager */ //servernel lehetne a scrrenmanager-en belulre, kliensnel nehezebb
+                /* create game screen and add it to sManager */
                 GameScreen gameScr = new GameScreen(numOfPlayers);
                 sManager.setGameScreen(gameScr);
 
@@ -119,11 +89,12 @@ public class Menu {
                 this.server.acceptConnections();
                 this.server.setupGame();
 
+                /* get the board object we have to display, and give it to the screen manager */
                 Board boardToDisplay = this.server.getGame().getMainBoard();
                 initGuiData(boardToDisplay,sManager.getGameScreen());
                 sManager.update(true);
 
-                /* set prevRound (end of round detection is based on it)*/
+                /* set prevRound (end of round detection is based on it) */
                 prevRound = boardToDisplay.getCurrentRound();
 
                 /* eneter game loop */
@@ -132,7 +103,11 @@ public class Menu {
                     /* get Control input for local player */
                     server.getPlayer().setControlState(sManager.getControlState());
 
-                    /* server main function is Server.runServer(), which is called by a timer */
+
+                    /*                -------------***************---------------
+                      server main function is Server.runServer(), which is called by Server.setupGame()
+                                   Timer is set up, adn started in Server.setupGame
+                                      -------------***************---------------                 */
 
 
                     /* wait for timer thread to finish */
@@ -147,46 +122,50 @@ public class Menu {
 
 
                     /* update data in GUI classes */
-                    updateGuiData(boardToDisplay,gameScr);
-                    System.out.println("Update called from menu");
                     if (server.getGame().getGameState() == GameState.PREP) {
-                        initGuiData(boardToDisplay,gameScr);
+                        initGuiData(boardToDisplay,gameScr);  /* in prepmode more data is requried */
                     }
-                    /* clear gui and board if needed */
+                    else{
+                        updateGuiData(boardToDisplay,gameScr);
+                    }
+
+                    /* clear gui and board every cycle in prep */
                     if(server.getGame().getGameState() == GameState.PREP || prevGameState == GameState.PREP){
-                        /* in prep mode we have to clear the image every time (new round also starts with prep) */
+                        /* in prep mode we have to clear the image every time (new rounds also start with prep) */
                         sManager.getGameScreen().getGamePanel().resetBufferedImage();
                     }
 
-                    /* if the game is over display endscreen */
+                    /* if the game is over display the endscreen */
                     if (server.getGame().getGameState() == GameState.MENU){
 
-                        initEndGameScreenData(boardToDisplay,endGameScreen); //TODO (B) ezt majd cleanelni
+                        initEndGameScreenData(boardToDisplay,endGameScreen);
                         sManager.setProgramState(ProgramState.END_OF_GAME);
 
                         server.sendEndOfGameToClients();
                     }
 
-
+                    /* call the update method for the GUI */
                     if (server.getGame().getGameState() == GameState.PREP|| prevGameState == GameState.PREP){
                         sManager.update(true);
                     }
                     else
                     {
                         sManager.update(false);
-
                     }
-
+                    /* set flag for the timer thread */
                     server.drawFinished();
                     prevGameState = server.getGame().getGameState();
-
                 }
 
+                /* enter loop for endGame screen */
                 while(sManager.getProgramState() == ProgramState.END_OF_GAME){
 
+                    /* call GUI update methd */
                     sManager.update((false));
-                    if(sManager.getProgramState() == ProgramState.MAIN_MENU){
 
+                    /* wait for input */
+                    if(sManager.getProgramState() == ProgramState.MAIN_MENU){
+                        /* return to the main menu */
                         server.closeAllConnections();
                         sManager.deleteGameScreen();
                         sManager.getEndGameScreen().getWaitingTextLabel().setVisible(false);
@@ -195,16 +174,17 @@ public class Menu {
                         break;
                     }
                     if(sManager.getProgramState() == ProgramState.IN_GAME){
+                        /* replay game with the exact same settings */
                         server.waitForReplayMsgs();
-                        //endOfEndScreen = true;
                         System.out.println("Replaying match");
                         server.closeAllConnections();
                     }
-                }
-            }
+                } /* end of endGameScrren while */
+
+            } /* end of server if*/
 
 
-            /* if this insatance is a client, setup the client, and start the game */
+            /* if this instance is a client, set up the client, and start the game */
             else {
                 /* create client */
                 String playerName = sManager.getPlayerName();
@@ -212,16 +192,15 @@ public class Menu {
                 client = new Client(serverIp,playerName);
 
                 /* wait for server to send init package,
-                 * containing other the other players' data
+                 * containing the other players' data
                  */
                 client.receiveFromServerInit();
 
 
-                /* update numOfPlayers in gameScreen */
+                /* create a gameScrren, then get the board object we want to display */
                 int numOfPlayers = client.board.getScores().length;
                 GameScreen gameScr = new GameScreen(numOfPlayers);
                 sManager.setGameScreen(gameScr);
-
                 window.setTitle("Kurve Fívör (client: #" + client.player.id + ", player: " + client.player.getName() + ")");
 
                 Board boardToDisplay = this.client.getBoard();
@@ -230,8 +209,8 @@ public class Menu {
                 /* set prevRound (end of round detection is based on it)*/
                 prevRound = boardToDisplay.getCurrentRound();
 
+                /* call GUI update method */
                 sManager.update(true);
-
 
                 /* enter game loop */
                 while (sManager.getProgramState() == ProgramState.IN_GAME) {
@@ -240,36 +219,38 @@ public class Menu {
                      * it should be moved inside sendToServer somehow */
                     client.getPlayer().setControlState(sManager.getControlState());
 
-                    /* wait for server to request data, and then send it */
-                    PackageS2C message;
+                    PackageS2C message; /* container for the message wa will get form the server */
+
+                    /* wait for server to request data. Return value indicates if server requested control input,
+                    * or if it signaled that the game is over (this happens after the last round) */
                     if (client.sendToServer() == true)
                     {
 
-                        /* receive game data containing data from the latest cycle */
+                        /* receive game information containing data from the latest cycle */
                         message = client.receiveFromServer();
                         if (message != null )  {
                             if(message.gameState == GameState.PREP || prevGameState == GameState.PREP) {
 
-                                /* in prep mode we have to clear the image every time (new round also starts with prep) */
+                                /* in prep mode we have to clear the image every time (new rounds also start with prep) */
                                 sManager.getGameScreen().getGamePanel().resetBufferedImage();
                             }
 
                             if (message.gameState == GameState.PREP){
                                 if (prevRound != message.currentRound){
-                                    /* at new round we have to clear the lines on the board */
+                                    /* at new round we have to clear the curves on the board */
                                     boardToDisplay.clearBoard();
                                 }
                                 prevRound = message.currentRound;
                             }
-                            else if (message.gameState == GameState.PLAYING) {
-                                System.out.println("Started playing");
-                            }
 
+                            /* give data to the local board. Only new curve points are sent from the server,
+                             *  the local board assembles them into a complete curve
+                             */
                             this.client.board.receiveFromPackageS2C(message);
 
-                            /* actualize data stored in gui classes */
+                            /* actualize the data stored in gui classes */
                             if (message.gameState == GameState.PREP || prevGameState == GameState.PREP){
-                                initGuiData(boardToDisplay,gameScr);
+                                initGuiData(boardToDisplay,gameScr); /* in prep mode we need more parameters */
                                 /* draw */
                                 sManager.update(true);
                             }
@@ -283,32 +264,38 @@ public class Menu {
                         }
                     }
                     else{
-                        initEndGameScreenData(boardToDisplay,endGameScreen); //TODO (B) ezt majd cleanelni
+                        /* if the game is over, display the endscreen */
+                        initEndGameScreenData(boardToDisplay,endGameScreen);
                         sManager.setProgramState(ProgramState.END_OF_GAME);
                     }
-                }
+                } /* end of game loop */
 
+                /* endGameScreen loop */
                 while(sManager.getProgramState() == ProgramState.END_OF_GAME){
 
+                    /* update GUI */
                     sManager.update((false));
+
+                    /* wait for user input */
                     if(sManager.getProgramState() == ProgramState.MAIN_MENU) {
+                        /* return main menu */
                         client.closeSocket();
                         sManager.getEndGameScreen().getWaitingTextLabel().setVisible(false);
                         sManager.getMenuScreen().getWaitingTextLabel().setVisible(false);
                         window.setTitle("Kurve Fívör");
-                        break; //TODO (D) waiting for other players felirat látszik amikor visszalep a menube
+                        break;
                     }
 
                     if (sManager.getProgramState() == ProgramState.IN_GAME) {
+                        /* replay game with the same setiings */
                         client.sendReplayRequest();
                         client.waitForReplayMsg();
                         System.out.println("Rematch accepted");
                         client.closeSocket();
-
                     }
                 }
                 //TODO (low prio) jar generalas
-            }
-        }
-    }
+            } /* end of client if  */
+        } /* end of while(1) */
+    } /* end of function */
 }
