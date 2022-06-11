@@ -139,9 +139,6 @@ public class Client{
             System.out.println("ClassNotFoundException");
         }
 
-
-
-
         /* if we get to here that's an error */
         return null;
     }
