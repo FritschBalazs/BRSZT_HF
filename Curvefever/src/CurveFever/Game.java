@@ -584,6 +584,7 @@ public class Game {
                 case PLAYING -> {
                     if (evaluateStep(Controls, currentCycle))
                         return true;
+                    return false;
                 }
 
                 case MENU -> {
