@@ -6,5 +6,7 @@ An online multiplayer JAVA game, where you are a constantly moving line, and you
 
 Designed and made By:
   Dániel Harsányi - Graphics
+  
   Márton Hantos   - Game logic
+  
   Balázs Fritsch  - Networking and main application logic
